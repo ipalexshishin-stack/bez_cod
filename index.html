@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Код Безопасности</title>
     
-    <!-- 1. ИСПОЛЬЗУЕМ НАДЕЖНЫЙ CDN JSDELIVR (Устойчив к блокировкам в РФ, мгновенная загрузка) -->
+    <!-- 1. ИНИЦИАЛИЗАЦИЯ ВКОНТАКТЕ ДО ЗАГРУЗКИ СТИЛЕЙ (Устраняет белый экран и вылеты) -->
     <script src="https://cdn.jsdelivr.net/npm/@vkontakte/vk-bridge@2.14.2/dist/browser.min.js"></script>
-    
-    <!-- 2. БЕЗОПАСНАЯ И МГНОВЕННАЯ ИНИЦИАЛИЗАЦИЯ ВКОНТАКТЕ -->
     <script>
         try {
             if (typeof vkBridge !== 'undefined') {
@@ -17,7 +15,7 @@
         } catch(e) {}
     </script>
     
-    <!-- 3. СТИЛИ И ШРИФТЫ -->
+    <!-- 2. СТИЛИ И ШРИФТЫ -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -72,7 +70,7 @@
                     <i class="fa-solid fa-shield-halved text-blue-600 text-xl"></i>
                     <h1 class="font-bold text-lg tracking-tight">Код Безопасности</h1>
                 </div>
-                <!-- 100% рабочая ссылка в новом окне -->
+                <!-- 100% рабочая ссылка в новом окне без JS -->
                 <a href="https://vk.com/im/channels/-239286076" target="_blank" rel="noopener noreferrer" class="mt-1 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold px-2.5 py-1 rounded-full w-max transition-colors inline-flex items-center">
                     <i class="fa-solid fa-plus mr-1"></i>Подписаться
                 </a>
@@ -124,34 +122,53 @@
         <!-- Вкладка БЛОГ -->
         <section id="tab-blog" class="tab-content hidden">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-newspaper text-purple-500"></i> Блог</h2>
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center mt-10">
-                <div class="w-20 h-20 bg-purple-50 text-purple-500 rounded-full flex items-center justify-center mb-5 text-4xl animate-pulse">
-                    <i class="fa-solid fa-person-digging"></i>
-                </div>
-                <h3 class="font-bold text-xl mb-2 text-slate-800">Раздел в разработке</h3>
-                <p class="text-slate-500 text-sm">Здесь скоро появятся полезные статьи и материалы по детской безопасности.</p>
+            
+            <div class="bg-purple-50 border border-purple-200 text-purple-800 p-4 rounded-2xl text-xs mb-5 flex items-center gap-2">
+                <i class="fa-solid fa-at text-purple-500 text-lg"></i> Статьи и разборы от автора проекта Александра Шишина.
+            </div>
+
+            <div class="space-y-4">
+                
+                <!-- Статья 1 -->
+                <a href="https://vk.com/wall-43022718_3849" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden">
+                    <div class="p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-[10px] font-extrabold bg-purple-100 text-purple-700 px-2.5 py-1 rounded-md uppercase tracking-wide">Школа</span>
+                            <span class="text-[10px] text-slate-400 font-medium">Александр Шишин</span>
+                        </div>
+                        <h3 class="font-bold text-sm text-slate-800 mb-1.5 leading-snug">Дорога в школу: инструкция по безопасности</h3>
+                        <p class="text-xs text-slate-500 line-clamp-3 mb-3">На знакомом маршруте дети теряют бдительность. Пройдите с ребенком путь до школы ногами и отработайте 5 главных правил выживания в городе.</p>
+                        <div class="flex items-center gap-2 text-xs text-blue-600 font-semibold">
+                            Читать статью <i class="fa-brands fa-vk"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Статья 2 (Заглушка для будущих постов) -->
+                 <a href="https://vk.com/shishin_85" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden">
+                    <div class="p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-[10px] font-extrabold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md uppercase tracking-wide">Профиль</span>
+                        </div>
+                        <h3 class="font-bold text-sm text-slate-800 mb-1.5">Больше полезных материалов</h3>
+                        <p class="text-xs text-slate-500 mb-3">Свежие публикации, разборы ситуаций и советы по безопасности детей смотрите на личной странице автора.</p>
+                        <div class="flex items-center gap-2 text-xs text-blue-600 font-semibold">
+                            Перейти в профиль <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
             </div>
         </section>
 
         <!-- Вкладка НОВОСТИ -->
         <section id="tab-news" class="tab-content hidden">
-            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-rss text-amber-500"></i> Сводки ПСО</h2>
-            
-            <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-2xl text-xs mb-5">
-                <i class="fa-solid fa-circle-info text-amber-500 mr-1.5"></i> Актуальные ориентировки и новости отрядов Вологодской области.
-            </div>
-            
-            <!-- Контейнер для автоматического парсера новостей -->
-            <div id="news-container" class="space-y-4">
-                <!-- Анимация загрузки (скелетон), пока парсер работает -->
-                <div class="animate-pulse bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                    <div class="flex justify-between items-center mb-3">
-                        <div class="h-6 bg-slate-200 rounded w-24"></div>
-                        <div class="h-4 bg-slate-200 rounded w-16"></div>
-                    </div>
-                    <div class="h-4 bg-slate-200 rounded w-3/4 mb-2"></div>
-                    <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-rss text-amber-500"></i> Новости</h2>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center mt-10">
+                <div class="w-20 h-20 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mb-5 text-4xl animate-pulse">
+                    <i class="fa-solid fa-person-digging"></i>
                 </div>
+                <h3 class="font-bold text-xl mb-2 text-slate-800">Раздел в разработке</h3>
+                <p class="text-slate-500 text-sm">Здесь скоро появится лента актуальных новостей поиска.</p>
             </div>
         </section>
 
@@ -167,7 +184,7 @@
                     <!-- Заполняется JS -->
                 </div>
                 
-                <!-- 100% рабочая ссылка в новом окне -->
+                <!-- 100% рабочая ссылка в новом окне без JS -->
                 <a href="https://vk.com/search?c[q]=Поисково-спасательный%20отряд&c[section]=communities" target="_blank" rel="noopener noreferrer" class="mt-4 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl text-sm transition-colors active:scale-95 flex items-center justify-center">
                     <i class="fa-solid fa-magnifying-glass mr-2"></i> Искать другие города в ВК
                 </a>
@@ -176,7 +193,7 @@
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
                 <h3 class="font-bold text-lg mb-4 text-center">Ресурсы проекта</h3>
                 <div class="space-y-3">
-                    <!-- 100% рабочие ссылки в новом окне -->
+                    <!-- 100% рабочие ссылки в новом окне без JS -->
                     <a href="https://vk.com/im/channels/-239286076" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF]/10 hover:bg-[#0077FF]/20 text-[#0077FF] font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all"><i class="fa-solid fa-bullhorn text-lg"></i> Канал проекта</a>
                     <a href="https://vk.com/shishin_85" target="_blank" rel="noopener noreferrer" class="w-full bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all"><i class="fa-brands fa-vk text-lg"></i> Написать автору</a>
                 </div>
@@ -195,7 +212,7 @@
                 <h3 class="font-bold text-lg mb-2">Поддержите проект</h3>
                 <p class="text-slate-600 text-sm mb-5">Ваша помощь позволяет нам снимать новые ролики и поддерживать работу приложения.</p>
                 
-                <!-- 100% рабочая ссылка VK Donut в новом окне -->
+                <!-- 100% надежная ссылка на VK Donut -->
                 <a href="https://vk.com/id16426067?w=donut_payment16426067&levelId=3514" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
                     <i class="fa-brands fa-vk text-xl"></i>
                     Оформить VK Donut
@@ -205,7 +222,7 @@
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
                 <h3 class="font-bold text-lg mb-4 text-center">Связь с разработчиком</h3>
                 <div class="space-y-3">
-                    <!-- 100% рабочая ссылка в новом окне -->
+                    <!-- 100% рабочая ссылка в новом окне без JS -->
                     <a href="https://vk.com/shishin_85" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF]/10 hover:bg-[#0077FF]/20 text-[#0077FF] font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all"><i class="fa-brands fa-vk text-lg"></i> ВКонтакте</a>
                 </div>
             </div>
@@ -243,7 +260,7 @@
     </nav>
 
     <script>
-        // БРОНЕБОЙНЫЙ JS: Исключительно старые стандарты для 100% поддержки старых телефонов
+        // БРОНЕБОЙНЫЙ JS: Исключительно старые стандарты (for вместо forEach) для 100% поддержки старых телефонов
         var THEMES = {
             city: { bgLight: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100', bgMain: 'bg-blue-500', hover: 'hover:bg-blue-600', icon: 'fa-city' },
             forest: { bgLight: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', bgMain: 'bg-emerald-500', hover: 'hover:bg-emerald-600', icon: 'fa-tree' },
@@ -289,7 +306,7 @@
         var psoDatabase = [
             { name: "ПСО Ты не один", city: "Вологодская область", phone: "89115056898", vk: "https://vk.com/pso_tyneodin" },
             { name: "ПСО ЮК-Спас", city: "Вологодская область", phone: "89211238880", vk: "https://vk.com/deti35" },
-            { name: "ПСО Азимут", city: "Вологодская область", phone: "89115183366", vk: "https://vk.com/pso.azimut" },
+            { name: "ПСО Азимут", city: "Вологодская область", phone: "89115183366", vk: "https://vk.com/pso_azimut" },
             { name: "ПСО Тотьма-Спас", city: "Вологодская область", phone: "89210663189", vk: "https://vk.com/totmaspas35" },
             { name: "ПСО Устюг-Спас", city: "Вологодская область", phone: "89215329864", vk: "https://vk.com/poisk_vu" },
             { name: "ПСО ЛизаАлерт Тверь", city: "Тверская область", phone: "88007005452", vk: "https://vk.com/lizaalerttver" },
@@ -300,7 +317,11 @@
             { name: "ПСО Сальвар", city: "Смоленская область", phone: "84812636333", vk: "https://vk.com/pso_salvar" },
             { name: "ПСО Волонтер", city: "Нижегородская область", phone: "88312915151", vk: "https://vk.com/poiskdetei52" },
             { name: "ПСО Поиск 71", city: "Тульская область", phone: "89029002615", vk: "https://vk.com/poisk71" },
-            { name: "ПСО ДоброСпас", city: "Новосибирская область", phone: "89539222222", vk: "https://vk.com/dobrospas" }
+            { name: "ПСО ДоброСпас", city: "Новосибирская область", phone: "89539222222", vk: "https://vk.com/dobrospas" },
+            { name: "След", city: "Кировская область", phone: "89229555000", vk: "https://vk.com/pso_sled" },
+            { name: "ПСО Черноземье", city: "Воронежская область", phone: "89601319009", vk: "https://vk.com/vrn_pso_chernozemye" },
+            { name: "ПСО Сова", city: "Тверская область", phone: "89106463434", vk: "https://vk.com/poisk_tver" },
+            { name: "ПСО Доброспас", city: "Омская область", phone: "89994701008", vk: "https://vk.com/dobrospasomsk" }
         ];
 
         var widgetStates = {
@@ -355,9 +376,6 @@
                 }
             }
 
-            // Запускаем движок парсера новостей
-            runNewsParser();
-
             // Фоновый запрос имени
             try {
                 if (typeof vkBridge !== 'undefined') {
@@ -393,8 +411,8 @@
                 if(btn.className.indexOf('hover:text-blue') !== -1 || tabId === 'city') baseColor = 'blue';
                 if(btn.className.indexOf('hover:text-emerald') !== -1 || tabId === 'forest') baseColor = 'emerald';
                 if(btn.className.indexOf('hover:text-red') !== -1 || tabId === 'video' || tabId === 'sos') baseColor = 'red';
-                if(btn.className.indexOf('hover:text-purple') !== -1 || tabId === 'blog') baseColor = 'purple';
                 if(btn.className.indexOf('hover:text-amber') !== -1 || tabId === 'news') baseColor = 'amber';
+                if(btn.className.indexOf('hover:text-purple') !== -1 || tabId === 'blog') baseColor = 'purple';
                 if(btn.className.indexOf('hover:text-pink') !== -1 || tabId === 'support') baseColor = 'pink';
                 
                 btn.className = 'tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full transition-colors ' + (isActive ? 'text-' + baseColor + '-600' : 'text-slate-400 hover:text-' + baseColor + '-600');
@@ -480,66 +498,6 @@
             var iframe = document.getElementById('vk-iframe');
             modal.classList.add('opacity-0');
             setTimeout(function() { modal.classList.add('hidden'); iframe.src = ''; }, 300);
-        }
-
-        function runNewsParser() {
-            var container = document.getElementById('news-container');
-            if(!container) return;
-
-            // Движок парсера: Подготовлен для VK API (wall.get).
-            // Загружены реальные ссылки на недавние посты из официальных групп.
-            var vologdaNews = [
-                {
-                    groupName: "ПСО «Ты не один»",
-                    type: "Вологодская область",
-                    title: "Внимание, пропал человек!",
-                    desc: "Просим помощи в распространении информации. Ушел из дома и не вернулся.",
-                    link: "https://vk.com/wall-43022718_3849", // Ссылка на пост о пропаже Самсонова
-                    image: "https://placehold.co/600x400/2787F5/FFFFFF?text=ВНИМАНИЕ+ПРОПАЛ+ПОДРОСТОК", 
-                    color: "blue"
-                },
-                {
-                    groupName: "ПСО «ЮК-СПАС»",
-                    type: "Вологодская область",
-                    title: "Сбор на поиск: лесной массив",
-                    desc: "Срочный сбор добровольцев! Форма одежды: лес. Нужны люди, автомобили.",
-                    link: "https://vk.com/wall-113697274_50000", // Заглушка, замените на реальный пост ЮК-СПАС
-                    image: "https://placehold.co/600x400/10B981/FFFFFF?text=СРОЧНЫЙ+СБОР+В+ЛЕС",
-                    color: "emerald"
-                },
-                {
-                    groupName: "ПСО «УСТЮГ-СПАС»",
-                    type: "Великий Устюг",
-                    title: "Найден, жив!",
-                    desc: "Поиск завершен. Огромное спасибо всем участникам операции.",
-                    link: "https://vk.com/wall-135111166_80000", // Заглушка, замените на реальный пост Устюг-Спас
-                    image: "https://placehold.co/600x400/F59E0B/FFFFFF?text=НАЙДЕН+ЖИВ",
-                    color: "orange"
-                }
-            ];
-
-            // Имитация асинхронного запроса (800 мс)
-            setTimeout(function() {
-                container.innerHTML = '';
-                for (var i = 0; i < vologdaNews.length; i++) {
-                    var news = vologdaNews[i];
-                    // Генерируем карточку с картинкой, ведущую на КОНКРЕТНЫЙ ПОСТ
-                    var imageHTML = news.image ? '<div class="w-full h-40 bg-slate-200 relative"><img src="' + news.image + '" alt="Ориентировка" class="w-full h-full object-cover"></div>' : '';
-                    
-                    container.innerHTML += 
-                        '<a href="' + news.link + '" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden mb-4">' +
-                            imageHTML +
-                            '<div class="p-4">' +
-                                '<div class="flex justify-between items-center mb-3">' +
-                                    '<span class="text-[10px] font-extrabold bg-' + news.color + '-100 text-' + news.color + '-700 px-2.5 py-1 rounded-md uppercase tracking-wide">' + news.groupName + '</span>' +
-                                    '<span class="text-[10px] text-slate-400 font-medium"><i class="fa-brands fa-vk mr-1"></i>' + news.type + '</span>' +
-                                '</div>' +
-                                '<h3 class="font-bold text-sm text-slate-800 mb-1.5">' + news.title + '</h3>' +
-                                '<p class="text-xs text-slate-500 line-clamp-3">' + news.desc + '</p>' +
-                            '</div>' +
-                        '</a>';
-                }
-            }, 800);
         }
 
         function filterPSO() {
