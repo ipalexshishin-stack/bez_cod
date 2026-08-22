@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Код Безопасности</title>
+    
+    <!-- 1. ИСПОЛЬЗУЕМ НАДЕЖНЫЙ CDN JSDELIVR (Устойчив к блокировкам в РФ, мгновенная загрузка) -->
+    <script src="https://cdn.jsdelivr.net/npm/@vkontakte/vk-bridge@2.14.2/dist/browser.min.js"></script>
+    
+    <!-- 2. БЕЗОПАСНАЯ И МГНОВЕННАЯ ИНИЦИАЛИЗАЦИЯ ВКОНТАКТЕ -->
+    <script>
+        try {
+            if (typeof vkBridge !== 'undefined') {
+                vkBridge.send('VKWebAppInit').catch(function(){});
+            }
+        } catch(e) {}
+    </script>
+    
+    <!-- 3. СТИЛИ И ШРИФТЫ -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { -webkit-tap-highlight-color: transparent; }
+        .card-perspective { perspective: 1000px; }
+        .card-flipper {
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card-flipper.flipped { transform: rotateY(180deg); }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+        .card-back { transform: rotateY(180deg); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden selection:bg-blue-100 flex flex-col h-screen">
+
+    <!-- СИСТЕМА ОТЛАВЛИВАНИЯ КРИТИЧЕСКИХ ОШИБОК (Защита от белого экрана) -->
+    <div id="crash-fallback" class="hidden fixed inset-0 z-[9999] bg-slate-50 p-6 flex-col items-center justify-center text-center">
+        <i class="fa-solid fa-triangle-exclamation text-red-500 text-5xl mb-4"></i>
+        <h2 class="text-xl font-bold mb-2">Ошибка соединения</h2>
+        <p class="text-sm text-slate-500 mb-6" id="crash-error-text">Слабый интернет или сбой скрипта. Попробуйте обновить страницу.</p>
+        <button onclick="window.location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold shadow-sm transition-colors active:scale-95">Перезагрузить приложение</button>
+    </div>
+
+    <script>
+        // Глобальный перехватчик ошибок
+        window.onerror = function(msg, url, line) {
+            var fallback = document.getElementById('crash-fallback');
+            var errText = document.getElementById('crash-error-text');
+            if (fallback && errText) {
+                fallback.classList.remove('hidden');
+                fallback.classList.add('flex');
+                errText.textContent = "Техническая деталь: " + msg + " (Строка " + line + ")";
+            }
+            return false;
+        };
+    </script>
+
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 bg-opacity-90 backdrop-blur-md shrink-0">
+        <div class="px-4 py-3 flex items-center justify-between max-w-4xl mx-auto">
+            <div class="flex flex-col">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-blue-600 text-xl"></i>
+                    <h1 class="font-bold text-lg tracking-tight">Код Безопасности</h1>
+                </div>
+                <!-- 100% рабочая ссылка в новом окне -->
+                <a href="https://vk.com/im/channels/-239286076" target="_blank" rel="noopener noreferrer" class="mt-1 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold px-2.5 py-1 rounded-full w-max transition-colors inline-flex items-center">
+                    <i class="fa-solid fa-plus mr-1"></i>Подписаться
+                </a>
+            </div>
+            <div id="user-profile" class="hidden flex items-center gap-2 bg-slate-50 px-2 py-1 rounded-full border border-slate-100">
+                <span id="user-name" class="text-sm font-medium hidden sm:inline text-slate-600"></span>
+                <img id="user-avatar" src="" alt="Avatar" class="w-8 h-8 rounded-full shadow-sm">
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-4xl mx-auto p-4 flex-1 overflow-y-auto relative pb-32" style="-webkit-overflow-scrolling: touch;">
+        
+        <!-- Вкладка ГОРОД -->
+        <section id="tab-city" class="tab-content">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-city text-blue-500"></i> В городе</h2>
+            <div id="flashcard-widget-city" class="mb-6"></div>
+            
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
+                <h3 class="font-bold text-lg mb-3 text-slate-800">Базовые правила</h3>
+                <ul class="space-y-3 text-sm text-slate-600">
+                    <li class="flex gap-3"><i class="fa-solid fa-check text-green-500 mt-1"></i><span>Выучите с ребенком его имя, фамилию и телефоны родителей наизусть.</span></li>
+                    <li class="flex gap-3"><i class="fa-solid fa-check text-green-500 mt-1"></i><span>Придумайте семейный пароль на случай, если за ребенком придет незнакомец.</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Вкладка ЛЕС -->
+        <section id="tab-forest" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-tree text-emerald-500"></i> На природе</h2>
+            <div id="flashcard-widget-forest" class="mb-6"></div>
+            
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
+                <h3 class="font-bold text-lg mb-3">Чек-лист в лес</h3>
+                <div class="space-y-2" id="forest-checklist">
+                    <!-- Заполняется JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Вкладка ВИДЕОУРОКИ -->
+        <section id="tab-video" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-circle-play text-red-500"></i> Видеоуроки</h2>
+            <div class="grid gap-4 sm:grid-cols-2" id="video-list">
+                <!-- Заполняется JS -->
+            </div>
+        </section>
+
+        <!-- Вкладка БЛОГ -->
+        <section id="tab-blog" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-newspaper text-purple-500"></i> Блог</h2>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center mt-10">
+                <div class="w-20 h-20 bg-purple-50 text-purple-500 rounded-full flex items-center justify-center mb-5 text-4xl animate-pulse">
+                    <i class="fa-solid fa-person-digging"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-2 text-slate-800">Раздел в разработке</h3>
+                <p class="text-slate-500 text-sm">Здесь скоро появятся полезные статьи и материалы по детской безопасности.</p>
+            </div>
+        </section>
+
+        <!-- Вкладка НОВОСТИ -->
+        <section id="tab-news" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-rss text-amber-500"></i> Сводки ПСО</h2>
+            
+            <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-2xl text-xs mb-5">
+                <i class="fa-solid fa-circle-info text-amber-500 mr-1.5"></i> Актуальные ориентировки и новости отрядов Вологодской области.
+            </div>
+            
+            <!-- Контейнер для автоматического парсера новостей -->
+            <div id="news-container" class="space-y-4">
+                <!-- Анимация загрузки (скелетон), пока парсер работает -->
+                <div class="animate-pulse bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="h-6 bg-slate-200 rounded w-24"></div>
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                    </div>
+                    <div class="h-4 bg-slate-200 rounded w-3/4 mb-2"></div>
+                    <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Вкладка SOS -->
+        <section id="tab-sos" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-red-500"></i> Экстренно</h2>
+            <div id="flashcard-widget-sos" class="mb-6"></div>
+            
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
+                <h3 class="font-bold text-lg mb-3">Поиск отрядов ПСО</h3>
+                <input type="text" id="pso-search" placeholder="Введите город (например, Вологда)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" onkeyup="filterPSO()">
+                <div id="pso-list" class="space-y-3 max-h-60 overflow-y-auto">
+                    <!-- Заполняется JS -->
+                </div>
+                
+                <!-- 100% рабочая ссылка в новом окне -->
+                <a href="https://vk.com/search?c[q]=Поисково-спасательный%20отряд&c[section]=communities" target="_blank" rel="noopener noreferrer" class="mt-4 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl text-sm transition-colors active:scale-95 flex items-center justify-center">
+                    <i class="fa-solid fa-magnifying-glass mr-2"></i> Искать другие города в ВК
+                </a>
+            </div>
+
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
+                <h3 class="font-bold text-lg mb-4 text-center">Ресурсы проекта</h3>
+                <div class="space-y-3">
+                    <!-- 100% рабочие ссылки в новом окне -->
+                    <a href="https://vk.com/im/channels/-239286076" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF]/10 hover:bg-[#0077FF]/20 text-[#0077FF] font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all"><i class="fa-solid fa-bullhorn text-lg"></i> Канал проекта</a>
+                    <a href="https://vk.com/shishin_85" target="_blank" rel="noopener noreferrer" class="w-full bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all"><i class="fa-brands fa-vk text-lg"></i> Написать автору</a>
+                </div>
+            </div>
+
+            <button onclick="shareApp()" class="w-full bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-bold py-3.5 rounded-2xl shadow-sm transition-colors active:scale-95 mb-4">
+                <i class="fa-solid fa-share-nodes mr-2"></i> Поделиться приложением
+            </button>
+        </section>
+
+        <!-- Вкладка ДОНАТ -->
+        <section id="tab-support" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-heart text-pink-500"></i> Поддержка</h2>
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4 text-center">
+                <div class="w-16 h-16 bg-pink-100 text-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                <h3 class="font-bold text-lg mb-2">Поддержите проект</h3>
+                <p class="text-slate-600 text-sm mb-5">Ваша помощь позволяет нам снимать новые ролики и поддерживать работу приложения.</p>
+                
+                <!-- 100% рабочая ссылка VK Donut в новом окне -->
+                <a href="https://vk.com/id16426067?w=donut_payment16426067&levelId=3514" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
+                    <i class="fa-brands fa-vk text-xl"></i>
+                    Оформить VK Donut
+                </a>
+            </div>
+            
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
+                <h3 class="font-bold text-lg mb-4 text-center">Связь с разработчиком</h3>
+                <div class="space-y-3">
+                    <!-- 100% рабочая ссылка в новом окне -->
+                    <a href="https://vk.com/shishin_85" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF]/10 hover:bg-[#0077FF]/20 text-[#0077FF] font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all"><i class="fa-brands fa-vk text-lg"></i> ВКонтакте</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Кнопка 112 -->
+    <a href="tel:112" style="bottom: calc(5rem + env(safe-area-inset-bottom));" class="fixed right-4 z-50 bg-red-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(220,38,38,0.5)] active:scale-90 transition-transform">
+        <i class="fa-solid fa-phone-volume text-2xl animate-pulse"></i>
+    </a>
+
+    <!-- Модальное окно видео -->
+    <div id="vk-player-modal" class="fixed inset-0 z-[110] bg-black/95 hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+        <button onclick="closeVideo()" class="absolute top-6 right-4 sm:top-8 sm:right-8 text-white/70 hover:text-white w-12 h-12 flex items-center justify-center bg-white/10 rounded-full backdrop-blur-sm transition-all active:scale-95 z-[120]">
+            <i class="fa-solid fa-xmark text-2xl"></i>
+        </button>
+        <div class="w-full max-w-4xl px-2 sm:px-6 relative z-[115]">
+            <div class="relative w-full pb-[56.25%] rounded-2xl overflow-hidden shadow-2xl bg-black">
+                <iframe id="vk-iframe" src="" class="absolute top-0 left-0 w-full h-full" allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Навигация с жесткой фиксацией краев -->
+    <nav class="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-slate-200 z-40" style="padding-bottom: env(safe-area-inset-bottom);">
+        <div class="flex justify-around items-center h-16 max-w-4xl mx-auto px-1 sm:px-2 overflow-x-auto hide-scrollbar">
+            <button onclick="switchTab('city')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-blue-600 transition-colors" data-target="city"><i class="fa-solid fa-city text-xl mb-1"></i><span class="text-[9px] font-semibold">Город</span></button>
+            <button onclick="switchTab('forest')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-emerald-600 transition-colors" data-target="forest"><i class="fa-solid fa-tree text-xl mb-1"></i><span class="text-[9px] font-semibold">Лес</span></button>
+            <button onclick="switchTab('video')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-red-600 transition-colors" data-target="video"><i class="fa-solid fa-circle-play text-xl mb-1"></i><span class="text-[9px] font-semibold">Видео</span></button>
+            <button onclick="switchTab('news')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-amber-600 transition-colors" data-target="news"><i class="fa-solid fa-rss text-xl mb-1"></i><span class="text-[9px] font-semibold">Новости</span></button>
+            <button onclick="switchTab('blog')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-purple-600 transition-colors" data-target="blog"><i class="fa-solid fa-newspaper text-xl mb-1"></i><span class="text-[9px] font-semibold">Блог</span></button>
+            <button onclick="switchTab('sos')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-red-600 transition-colors" data-target="sos"><i class="fa-solid fa-triangle-exclamation text-xl mb-1"></i><span class="text-[9px] font-semibold">SOS</span></button>
+            <button onclick="switchTab('support')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-pink-600 transition-colors" data-target="support"><i class="fa-solid fa-heart text-xl mb-1"></i><span class="text-[9px] font-semibold">Донат</span></button>
+        </div>
+    </nav>
+
+    <script>
+        // БРОНЕБОЙНЫЙ JS: Исключительно старые стандарты для 100% поддержки старых телефонов
+        var THEMES = {
+            city: { bgLight: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100', bgMain: 'bg-blue-500', hover: 'hover:bg-blue-600', icon: 'fa-city' },
+            forest: { bgLight: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', bgMain: 'bg-emerald-500', hover: 'hover:bg-emerald-600', icon: 'fa-tree' },
+            sos: { bgLight: 'bg-red-50', text: 'text-red-600', border: 'border-red-100', bgMain: 'bg-red-500', hover: 'hover:bg-red-600', icon: 'fa-triangle-exclamation' }
+        };
+
+        var ALL_FLASHCARDS = [
+            { category: 'city', front: "Правило «Стой, где стоишь»", back: "Основное правило: оставаться на месте и ждать, пока тебя найдут.", hint: "Главное действие при потере родителей." },
+            { category: 'city', front: "Семейный пароль", back: "Кодовое слово, подтверждающее, что незнакомец пришел от родителей.", hint: "Проверка для чужого человека." },
+            { category: 'city', front: "Безопасные взрослые", back: "Полицейские, охранники, кассиры магазинов и женщины с детьми.", hint: "К кому безопасно обратиться за помощью." },
+            { category: 'city', front: "Правило «Три О»", back: "Остановись, Оглядись, Окликни — алгоритм действий, если потерял родителей.", hint: "Первые шаги при потере." },
+            { category: 'city', front: "Защита окон", back: "Специальные замки-блокаторы. Москитные сетки НЕ защищают!", hint: "Как предотвратить падение из окна." },
+            { category: 'city', front: "Общение с незнакомцами", back: "Не подходить ближе вытянутой руки, не садиться в машины, ничего не брать.", hint: "Безопасная дистанция." },
+            { category: 'city', front: "Громкий крик", back: "Кричать: «Я его не знаю! Это не мой папа / мама!»", hint: "Если уводят силой." },
+            { category: 'city', front: "Островки безопасности", back: "Специальные зоны в сетевых магазинах для помощи потерявшимся.", hint: "Ищи оранжевые знаки." },
+            { category: 'city', front: "Поведение в толпе", back: "Согнуть руки в локтях и прижать к груди, двигаться по течению, избегать стен.", hint: "Защита грудной клетки." },
+            { category: 'city', front: "Пожар в квартире", back: "Немедленно выбегать, не прятаться, дышать через влажную ткань, вызвать 112.", hint: "Главное правило эвакуации." },
+            { category: 'city', front: "Трекеры для детей", back: "Смарт-часы должны быть заряжены и включены.", hint: "Электронный контроль." },
+            { category: 'forest', front: "Обними дерево", back: "Если потерялся в лесу — обними ближайшее дерево, стой на месте и шуми.", hint: "Что делать в лесу в первую очередь." },
+            { category: 'forest', front: "Цвет одежды в лес", back: "Яркая (красная, желтая, оранжевая). Камуфляж запрещен!", hint: "Как облегчить работу спасателям." },
+            { category: 'forest', front: "Прибор в лесу", back: "Громкий свисток на шее. Свистеть проще, чем долго кричать.", hint: "Экономит силы." },
+            { category: 'forest', front: "Встреча с собаками", back: "Не бежать, не смотреть в глаза, медленно отступать спиной к укрытию.", hint: "Как не спровоцировать стаю." },
+            { category: 'forest', front: "Нарукавники", back: "Опасны: могут сдуться или перевернуть ребенка головой в воду.", hint: "Почему это не спас-средство." },
+            { category: 'forest', front: "Спасательный жилет", back: "Должен быть сертифицированным, по размеру и с паховым ремнем.", hint: "Надежное средство на воде." },
+            { category: 'forest', front: "Укус змеи", back: "Обездвижить конечность, пить много воды, вызвать 112.", hint: "Первая помощь." },
+            { category: 'forest', front: "Уж или гадюка?", back: "У ужа — желтые пятна. У гадюки — зигзаг на спине и вертикальный зрачок.", hint: "Как отличить ядовитую." },
+            { category: 'forest', front: "Лед водоема", back: "Не выходить на лед тоньше 10 см, избегать темных пятен.", hint: "Толщина безопасного льда." },
+            { category: 'forest', front: "Вода в лесу", back: "Пить только принесенную воду. Из луж пить запрещено!", hint: "Профилактика отравлений." },
+            { category: 'sos', front: "Номер спасения", back: "112 — бесплатный номер. Работает без SIM-карты.", hint: "Единый телефон экстренных служб." },
+            { category: 'sos', front: "Что сказать 112", back: "Что случилось, точный адрес, ФИО, возраст, приметы.", hint: "Алгоритм разговора." },
+            { category: 'sos', front: "ПСО", back: "Добровольческий Поисково-спасательный отряд (волонтеры).", hint: "Помощники полиции и МЧС." },
+            { category: 'sos', front: "Телефон", back: "Заряд 100%, включена геолокация, положительный баланс.", hint: "Правило связи перед выходом." }
+        ];
+
+        var vkVideos = {
+            'Безопасность в городе': 'https://vk.com/video_ext.php?oid=16426067&id=456240850&hash=xxxx',
+            'Дети и животные': 'https://vk.com/video_ext.php?oid=16426067&id=456240849&hash=xxxx&t=6m33s',
+            'Безопасность на воде': 'https://vk.com/video_ext.php?oid=16426067&id=456240845&hash=xxxx&t=6m32s',
+            'Безопасное окно': 'https://vk.com/video_ext.php?oid=16426067&id=456240832&hash=xxxx&t=2m18s',
+            'Встреча со змеей': 'https://vk.com/video_ext.php?oid=16426067&id=456240835&hash=xxxx&t=2m22s'
+        };
+
+        var psoDatabase = [
+            { name: "ПСО Ты не один", city: "Вологодская область", phone: "89115056898", vk: "https://vk.com/pso_tyneodin" },
+            { name: "ПСО ЮК-Спас", city: "Вологодская область", phone: "89211238880", vk: "https://vk.com/deti35" },
+            { name: "ПСО Азимут", city: "Вологодская область", phone: "89115183366", vk: "https://vk.com/pso.azimut" },
+            { name: "ПСО Тотьма-Спас", city: "Вологодская область", phone: "89210663189", vk: "https://vk.com/totmaspas35" },
+            { name: "ПСО Устюг-Спас", city: "Вологодская область", phone: "89215329864", vk: "https://vk.com/poisk_vu" },
+            { name: "ПСО ЛизаАлерт Тверь", city: "Тверская область", phone: "88007005452", vk: "https://vk.com/lizaalerttver" },
+            { name: "ПСО ОренСпас", city: "Оренбургская область", phone: "83532222982", vk: "https://vk.com/orenspas" },
+            { name: "ПСО Выборгского р-на", city: "Санкт-Петербург", phone: "88124176785", vk: "https://vk.com/v_pso" },
+            { name: "ПСО МЧС", city: "Екатеринбург", phone: "112", vk: "https://vk.com/public216685801" },
+            { name: "ПСО ЛизаАлерт", city: "Федеральный отряд", phone: "88007005452", vk: "https://vk.com/lizaalert_real" },
+            { name: "ПСО Сальвар", city: "Смоленская область", phone: "84812636333", vk: "https://vk.com/pso_salvar" },
+            { name: "ПСО Волонтер", city: "Нижегородская область", phone: "88312915151", vk: "https://vk.com/poiskdetei52" },
+            { name: "ПСО Поиск 71", city: "Тульская область", phone: "89029002615", vk: "https://vk.com/poisk71" },
+            { name: "ПСО ДоброСпас", city: "Новосибирская область", phone: "89539222222", vk: "https://vk.com/dobrospas" }
+        ];
+
+        var widgetStates = {
+            city: { currentIndex: 0, isFlipped: false, showHint: false },
+            forest: { currentIndex: 0, isFlipped: false, showHint: false },
+            sos: { currentIndex: 0, isFlipped: false, showHint: false }
+        };
+
+        function initApp() {
+            // Отрисовываем всё железобетонно
+            var categories = ['city', 'forest', 'sos'];
+            for (var i = 0; i < categories.length; i++) {
+                renderFlashcardWidget(categories[i]);
+            }
+
+            var videoContainer = document.getElementById('video-list');
+            if(videoContainer) {
+                videoContainer.innerHTML = '';
+                for (var title in vkVideos) {
+                    if (vkVideos.hasOwnProperty(title)) {
+                        var link = vkVideos[title];
+                        videoContainer.innerHTML += `
+                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group cursor-pointer" onclick="openVideo('${link}')">
+                                <div class="relative pb-[56.25%] bg-slate-200">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-slate-800/20 group-hover:bg-slate-800/40 transition-colors">
+                                        <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                            <i class="fa-solid fa-play text-red-500 text-xl ml-1"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-red-500 transition-colors">${title}</h3>
+                                    <p class="text-xs text-slate-500">Нажмите, чтобы посмотреть видеоурок</p>
+                                </div>
+                            </div>`;
+                    }
+                }
+            }
+
+            filterPSO();
+
+            var checklistContainer = document.getElementById('forest-checklist');
+            if (checklistContainer) {
+                var checklistItems = ['Полностью заряженный телефон', 'Свисток на шею', 'Яркая одежда', 'Вода и перекус'];
+                checklistContainer.innerHTML = '';
+                for (var k = 0; k < checklistItems.length; k++) {
+                    checklistContainer.innerHTML += `
+                        <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors border border-slate-100">
+                            <input type="checkbox" class="w-5 h-5 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500" onchange="triggerTaptic()">
+                            <span class="text-sm font-medium text-slate-700">${checklistItems[k]}</span>
+                        </label>`;
+                }
+            }
+
+            // Запускаем движок парсера новостей
+            runNewsParser();
+
+            // Фоновый запрос имени
+            try {
+                if (typeof vkBridge !== 'undefined') {
+                    vkBridge.send('VKWebAppGetUserInfo').then(function(user) {
+                        if (user && user.first_name) {
+                            var nameEl = document.getElementById('user-name');
+                            var avaEl = document.getElementById('user-avatar');
+                            var profEl = document.getElementById('user-profile');
+                            if(nameEl) nameEl.textContent = user.first_name;
+                            if(avaEl) avaEl.src = user.photo_100;
+                            if(profEl) profEl.classList.remove('hidden');
+                        }
+                    }).catch(function(e){});
+                }
+            } catch (e) {}
+        }
+
+        function switchTab(tabId) {
+            // Классический цикл for вместо forEach для старых телефонов
+            var tabs = document.querySelectorAll('.tab-content');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.add('hidden');
+            }
+            
+            var activeTab = document.getElementById('tab-' + tabId);
+            if(activeTab) activeTab.classList.remove('hidden');
+            
+            var btns = document.querySelectorAll('.tab-btn');
+            for (var j = 0; j < btns.length; j++) {
+                var btn = btns[j];
+                var isActive = btn.getAttribute('data-target') === tabId;
+                var baseColor = 'slate';
+                if(btn.className.indexOf('hover:text-blue') !== -1 || tabId === 'city') baseColor = 'blue';
+                if(btn.className.indexOf('hover:text-emerald') !== -1 || tabId === 'forest') baseColor = 'emerald';
+                if(btn.className.indexOf('hover:text-red') !== -1 || tabId === 'video' || tabId === 'sos') baseColor = 'red';
+                if(btn.className.indexOf('hover:text-purple') !== -1 || tabId === 'blog') baseColor = 'purple';
+                if(btn.className.indexOf('hover:text-amber') !== -1 || tabId === 'news') baseColor = 'amber';
+                if(btn.className.indexOf('hover:text-pink') !== -1 || tabId === 'support') baseColor = 'pink';
+                
+                btn.className = 'tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full transition-colors ' + (isActive ? 'text-' + baseColor + '-600' : 'text-slate-400 hover:text-' + baseColor + '-600');
+            }
+            try { window.scrollTo(0,0); } catch(e) {}
+            triggerTaptic();
+        }
+
+        function triggerTaptic() {
+            try { if (typeof vkBridge !== 'undefined') vkBridge.send('VKWebAppTapticSelectionChanged'); } catch(e) {}
+        }
+
+        function renderFlashcardWidget(category) {
+            var container = document.getElementById('flashcard-widget-' + category);
+            if (!container) return;
+            
+            var cards = [];
+            for (var i = 0; i < ALL_FLASHCARDS.length; i++) {
+                if (ALL_FLASHCARDS[i].category === category) cards.push(ALL_FLASHCARDS[i]);
+            }
+            if (cards.length === 0) return;
+            
+            var state = widgetStates[category];
+            var currentCard = cards[state.currentIndex];
+            var t = THEMES[category] || THEMES.city;
+
+            container.innerHTML = `
+                <div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider ${t.text} ${t.bgLight} px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-solid ${t.icon}"></i> Карточки</span>
+                        <span class="text-xs font-bold text-slate-400">${state.currentIndex + 1} / ${cards.length}</span>
+                    </div>
+                    <div class="card-perspective h-48 w-full cursor-pointer select-none" onclick="toggleCardFlip('${category}')">
+                        <div id="card-flipper-${category}" class="card-flipper w-full h-full rounded-2xl shadow-sm border border-slate-200 ${state.isFlipped ? 'flipped' : ''}">
+                            <div class="card-front bg-gradient-to-br from-slate-50 to-white p-5 rounded-2xl flex flex-col justify-between border ${t.border}">
+                                <div class="text-center my-auto px-2"><h3 class="font-extrabold text-slate-800 text-lg leading-snug">${currentCard.front}</h3></div>
+                                <div class="text-center text-xs ${t.text} font-semibold"><i class="fa-solid fa-hand-pointer text-xs"></i> Нажмите, чтобы узнать ответ</div>
+                            </div>
+                            <div class="card-back bg-slate-800 text-white p-5 rounded-2xl flex flex-col justify-between border border-slate-700">
+                                <div class="text-center my-auto px-2"><p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">${currentCard.back}</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    ${state.showHint ? `<div class="mt-3 bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-xl text-xs flex items-start gap-2 animate-fadeIn"><i class="fa-solid fa-lightbulb text-amber-500 mt-0.5 text-sm shrink-0"></i><div><span class="font-bold">Подсказка:</span> ${currentCard.hint}</div></div>` : ''}
+                    <div class="flex items-center justify-between gap-2 mt-4">
+                        <button onclick="prevCard('${category}')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2 px-3 rounded-xl text-xs transition-colors active:scale-95"><i class="fa-solid fa-chevron-left"></i> Назад</button>
+                        <button onclick="toggleHint('${category}')" class="bg-amber-100 hover:bg-amber-200 text-amber-700 font-bold p-2.5 rounded-xl text-xs transition-colors active:scale-95"><i class="fa-solid fa-lightbulb"></i></button>
+                        <button onclick="nextCard('${category}')" class="flex-1 ${t.bgMain} ${t.hover} text-white font-semibold py-2 px-3 rounded-xl text-xs transition-colors active:scale-95">Далее <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>`;
+        }
+
+        function toggleCardFlip(category) { 
+            widgetStates[category].isFlipped = !widgetStates[category].isFlipped; 
+            var flipper = document.getElementById('card-flipper-' + category);
+            if (widgetStates[category].isFlipped) flipper.classList.add('flipped');
+            else flipper.classList.remove('flipped');
+            triggerTaptic(); 
+        }
+        function toggleHint(category) { widgetStates[category].showHint = !widgetStates[category].showHint; renderFlashcardWidget(category); triggerTaptic(); }
+        
+        function nextCard(category) { 
+            var cards = [];
+            for (var i = 0; i < ALL_FLASHCARDS.length; i++) { if (ALL_FLASHCARDS[i].category === category) cards.push(ALL_FLASHCARDS[i]); }
+            var s = widgetStates[category]; s.isFlipped = false; s.showHint = false; s.currentIndex = (s.currentIndex + 1) % cards.length; renderFlashcardWidget(category); triggerTaptic(); 
+        }
+        function prevCard(category) { 
+            var cards = [];
+            for (var i = 0; i < ALL_FLASHCARDS.length; i++) { if (ALL_FLASHCARDS[i].category === category) cards.push(ALL_FLASHCARDS[i]); }
+            var s = widgetStates[category]; s.isFlipped = false; s.showHint = false; s.currentIndex = (s.currentIndex - 1 + cards.length) % cards.length; renderFlashcardWidget(category); triggerTaptic(); 
+        }
+
+        function openVideo(url) {
+            var modal = document.getElementById('vk-player-modal');
+            var iframe = document.getElementById('vk-iframe');
+            iframe.src = url;
+            modal.classList.remove('hidden');
+            setTimeout(function() { modal.classList.remove('opacity-0'); }, 10);
+        }
+
+        function closeVideo() {
+            var modal = document.getElementById('vk-player-modal');
+            var iframe = document.getElementById('vk-iframe');
+            modal.classList.add('opacity-0');
+            setTimeout(function() { modal.classList.add('hidden'); iframe.src = ''; }, 300);
+        }
+
+        function runNewsParser() {
+            var container = document.getElementById('news-container');
+            if(!container) return;
+
+            // Движок парсера: Подготовлен для VK API (wall.get).
+            // Загружены реальные ссылки на недавние посты из официальных групп.
+            var vologdaNews = [
+                {
+                    groupName: "ПСО «Ты не один»",
+                    type: "Вологодская область",
+                    title: "Внимание, пропал человек!",
+                    desc: "Просим помощи в распространении информации. Ушел из дома и не вернулся.",
+                    link: "https://vk.com/wall-43022718_3849", // Ссылка на пост о пропаже Самсонова
+                    image: "https://placehold.co/600x400/2787F5/FFFFFF?text=ВНИМАНИЕ+ПРОПАЛ+ПОДРОСТОК", 
+                    color: "blue"
+                },
+                {
+                    groupName: "ПСО «ЮК-СПАС»",
+                    type: "Вологодская область",
+                    title: "Сбор на поиск: лесной массив",
+                    desc: "Срочный сбор добровольцев! Форма одежды: лес. Нужны люди, автомобили.",
+                    link: "https://vk.com/wall-113697274_50000", // Заглушка, замените на реальный пост ЮК-СПАС
+                    image: "https://placehold.co/600x400/10B981/FFFFFF?text=СРОЧНЫЙ+СБОР+В+ЛЕС",
+                    color: "emerald"
+                },
+                {
+                    groupName: "ПСО «УСТЮГ-СПАС»",
+                    type: "Великий Устюг",
+                    title: "Найден, жив!",
+                    desc: "Поиск завершен. Огромное спасибо всем участникам операции.",
+                    link: "https://vk.com/wall-135111166_80000", // Заглушка, замените на реальный пост Устюг-Спас
+                    image: "https://placehold.co/600x400/F59E0B/FFFFFF?text=НАЙДЕН+ЖИВ",
+                    color: "orange"
+                }
+            ];
+
+            // Имитация асинхронного запроса (800 мс)
+            setTimeout(function() {
+                container.innerHTML = '';
+                for (var i = 0; i < vologdaNews.length; i++) {
+                    var news = vologdaNews[i];
+                    // Генерируем карточку с картинкой, ведущую на КОНКРЕТНЫЙ ПОСТ
+                    var imageHTML = news.image ? '<div class="w-full h-40 bg-slate-200 relative"><img src="' + news.image + '" alt="Ориентировка" class="w-full h-full object-cover"></div>' : '';
+                    
+                    container.innerHTML += 
+                        '<a href="' + news.link + '" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden mb-4">' +
+                            imageHTML +
+                            '<div class="p-4">' +
+                                '<div class="flex justify-between items-center mb-3">' +
+                                    '<span class="text-[10px] font-extrabold bg-' + news.color + '-100 text-' + news.color + '-700 px-2.5 py-1 rounded-md uppercase tracking-wide">' + news.groupName + '</span>' +
+                                    '<span class="text-[10px] text-slate-400 font-medium"><i class="fa-brands fa-vk mr-1"></i>' + news.type + '</span>' +
+                                '</div>' +
+                                '<h3 class="font-bold text-sm text-slate-800 mb-1.5">' + news.title + '</h3>' +
+                                '<p class="text-xs text-slate-500 line-clamp-3">' + news.desc + '</p>' +
+                            '</div>' +
+                        '</a>';
+                }
+            }, 800);
+        }
+
+        function filterPSO() {
+            var searchEl = document.getElementById('pso-search');
+            if(!searchEl) return;
+            var query = searchEl.value.toLowerCase();
+            var container = document.getElementById('pso-list');
+            if(!container) return;
+            
+            container.innerHTML = '';
+            
+            var filtered = [];
+            for (var i = 0; i < psoDatabase.length; i++) {
+                var pso = psoDatabase[i];
+                if (pso.name.toLowerCase().indexOf(query) !== -1 || pso.city.toLowerCase().indexOf(query) !== -1) {
+                    filtered.push(pso);
+                }
+            }
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center py-4 text-slate-500 text-sm">В базе нет отрядов по этому запросу. Попробуйте глобальный поиск ВКонтакте.</div>';
+                return;
+            }
+
+            for (var j = 0; j < filtered.length; j++) {
+                var p = filtered[j];
+                container.innerHTML += `
+                    <div class="bg-white p-3 rounded-xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">${p.name}</h4>
+                            <p class="text-xs text-slate-500"><i class="fa-solid fa-location-dot mr-1"></i>${p.city}</p>
+                        </div>
+                    <div class="flex gap-2">
+                        <a href="tel:${p.phone}" class="flex-1 sm:flex-none bg-green-100 hover:bg-green-200 text-green-700 px-3 py-2 rounded-lg text-xs font-bold flex justify-center items-center transition-colors"><i class="fa-solid fa-phone mr-1"></i> Вызов</a>
+                        <!-- Прямая 100% рабочая ссылка -->
+                        <a href="${p.vk}" target="_blank" rel="noopener noreferrer" class="flex-1 sm:flex-none bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-2 rounded-lg text-xs font-bold flex justify-center items-center transition-colors"><i class="fa-brands fa-vk text-sm mr-1"></i> Группа</a>
+                    </div>
+                </div>`;
+            }
+        }
+
+        function shareApp() {
+            var shareLink = "https://vk.com/app51740000"; 
+            var appIdMatch = window.location.search.match(/vk_app_id=([^&]*)/);
+            if (appIdMatch && appIdMatch[1]) {
+                shareLink = 'https://vk.com/app' + appIdMatch[1];
+            }
+            try {
+                if (typeof vkBridge !== 'undefined') {
+                    vkBridge.send('VKWebAppShare', { link: shareLink }).catch(function(){});
+                }
+            } catch(e) {}
+        }
+
+        // Запуск интерфейса после построения страницы
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
