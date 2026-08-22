@@ -103,16 +103,16 @@
             </div>
         </section>
 
-        <!-- Вкладка ЛЕС -->
-        <section id="tab-forest" class="tab-content hidden">
-            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-tree text-emerald-500"></i> На природе</h2>
-            <div id="flashcard-widget-forest" class="mb-6"></div>
+        <!-- Вкладка НОВОСТИ -->
+        <section id="tab-news" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-rss text-orange-500"></i> Новости</h2>
             
-            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
-                <h3 class="font-bold text-lg mb-3">Чек-лист в лес</h3>
-                <div class="space-y-2" id="forest-checklist">
-                    <!-- Заполняется JS -->
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
+                <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-person-digging text-2xl"></i>
                 </div>
+                <h3 class="font-bold text-lg text-slate-800 mb-2">Раздел в разработке</h3>
+                <p class="text-sm text-slate-500 max-w-[250px] mx-auto">Скоро здесь появится умная лента актуальных новостей о детской безопасности.</p>
             </div>
         </section>
 
@@ -195,18 +195,6 @@
             </div>
         </section>
 
-        <!-- Вкладка НОВОСТИ -->
-        <section id="tab-news" class="tab-content hidden">
-            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-rss text-amber-500"></i> Новости</h2>
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center mt-10">
-                <div class="w-20 h-20 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mb-5 text-4xl animate-pulse">
-                    <i class="fa-solid fa-person-digging"></i>
-                </div>
-                <h3 class="font-bold text-xl mb-2 text-slate-800">Раздел в разработке</h3>
-                <p class="text-slate-500 text-sm">Здесь скоро появится лента актуальных новостей поиска.</p>
-            </div>
-        </section>
-
         <!-- Вкладка SOS -->
         <section id="tab-sos" class="tab-content hidden">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-red-500"></i> Экстренно</h2>
@@ -247,18 +235,30 @@
                 <h3 class="font-bold text-lg mb-2">Поддержите проект</h3>
                 <p class="text-slate-600 text-sm mb-5">Ваша помощь позволяет нам снимать новые ролики и поддерживать работу приложения.</p>
                 
-                <!-- 100% надежная ссылка на VK Donut -->
-                <a href="https://vk.com/id16426067?w=donut_payment16426067&levelId=3514" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
-                    <i class="fa-brands fa-vk text-xl"></i>
-                    Оформить VK Donut
-                </a>
+                <div class="space-y-3">
+                    <!-- 100% надежная ссылка на VK Donut -->
+                    <a href="https://vk.com/id16426067?w=donut_payment16426067&levelId=3514" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
+                        <i class="fa-brands fa-vk text-xl"></i>
+                        Оформить VK Donut
+                    </a>
+                    
+                    <!-- Ссылка на маркет ПСО -->
+                    <a href="https://vk.com/market-32585861" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-shop text-lg"></i>
+                        Магазин ПСО "Ты не один"
+                    </a>
+                </div>
             </div>
             
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
-                <h3 class="font-bold text-lg mb-4 text-center">Связь с разработчиком</h3>
+                <h3 class="font-bold text-lg mb-4 text-center">Полезные ресурсы</h3>
                 <div class="space-y-3">
+                    <!-- Ссылка на HR Пульс (Max) -->
+                    <a href="https://max.ru/channel_hrpuls35" target="_blank" rel="noopener noreferrer" class="w-full bg-[#1A202C] hover:bg-[#2D3748] text-white font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all">
+                        <i class="fa-solid fa-briefcase text-lg"></i> Поиск работы (HR Пульс)
+                    </a>
                     <!-- 100% рабочая ссылка в новом окне без JS -->
-                    <a href="https://vk.com/shishin_85" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF]/10 hover:bg-[#0077FF]/20 text-[#0077FF] font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all"><i class="fa-brands fa-vk text-lg"></i> ВКонтакте</a>
+                    <a href="https://vk.com/shishin_85" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF]/10 hover:bg-[#0077FF]/20 text-[#0077FF] font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all"><i class="fa-brands fa-vk text-lg"></i> Написать автору ВКонтакте</a>
                 </div>
             </div>
         </section>
@@ -287,7 +287,7 @@
             <button onclick="switchTab('city')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-blue-600 transition-colors" data-target="city"><i class="fa-solid fa-city text-xl mb-1"></i><span class="text-[9px] font-semibold">Город</span></button>
             <button onclick="switchTab('forest')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-emerald-600 transition-colors" data-target="forest"><i class="fa-solid fa-tree text-xl mb-1"></i><span class="text-[9px] font-semibold">Лес</span></button>
             <button onclick="switchTab('video')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-red-600 transition-colors" data-target="video"><i class="fa-solid fa-circle-play text-xl mb-1"></i><span class="text-[9px] font-semibold">Видео</span></button>
-            <button onclick="switchTab('news')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-amber-600 transition-colors" data-target="news"><i class="fa-solid fa-rss text-xl mb-1"></i><span class="text-[9px] font-semibold">Новости</span></button>
+            <button onclick="switchTab('news')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-orange-600 transition-colors" data-target="news"><i class="fa-solid fa-rss text-xl mb-1"></i><span class="text-[9px] font-semibold">Новости</span></button>
             <button onclick="switchTab('blog')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-purple-600 transition-colors" data-target="blog"><i class="fa-solid fa-newspaper text-xl mb-1"></i><span class="text-[9px] font-semibold">Блог</span></button>
             <button onclick="switchTab('sos')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-red-600 transition-colors" data-target="sos"><i class="fa-solid fa-triangle-exclamation text-xl mb-1"></i><span class="text-[9px] font-semibold">SOS</span></button>
             <button onclick="switchTab('support')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-pink-600 transition-colors" data-target="support"><i class="fa-solid fa-heart text-xl mb-1"></i><span class="text-[9px] font-semibold">Донат</span></button>
@@ -446,7 +446,7 @@
                 if(btn.className.indexOf('hover:text-blue') !== -1 || tabId === 'city') baseColor = 'blue';
                 if(btn.className.indexOf('hover:text-emerald') !== -1 || tabId === 'forest') baseColor = 'emerald';
                 if(btn.className.indexOf('hover:text-red') !== -1 || tabId === 'video' || tabId === 'sos') baseColor = 'red';
-                if(btn.className.indexOf('hover:text-amber') !== -1 || tabId === 'news') baseColor = 'amber';
+                if(btn.className.indexOf('hover:text-orange') !== -1 || tabId === 'news') baseColor = 'orange';
                 if(btn.className.indexOf('hover:text-purple') !== -1 || tabId === 'blog') baseColor = 'purple';
                 if(btn.className.indexOf('hover:text-pink') !== -1 || tabId === 'support') baseColor = 'pink';
                 
