@@ -1,12 +1,854 @@
-if(btn) { btn.disabled = true; btn.classList.add('opacity-50'); }
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Код Безопасности</title>
+    
+    <!-- Устраняем белый экран -->
+    <script src="https://cdn.jsdelivr.net/npm/@vkontakte/vk-bridge@2.14.2/dist/browser.min.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        try {
+            if (typeof vkBridge !== 'undefined') {
+                vkBridge.send('VKWebAppInit').catch(function(){});
+            }
+        } catch(e) {}
+    </script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { -webkit-tap-highlight-color: transparent; }
+        .card-perspective { perspective: 1000px; }
+        .card-flipper {
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card-flipper.flipped { transform: rotateY(180deg); }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+        .card-back { transform: rotateY(180deg); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .typing-indicator span {
+            animation: blink 1.4s infinite both;
+            height: 6px; width: 6px; background: #8b5cf6;
+            border-radius: 50%; display: inline-block; margin: 0 1px;
+        }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
+
+        /* Стили для печати (PDF) */
+        @media print {
+            body * { visibility: hidden; }
+            #printable-pdf-content, #printable-pdf-content * { visibility: visible; }
+            #printable-pdf-content { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; color: black !important; background: white !important; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden selection:bg-blue-100 flex flex-col h-screen">
+
+    <div id="crash-fallback" class="hidden fixed inset-0 z-[9999] bg-slate-50 p-6 flex-col items-center justify-center text-center">
+        <i class="fa-solid fa-triangle-exclamation text-red-500 text-5xl mb-4"></i>
+        <h2 class="text-xl font-bold mb-2">Ошибка соединения</h2>
+        <p class="text-sm text-slate-500 mb-6" id="crash-error-text">Слабый интернет или сбой скрипта.</p>
+        <button onclick="window.location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold shadow-sm transition-colors active:scale-95">Перезагрузить</button>
+    </div>
+
+    <script>
+        window.onerror = function(msg, url, line) {
+            var fallback = document.getElementById('crash-fallback');
+            var errText = document.getElementById('crash-error-text');
+            if (fallback && errText) {
+                fallback.classList.remove('hidden');
+                fallback.classList.add('flex');
+                errText.textContent = "Деталь: " + msg + " (" + line + ")";
+            }
+            return false;
+        };
+    </script>
+
+    <!-- Шапка с профилем и кнопкой Поделиться -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 bg-opacity-90 backdrop-blur-md shrink-0">
+        <div class="px-4 py-3 flex items-center justify-between max-w-4xl mx-auto w-full">
+            <div class="flex gap-3 items-center">
+                <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center shrink-0 border border-blue-100 overflow-hidden relative shadow-sm">
+                    <i id="default-avatar-icon" class="fa-solid fa-shield-halved text-blue-500 text-lg"></i>
+                    <img id="user-avatar-img" src="" alt="Профиль" class="w-full h-full object-cover hidden absolute inset-0 z-10">
+                </div>
+                <div class="flex flex-col justify-center">
+                    <h1 class="font-bold text-base tracking-tight leading-tight text-slate-800">Код Безопасности</h1>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <span id="user-name-display" class="text-[10px] text-slate-500 font-medium truncate max-w-[80px] sm:max-w-[120px]">Гость</span>
+                        <span class="text-slate-300 text-[10px]">•</span>
+                        <a href="https://vk.ru/im/channels/-239286076" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-700 text-[10px] font-bold transition-colors inline-flex items-center">
+                            <i class="fa-solid fa-plus mr-0.5"></i>Подписка
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2 shrink-0">
+                <button onclick="shareApp()" class="flex items-center justify-center w-8 h-8 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full transition-colors active:scale-95" title="Поделиться">
+                    <i class="fa-solid fa-share-nodes text-sm"></i>
+                </button>
+                <a href="https://vk.com/id16426067?w=donut_payment16426067&levelId=3514" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-8 h-8 sm:w-auto sm:px-3 sm:py-1.5 bg-orange-50 hover:bg-orange-100 border border-orange-100 text-orange-500 rounded-full transition-colors active:scale-95">
+                    <i class="fa-solid fa-star text-xs"></i><span class="hidden sm:inline sm:ml-1.5 text-xs font-bold">VK Donut</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-4xl mx-auto p-4 flex-1 overflow-y-auto relative pb-32" style="-webkit-overflow-scrolling: touch;">
+        
+        <!-- Вкладка: Город -->
+        <section id="tab-city" class="tab-content">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-city text-blue-500"></i> В городе</h2>
+            
+            <button onclick="openPdfMaterial('city')" class="w-full mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 rounded-2xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-file-pdf text-xl"></i> Скачать Памятку (PDF)
+            </button>
+
+            <div id="flashcard-widget-city" class="mb-6"></div>
+            
+            <!-- Интерактивный тест -->
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
+                <h3 class="font-bold text-lg mb-3 flex items-center gap-2 text-slate-800">
+                    <i class="fa-solid fa-gamepad text-blue-500"></i> Мини-игра: Проверь себя
+                </h3>
+                <div id="quiz-container-city" class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+                    <!-- Рендерится через JS -->
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
+                <h3 class="font-bold text-lg mb-3 text-slate-800">Базовые правила</h3>
+                <ul class="space-y-3 text-sm text-slate-600">
+                    <li class="flex gap-3"><i class="fa-solid fa-check text-green-500 mt-1"></i><span>Выучите с ребенком его имя, фамилию и телефоны родителей наизусть.</span></li>
+                    <li class="flex gap-3"><i class="fa-solid fa-check text-green-500 mt-1"></i><span>Придумайте семейный пароль на случай, если за ребенком придет незнакомец.</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Вкладка: Лес -->
+        <section id="tab-forest" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-tree text-emerald-500"></i> В лесу</h2>
+            
+            <button onclick="openPdfMaterial('forest')" class="w-full mb-6 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold py-3.5 rounded-2xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-file-pdf text-xl"></i> Памятка грибника (PDF)
+            </button>
+
+            <div id="flashcard-widget-forest" class="mb-6"></div>
+            
+            <!-- Интерактивный тест -->
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
+                <h3 class="font-bold text-lg mb-3 flex items-center gap-2 text-slate-800">
+                    <i class="fa-solid fa-compass text-emerald-500"></i> Игра: Выживание в лесу
+                </h3>
+                <div id="quiz-container-forest" class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4">
+                    <!-- Рендерится через JS -->
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
+                <h3 class="font-bold text-lg mb-3 text-slate-800">Чек-лист перед выходом</h3>
+                <div id="forest-checklist" class="space-y-3">
+                    <!-- Заполняется JS -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Вкладка: ИИ -->
+        <section id="tab-ai" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-2 flex items-center gap-2 shrink-0"><i class="fa-solid fa-robot text-purple-500"></i> ИИ-Помощник</h2>
+            <p class="text-xs text-slate-500 mb-4 shrink-0">Задайте любой вопрос о безопасности детей</p>
+            
+            <div class="flex flex-col bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden h-[60vh] sm:h-[500px]">
+                <div id="ai-chat-box" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-slate-50/50">
+                    <div class="flex gap-3 w-full max-w-[90%] animate-fadeIn">
+                        <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200">
+                            <i class="fa-solid fa-robot text-purple-600 text-sm"></i>
+                        </div>
+                        <div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">
+                            Здравствуйте! Я ИИ-гид по детской безопасности. Задайте мне вопрос, например:<br><br>
+                            <span class="text-purple-600 font-medium cursor-pointer hover:underline" onclick="fillAI('Что собрать в аптечку для леса?')">- Что собрать в аптечку для леса?</span><br>
+                            <span class="text-purple-600 font-medium cursor-pointer hover:underline" onclick="fillAI('Как научить ребенка не уходить с чужими?')">- Как научить ребенка не уходить с чужими?</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 bg-white border-t border-slate-100 flex gap-2 shrink-0 relative">
+                    <textarea id="ai-input" rows="1" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none max-h-24" placeholder="Ваш вопрос..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendAIMessage(); }"></textarea>
+                    <button id="ai-send-btn" onclick="sendAIMessage()" class="bg-purple-600 hover:bg-purple-700 text-white w-12 h-12 rounded-xl flex items-center justify-center transition-colors shadow-sm shrink-0 active:scale-95 disabled:opacity-50 disabled:active:scale-100">
+                        <i class="fa-solid fa-paper-plane text-sm ml-0.5"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Вкладка: Видеоуроки -->
+        <section id="tab-video" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-circle-play text-red-500"></i> Видеоуроки</h2>
+            
+            <a href="https://vk.ru/clips/shishin_85" target="_blank" rel="noopener noreferrer" class="mb-5 w-full bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-bold py-3.5 rounded-2xl shadow-sm transition-colors active:scale-95 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-mobile-screen text-lg"></i> Смотреть короткие VK Клипы
+            </a>
+
+            <div class="grid gap-4 sm:grid-cols-2" id="video-list">
+                <!-- Заполняется JS -->
+            </div>
+        </section>
+
+        <!-- Вкладка: Блог -->
+        <section id="tab-blog" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-newspaper text-purple-500"></i> Блог</h2>
+            
+            <div class="bg-purple-50 border border-purple-200 text-purple-800 p-4 rounded-2xl text-xs mb-5 flex items-center gap-2">
+                <i class="fa-solid fa-at text-purple-500 text-lg shrink-0"></i> 
+                <span>Статьи и разборы от автора проекта Александра Шишина.</span>
+            </div>
+
+            <div class="mb-5 space-y-3">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+                    <input type="text" id="blog-search" placeholder="Поиск статей..." class="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" onkeyup="filterBlog()">
+                </div>
+                
+                <div id="blog-categories" class="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+                    <!-- Заполняется JS -->
+                </div>
+            </div>
+
+            <div class="space-y-4" id="blog-list">
+                <!-- Заполняется JS -->
+            </div>
+        </section>
+
+        <!-- Вкладка: SOS -->
+        <section id="tab-sos" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-red-500"></i> Экстренно</h2>
+            <div id="flashcard-widget-sos" class="mb-6"></div>
+            
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
+                <h3 class="font-bold text-lg mb-3">Поиск отрядов ПСО</h3>
+                <input type="text" id="pso-search" placeholder="Введите город (например, Вологда)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" onkeyup="filterPSO()">
+                <div id="pso-list" class="space-y-3 max-h-60 overflow-y-auto">
+                    <!-- Заполняется JS -->
+                </div>
+                
+                <a href="https://vk.com/search?c[q]=Поисково-спасательный%20отряд&c[section]=communities" target="_blank" rel="noopener noreferrer" class="mt-4 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl text-sm transition-colors active:scale-95 flex items-center justify-center">
+                    <i class="fa-solid fa-magnifying-glass mr-2"></i> Искать другие города в ВК
+                </a>
+            </div>
+        </section>
+
+        <!-- Вкладка: Поддержка -->
+        <section id="tab-support" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-heart text-pink-500"></i> Поддержка</h2>
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4 text-center">
+                <div class="w-16 h-16 bg-pink-100 text-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                <h3 class="font-bold text-lg mb-2">Поддержите проект</h3>
+                <p class="text-slate-600 text-sm mb-5">Ваша помощь позволяет нам снимать новые ролики и поддерживать работу приложения.</p>
+                
+                <div class="space-y-3">
+                    <a href="https://vk.com/id16426067?w=donut_payment16426067&levelId=3514" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
+                        <i class="fa-brands fa-vk text-xl"></i> Оформить VK Donut
+                    </a>
+                    <a href="https://yoomoney.ru/to/4100119571558687" target="_blank" rel="noopener noreferrer" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-wallet text-lg"></i> Перевод по СБП / Карте
+                    </a>
+                    <a href="https://vk.com/market-32585861" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-shop text-lg"></i> Маркет
+                    </a>
+                </div>
+            </div>
+
+            <!-- Команда и партнеры -->
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
+                <h3 class="font-bold text-lg mb-4 text-slate-800 border-b border-slate-100 pb-2">Команда и партнеры</h3>
+                <div class="space-y-4">
+                    <a href="https://vk.com/id16426067" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95">
+                        <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-user-shield"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">Александр Шишин</div>
+                            <div class="text-xs text-slate-500">Автор проекта, специалист по безопасности</div>
+                        </div>
+                        <i class="fa-brands fa-vk text-blue-500 text-lg"></i>
+                    </a>
+
+                    <a href="https://vk.ru/im/channels/-239286076" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95">
+                        <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-users"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">Канал проекта</div>
+                            <div class="text-xs text-slate-500">Подписывайтесь на обновления</div>
+                        </div>
+                        <i class="fa-brands fa-vk text-blue-500 text-lg"></i>
+                    </a>
+
+                    <a href="https://vk.ru/hrpuls" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-800 hover:bg-slate-900 rounded-xl transition-colors shadow-sm active:scale-95 mt-4 group">
+                        <div class="w-10 h-10 bg-white/10 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/20 transition-colors"><i class="fa-solid fa-briefcase"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-white flex items-center gap-2">
+                                HR Пульс <span class="bg-blue-500 text-white text-[8px] uppercase font-bold px-1.5 py-0.5 rounded">Партнер</span>
+                            </div>
+                            <div class="text-xs text-slate-300">Свежие вакансии и карьера</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-slate-400 group-hover:text-white transition-colors"></i>
+                    </a>
+                    
+                    <a href="https://vk.ru/svarche" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-orange-600 hover:bg-orange-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
+                        <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-fire-flame-curved"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-white flex items-center gap-2">
+                                СварЧе <span class="bg-red-500 text-white text-[8px] uppercase font-bold px-1.5 py-0.5 rounded">Партнер</span>
+                            </div>
+                            <div class="text-xs text-orange-200">Сварочные работы в Череповце</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-orange-300 group-hover:text-white transition-colors"></i>
+                    </a>
+
+                    <a href="https://vk.com/pso.azimut" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
+                        <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-white flex items-center gap-2">
+                                ПСО «Азимут» <span class="bg-red-500 text-white text-[8px] uppercase font-bold px-1.5 py-0.5 rounded">Партнер</span>
+                            </div>
+                            <div class="text-xs text-indigo-200">Поисково-спасательный отряд</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-indigo-200 group-hover:text-white transition-colors"></i>
+                    </a>
+
+                    <a href="https://vk.ru/pso_tyneodin" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-teal-600 hover:bg-teal-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
+                        <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-users-viewfinder"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-white flex items-center gap-2">
+                                ПСО «Ты не один» <span class="bg-red-500 text-white text-[8px] uppercase font-bold px-1.5 py-0.5 rounded">Партнер</span>
+                            </div>
+                            <div class="text-xs text-teal-100">Поисково-спасательный отряд</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-teal-200 group-hover:text-white transition-colors"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Плавающая кнопка 112 -->
+    <a id="btn-112" href="tel:112" style="bottom: calc(5.5rem + env(safe-area-inset-bottom));" class="fixed right-6 md:right-[calc(50%-22rem)] z-50 bg-red-600/90 backdrop-blur-sm text-white w-12 h-12 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(220,38,38,0.4)] active:scale-90 transition-all hover:bg-red-700">
+        <i class="fa-solid fa-phone-volume text-xl animate-pulse"></i>
+    </a>
+
+    <!-- Модальное окно видео -->
+    <div id="vk-player-modal" class="fixed inset-0 z-[110] bg-black/95 hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+        <button onclick="closeVideo()" class="absolute top-6 right-4 sm:top-8 sm:right-8 text-white/70 hover:text-white w-12 h-12 flex items-center justify-center bg-white/10 rounded-full backdrop-blur-sm transition-all active:scale-95 z-[120]">
+            <i class="fa-solid fa-xmark text-2xl"></i>
+        </button>
+        <div class="w-full max-w-4xl px-2 sm:px-6 relative z-[115]">
+            <div class="relative w-full pb-[56.25%] rounded-2xl overflow-hidden shadow-2xl bg-black flex items-center justify-center">
+                <div id="video-loader" class="absolute inset-0 flex flex-col items-center justify-center text-white/50 z-[116]">
+                    <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-3"></i>
+                    <span class="text-sm font-medium animate-pulse">Загрузка плеера...</span>
+                </div>
+                <iframe id="vk-iframe" src="" class="absolute top-0 left-0 w-full h-full z-[117] opacity-0 transition-opacity duration-500" allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" frameborder="0" allowfullscreen onload="this.classList.remove('opacity-0'); document.getElementById('video-loader')?.classList.add('hidden');"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно PDF/Печать -->
+    <div id="pdf-modal" class="fixed inset-0 z-[130] bg-slate-900/60 hidden flex-col items-center justify-end sm:justify-center opacity-0 transition-opacity duration-300 backdrop-blur-sm">
+        <div class="w-full max-w-2xl bg-white sm:rounded-2xl rounded-t-3xl shadow-2xl overflow-hidden flex flex-col h-[85vh] sm:h-[80vh] transform transition-transform translate-y-full sm:translate-y-0" id="pdf-modal-content">
+            
+            <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50 no-print">
+                <h3 class="font-bold text-lg text-slate-800" id="pdf-title">Памятка</h3>
+                <button onclick="closePdf()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300 transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-6 text-sm text-slate-700 bg-white" id="printable-pdf-content">
+                <!-- Контент для печати заполняется JS -->
+            </div>
+
+            <div class="p-4 border-t border-slate-100 bg-white no-print gap-3 flex flex-col sm:flex-row">
+                <button onclick="window.print()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-sm transition-colors active:scale-95 flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-print"></i> Печать / Сохранить как PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Нижняя навигация -->
+    <nav class="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-slate-200 z-40" style="padding-bottom: env(safe-area-inset-bottom);">
+        <div class="flex items-center h-16 max-w-4xl mx-auto w-full px-1">
+            <button onclick="switchTab('city', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-blue-600" data-target="city"><i class="fa-solid fa-city text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Город</span></button>
+            <button onclick="switchTab('forest', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-emerald-600" data-target="forest"><i class="fa-solid fa-tree text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Лес</span></button>
+            <button onclick="switchTab('video', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-red-600" data-target="video"><i class="fa-solid fa-circle-play text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Видео</span></button>
+            <button onclick="switchTab('ai', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-purple-600" data-target="ai"><i class="fa-solid fa-robot text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">ИИ</span></button>
+            <button onclick="switchTab('blog', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-purple-600" data-target="blog"><i class="fa-solid fa-newspaper text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Блог</span></button>
+            <button onclick="switchTab('sos', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-red-600" data-target="sos"><i class="fa-solid fa-triangle-exclamation text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">SOS</span></button>
+            <button onclick="switchTab('support', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-pink-600" data-target="support"><i class="fa-solid fa-heart text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Донат</span></button>
+        </div>
+    </nav>
+
+    <script>
+        // Инициализация API
+        const GEMINI_API_KEY = ""; 
+        
+        let aiChatHistory = [];
+
+        var THEMES = {
+            city: { bgLight: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100', bgMain: 'bg-blue-500', hover: 'hover:bg-blue-600', icon: 'fa-city', hoverBorder: 'hover:border-blue-400', hoverBg: 'hover:bg-blue-50' },
+            forest: { bgLight: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', bgMain: 'bg-emerald-500', hover: 'hover:bg-emerald-600', icon: 'fa-tree', hoverBorder: 'hover:border-emerald-400', hoverBg: 'hover:bg-emerald-50' },
+            sos: { bgLight: 'bg-red-50', text: 'text-red-600', border: 'border-red-100', bgMain: 'bg-red-500', hover: 'hover:bg-red-600', icon: 'fa-triangle-exclamation', hoverBorder: 'hover:border-red-400', hoverBg: 'hover:bg-red-50' }
+        };
+
+        var ALL_FLASHCARDS = [
+            { category: 'city', front: "Правило «Стой, где стоишь»", back: "Основное правило: оставаться на месте и ждать, пока тебя найдут.", hint: "Главное действие при потере родителей." },
+            { category: 'city', front: "Семейный пароль", back: "Кодовое слово, подтверждающее, что незнакомец пришел от родителей.", hint: "Проверка для чужого человека." },
+            { category: 'city', front: "Правило «Три О»", back: "Остановись, Оглядись, Окликни — алгоритм действий, если потерял родителей.", hint: "Первые шаги при потере." },
+            { category: 'city', front: "Островки безопасности", back: "Зона в Пятерочке/Перекрестке, где помогут потерявшемуся.<br><span class='mt-3 bg-white/10 p-2.5 rounded-xl flex items-center gap-3 border border-white/20 text-left w-full'><span class='w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center shrink-0 shadow-sm'><i class='fa-solid fa-location-dot text-white text-xl'></i></span><span class='flex flex-col'><span class='text-[12px] font-extrabold text-orange-400 uppercase leading-tight tracking-wide'>Островок<br>безопасности</span><span class='text-[10px] text-slate-300 mt-0.5'>Здесь помогут!</span></span></span>", hint: "Оранжевый знак геометки в супермаркетах." },
+            { category: 'forest', front: "Обними дерево", back: "Если потерялся в лесу — обними ближайшее дерево, стой на месте и шуми.", hint: "Что делать в лесу в первую очередь." },
+            { category: 'forest', front: "Цвет одежды в лес", back: "Яркая (красная, желтая, оранжевая). Камуфляж запрещен!", hint: "Как облегчить работу спасателям." },
+            { category: 'forest', front: "Встреча с диким зверем", back: "Замри. Не убегай! Медленно подними руки или куртку вверх (чтобы казаться больше) и плавно отступай назад, не поворачиваясь спиной.", hint: "Как вести себя с диким зверем." },
+            { category: 'sos', front: "Номер спасения", back: "112 — бесплатный номер. Работает без SIM-карты.", hint: "Единый телефон экстренных служб." }
+        ];
+
+        var vkVideos = {
+            'Безопасность в городе': 'https://vk.com/video_ext.php?oid=16426067&id=456240774&t=23s',
+            'Дети и животные': 'https://vk.com/video_ext.php?oid=16426067&id=456240849&t=6m33s',
+            'Безопасность на воде': 'https://vk.com/video_ext.php?oid=16426067&id=456240774&t=23s'
+        };
+
+        var psoDatabase = [
+            { name: "ПСО Ты не один", city: "Вологодская область", phone: "89115056898", vk: "https://vk.ru/pso_tyneodin" },
+            { name: "ПСО ЮК-Спас", city: "Вологодская область", phone: "89211238880", vk: "https://vk.com/deti35" },
+            { name: "ПСО Азимут", city: "Вологодская область", phone: "89115183366", vk: "https://vk.com/pso.azimut" },
+            { name: "ПСО ЛизаАлерт", city: "Федеральный отряд", phone: "88007005452", vk: "https://vk.com/lizaalert_real" }
+        ];
+
+        var blogArticles = [
+            { title: "Гайд по разработке: Как мы создали «Код Безопасности» 2.0", desc: "Подробная статья о том, как создать свое VK Mini App на чистом JS и Tailwind, обойти ограничения браузеров, добавить ИИ-бота и выложить приложение на GitHub Pages.", category: "Гайд", author: "Александр Шишин", link: "https://vk.ru/im/channels/-239286076" },
+            { title: "Дорога в школу: инструкция по безопасности", desc: "На знакомом маршруте дети теряют бдительность. Пройдите с ребенком путь до школы ногами...", category: "Школа", author: "Александр Шишин", link: "https://vk.com/wall16426067_31772" }
+        ];
+        var currentBlogCategory = 'Все';
+
+        var quizData = {
+            city: [
+                { q: "Ты понял, что потерялся в ТЦ. Что делать?", options: ["Бежать искать маму", "Встать на месте и ждать", "Выйти на улицу"], correct: 1, explanation: "Главное правило — Стой где стоишь! Мама найдет тебя там, где видела в последний раз." },
+                { q: "Чужой человек просит помочь найти котенка. Твои действия?", options: ["Пойду помогу", "Скажу НЕТ и отойду на 2 метра", "Помогу, если он улыбается"], correct: 1, explanation: "Взрослые должны просить помощи только у взрослых. Никаких котят!" },
+                { q: "К кому безопасно подойти на улице за помощью?", options: ["К любому дедушке", "К прохожему с собакой", "К полицейскому или женщине с ребенком"], correct: 2, explanation: "Безопасные взрослые: полиция, охранники, сотрудники магазинов и женщины с детьми." }
+            ],
+            forest: [
+                { q: "Какую куртку надеть в лес?", options: ["Зеленый камуфляж", "Черную непромокаемую", "Яркую (красную/желтую)"], correct: 2, explanation: "В камуфляже спасатели не увидят тебя даже с двух метров. Надевай самое яркое!" },
+                { q: "Ты потерялся в лесу. Твои первые действия?", options: ["Идти вперед, пока не найду дорогу", "Забраться на высокое дерево", "Обнять дерево и оставаться на месте"], correct: 2, explanation: "Сразу стой на месте! Чем дальше ты уйдешь, тем сложнее тебя будет найти." },
+                { q: "Что делать при встрече с медведем или кабаном?", options: ["Громко кричать и бежать", "Замереть, поднять руки и медленно отступать", "Кинуть в него палку"], correct: 1, explanation: "Нельзя убегать и поворачиваться спиной. Подними руки, чтобы казаться больше, и плавно отступай." }
+            ]
+        };
+        var quizStates = { city: { current: 0, score: 0, completed: false }, forest: { current: 0, score: 0, completed: false } };
+        var widgetStates = { city: { currentIndex: 0, isFlipped: false, showHint: false }, forest: { currentIndex: 0, isFlipped: false, showHint: false }, sos: { currentIndex: 0, isFlipped: false, showHint: false } };
+
+        function formatText(text) {
+            return text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                       .replace(/\* (.*?)(?=\n|$)/g, '<li class="ml-4">$1</li>')
+                       .replace(/\n/g, '<br>');
+        }
+
+        function initApp() {
+            try {
+                if (typeof vkBridge !== 'undefined') {
+                    vkBridge.send('VKWebAppGetUserInfo').then(function(data) {
+                        if (data && data.first_name) {
+                            var nameDisplay = document.getElementById('user-name-display');
+                            var avatarImg = document.getElementById('user-avatar-img');
+                            var defaultIcon = document.getElementById('default-avatar-icon');
+                            
+                            if (nameDisplay) nameDisplay.innerText = data.first_name;
+                            if (avatarImg && data.photo_100) {
+                                avatarImg.src = data.photo_100;
+                                avatarImg.classList.remove('hidden');
+                                if (defaultIcon) defaultIcon.classList.add('hidden');
+                            }
+                        }
+                    }).catch(function(err) {
+                        console.log('Ошибка профиля VK:', err);
+                    });
+                }
+            } catch(e) { console.log('vkBridge error:', e); }
+
+            var categories = ['city', 'forest', 'sos'];
+            for (var i = 0; i < categories.length; i++) renderFlashcardWidget(categories[i]);
+
+            var videoContainer = document.getElementById('video-list');
+            if(videoContainer) {
+                videoContainer.innerHTML = '';
+                for (var title in vkVideos) {
+                    if (vkVideos.hasOwnProperty(title)) {
+                        videoContainer.innerHTML += `
+                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group cursor-pointer flex flex-col" onclick="openVideo('${vkVideos[title]}')">
+                                <div class="relative pb-[56.25%] bg-slate-200">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-slate-800/20 group-hover:bg-slate-800/40 transition-colors">
+                                        <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                            <i class="fa-solid fa-play text-red-500 text-xl ml-1"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4"><h3 class="font-bold text-slate-800 text-sm mb-1">${title}</h3></div>
+                            </div>`;
+                    }
+                }
+            }
+
+            filterPSO();
+            initBlogCategories();
+            filterBlog();
+            renderQuiz('city');
+            renderQuiz('forest');
+
+            var checklistContainer = document.getElementById('forest-checklist');
+            if (checklistContainer) {
+                var checklistItems = ['Заряженный телефон (100%)', 'Свисток на шею', 'Яркая одежда (не камуфляж)', 'Вода (1л) и перекус', 'Спички/зажигалка', 'Оффлайн-карты в телефоне', 'Спрей от клещей'];
+                checklistContainer.innerHTML = '';
+                for (var k = 0; k < checklistItems.length; k++) {
+                    checklistContainer.innerHTML += `
+                        <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors border border-slate-100">
+                            <input type="checkbox" class="w-5 h-5 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500" onchange="triggerTaptic()">
+                            <span class="text-sm font-medium text-slate-700">${checklistItems[k]}</span>
+                        </label>`;
+                }
+            }
+        }
+
+        function shareApp() {
+            triggerTaptic();
+            try {
+                if (typeof vkBridge !== 'undefined') {
+                    var urlParams = new URLSearchParams(window.location.search);
+                    var appId = urlParams.get('vk_app_id');
+                    var shareLink = appId ? 'https://vk.com/app' + appId : window.location.href;
+                    vkBridge.send('VKWebAppShare', { link: shareLink }).catch(function(err) {});
+                }
+            } catch(e) {}
+        }
+
+        function switchTab(tabId, btnElement) {
+            var tabs = document.querySelectorAll('.tab-content');
+            for (var i = 0; i < tabs.length; i++) tabs[i].classList.add('hidden');
+            var activeTab = document.getElementById('tab-' + tabId);
+            if(activeTab) activeTab.classList.remove('hidden');
+            
+            var btn112 = document.getElementById('btn-112');
+            if (btn112) {
+                if (tabId === 'ai') { btn112.style.display = 'none'; } 
+                else { btn112.style.display = 'flex'; }
+            }
+            
+            var btns = document.querySelectorAll('.tab-btn');
+            for (var j = 0; j < btns.length; j++) {
+                var btn = btns[j];
+                var isActive = btn.getAttribute('data-target') === tabId;
+                var baseColor = 'slate';
+                if(isActive) {
+                    if(tabId === 'city') baseColor = 'blue';
+                    else if(tabId === 'forest') baseColor = 'emerald';
+                    else if(tabId === 'video' || tabId === 'sos') baseColor = 'red';
+                    else if(tabId === 'ai' || tabId === 'blog') baseColor = 'purple';
+                    else if(tabId === 'support') baseColor = 'pink';
+                }
+                btn.className = 'tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors ' + (isActive ? 'text-' + baseColor + '-600' : 'text-slate-400 hover:text-' + baseColor + '-600');
+            }
+            try { window.scrollTo(0,0); } catch(e) {}
+            triggerTaptic();
+        }
+
+        function triggerTaptic() {
+            try { if (typeof vkBridge !== 'undefined') vkBridge.send('VKWebAppTapticSelectionChanged'); } catch(e) {}
+        }
+
+        function renderFlashcardWidget(category) {
+            var container = document.getElementById('flashcard-widget-' + category);
+            if (!container) return;
+            var cards = ALL_FLASHCARDS.filter(c => c.category === category);
+            if (cards.length === 0) return;
+            var state = widgetStates[category];
+            var currentCard = cards[state.currentIndex];
+            var t = THEMES[category] || THEMES.city;
+
+            container.innerHTML = `
+                <div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider ${t.text} ${t.bgLight} px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-solid ${t.icon}"></i> Карточки</span>
+                        <span class="text-xs font-bold text-slate-400">${state.currentIndex + 1} / ${cards.length}</span>
+                    </div>
+                    <div class="card-perspective h-48 w-full cursor-pointer select-none" onclick="toggleCardFlip('${category}')">
+                        <div id="card-flipper-${category}" class="card-flipper w-full h-full rounded-2xl shadow-sm border border-slate-200 ${state.isFlipped ? 'flipped' : ''}">
+                            <div class="card-front bg-gradient-to-br from-slate-50 to-white p-5 rounded-2xl flex flex-col justify-between border ${t.border}">
+                                <div class="text-center my-auto px-2"><h3 class="font-extrabold text-slate-800 text-lg leading-snug">${currentCard.front}</h3></div>
+                            </div>
+                            <div class="card-back bg-slate-800 text-white p-5 rounded-2xl flex flex-col justify-between border border-slate-700">
+                                <div class="text-center my-auto px-2"><p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">${currentCard.back}</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    ${state.showHint ? `<div class="mt-3 bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-xl text-xs flex items-start gap-2 animate-fadeIn"><i class="fa-solid fa-lightbulb text-amber-500 mt-0.5 text-sm shrink-0"></i><div><span class="font-bold">Подсказка:</span> ${currentCard.hint}</div></div>` : ''}
+                    <div class="flex items-center justify-between gap-2 mt-4">
+                        <button onclick="prevCard('${category}')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2 px-3 rounded-xl text-xs transition-colors active:scale-95"><i class="fa-solid fa-chevron-left"></i> Назад</button>
+                        <button onclick="toggleHint('${category}')" class="bg-amber-100 hover:bg-amber-200 text-amber-700 font-bold p-2.5 rounded-xl text-xs transition-colors active:scale-95"><i class="fa-solid fa-lightbulb"></i></button>
+                        <button onclick="nextCard('${category}')" class="flex-1 ${t.bgMain} ${t.hover} text-white font-semibold py-2 px-3 rounded-xl text-xs transition-colors active:scale-95">Далее <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>`;
+        }
+
+        function toggleCardFlip(category) { widgetStates[category].isFlipped = !widgetStates[category].isFlipped; renderFlashcardWidget(category); triggerTaptic(); }
+        function toggleHint(category) { widgetStates[category].showHint = !widgetStates[category].showHint; renderFlashcardWidget(category); triggerTaptic(); }
+        function nextCard(category) { var c = ALL_FLASHCARDS.filter(x => x.category === category); var s = widgetStates[category]; s.isFlipped = false; s.showHint = false; s.currentIndex = (s.currentIndex + 1) % c.length; renderFlashcardWidget(category); triggerTaptic(); }
+        function prevCard(category) { var c = ALL_FLASHCARDS.filter(x => x.category === category); var s = widgetStates[category]; s.isFlipped = false; s.showHint = false; s.currentIndex = (s.currentIndex - 1 + c.length) % c.length; renderFlashcardWidget(category); triggerTaptic(); }
+
+        function renderQuiz(cat) {
+            var container = document.getElementById('quiz-container-' + cat);
+            if (!container) return;
+            var state = quizStates[cat];
+            var data = quizData[cat];
+            var t = THEMES[cat];
+
+            if (state.completed) {
+                var isPerfect = state.score === data.length;
+                container.innerHTML = `
+                    <div class="text-center py-4 animate-fadeIn">
+                        <div class="w-16 h-16 rounded-full ${isPerfect ? 'bg-green-100 text-green-500' : 'bg-orange-100 text-orange-500'} flex items-center justify-center mx-auto mb-3 text-3xl">
+                            <i class="fa-solid ${isPerfect ? 'fa-trophy' : 'fa-star-half-stroke'}"></i>
+                        </div>
+                        <h4 class="font-bold text-lg mb-1">Игра завершена!</h4>
+                        <p class="text-sm text-slate-600 mb-4">Правильных ответов: <span class="font-bold text-slate-800">${state.score} из ${data.length}</span></p>
+                        <button onclick="restartQuiz('${cat}')" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition-colors shadow-sm active:scale-95">Играть заново</button>
+                    </div>`;
+                return;
+            }
+
+            var q = data[state.current];
+            var optionsHtml = q.options.map((opt, idx) => `
+                <button onclick="answerQuiz('${cat}', ${idx})" class="w-full text-left p-3 bg-white border border-slate-200 rounded-xl mb-2 text-sm text-slate-700 transition-colors shadow-sm active:scale-95 hover:bg-slate-50">
+                    ${opt}
+                </button>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="animate-fadeIn" id="quiz-content-${cat}">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold text-slate-400">Вопрос ${state.current + 1}/${data.length}</span>
+                        <div class="flex gap-1">${data.map((_, i) => `<div class="w-2 h-2 rounded-full ${i === state.current ? t.bgMain : (i < state.current ? 'bg-green-400' : 'bg-slate-200')}"></div>`).join('')}</div>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-4 leading-snug">${q.q}</h4>
+                    <div>${optionsHtml}</div>
+                </div>`;
+        }
+
+        function answerQuiz(cat, idx) {
+            triggerTaptic();
+            var state = quizStates[cat];
+            var data = quizData[cat];
+            var q = data[state.current];
+            var isCorrect = (idx === q.correct);
+            
+            if (isCorrect) state.score++;
+            
+            var container = document.getElementById('quiz-content-' + cat);
+            var btnClass = isCorrect ? 'bg-green-100 border-green-300 text-green-800' : 'bg-red-100 border-red-300 text-red-800';
+            var icon = isCorrect ? '<i class="fa-solid fa-check-circle text-green-500 mr-2"></i>' : '<i class="fa-solid fa-xmark-circle text-red-500 mr-2"></i>';
+            
+            container.innerHTML = `
+                <div class="animate-fadeIn text-center py-2">
+                    <div class="p-4 ${btnClass} rounded-2xl border text-sm font-bold flex items-center justify-center mb-3">
+                        ${icon} ${isCorrect ? 'Верно!' : 'Ошибка!'}
+                    </div>
+                    <div class="text-xs text-slate-600 bg-white p-3 border border-slate-200 rounded-xl mb-4 text-left shadow-sm">
+                        <span class="font-bold">Почему так:</span> ${q.explanation}
+                    </div>
+                    <button onclick="nextQuizStep('${cat}')" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow-sm transition-colors active:scale-95">Понятно, дальше</button>
+                </div>`;
+        }
+
+        function nextQuizStep(cat) { triggerTaptic(); quizStates[cat].current++; if (quizStates[cat].current >= quizData[cat].length) quizStates[cat].completed = true; renderQuiz(cat); }
+        function restartQuiz(cat) { triggerTaptic(); quizStates[cat] = { current: 0, score: 0, completed: false }; renderQuiz(cat); }
+
+        function openPdfMaterial(type) {
+            triggerTaptic();
+            var modal = document.getElementById('pdf-modal');
+            var content = document.getElementById('printable-pdf-content');
+            var title = document.getElementById('pdf-title');
+            var innerHtml = '';
+
+            if (type === 'city') {
+                title.innerText = 'Памятка: Город';
+                innerHtml = `
+                    <div class="border-b-2 border-blue-500 pb-4 mb-4">
+                        <h1 class="text-2xl font-black text-slate-800 uppercase">ПРАВИЛА БЕЗОПАСНОСТИ В ГОРОДЕ</h1>
+                        <p class="text-sm text-slate-500">Официальная памятка проекта "Код Безопасности"</p>
+                    </div>
+                    <h2 class="text-lg font-bold text-blue-600 mb-2 mt-4">1. Если потерялся</h2>
+                    <ul class="list-disc pl-5 mb-4 space-y-1">
+                        <li><b>Стой, где стоишь!</b> Не ищи родителей сам.</li>
+                        <li>Оглядись. Если видишь Островок Безопасности (оранжевый знак) — иди к нему.</li>
+                        <li>Обратись к "безопасным взрослым": полицейский, охранник или женщина с ребенком.</li>
+                    </ul>
+                    <h2 class="text-lg font-bold text-blue-600 mb-2 mt-4">2. Общение с незнакомцами</h2>
+                    <ul class="list-disc pl-5 mb-4 space-y-1">
+                        <li>Никогда не уходи с чужими, даже если они просят помощи. Взрослые должны просить помощи у взрослых!</li>
+                        <li>Держи дистанцию в 2 метра (вытянутая рука).</li>
+                        <li>Используйте <b>Семейный пароль</b>, если кто-то говорит, что пришел от мамы.</li>
+                    </ul>
+                    <h2 class="text-lg font-bold text-blue-600 mb-2 mt-4">3. Экстренная помощь</h2>
+                    <div class="bg-red-50 p-4 rounded-xl border border-red-200">
+                        Единый телефон службы спасения: <b>112</b> (работает без сим-карты).<br>
+                        Федеральный ПСО ЛизаАлерт: <b>8-800-700-54-52</b>
+                    </div>
+                `;
+            } else {
+                title.innerText = 'Памятка: Лес';
+                innerHtml = `
+                    <div class="border-b-2 border-emerald-500 pb-4 mb-4">
+                        <h1 class="text-2xl font-black text-slate-800 uppercase">ПРАВИЛА ВЫЖИВАНИЯ В ЛЕСУ</h1>
+                        <p class="text-sm text-slate-500">Официальная памятка проекта "Код Безопасности"</p>
+                    </div>
+                    <h2 class="text-lg font-bold text-emerald-600 mb-2 mt-4">1. Сборы в лес (Строго обязательно!)</h2>
+                    <ul class="list-disc pl-5 mb-4 space-y-1">
+                        <li><b>Одежда:</b> Только яркая! Камуфляж убивает.</li>
+                        <li><b>Телефон:</b> Заряд 100%. Оффлайн карты загружены.</li>
+                        <li><b>Аптечка:</b> Спрей от клещей, вода (1л), перекус, свисток, спички.</li>
+                    </ul>
+                    <h2 class="text-lg font-bold text-emerald-600 mb-2 mt-4">2. Если заблудился</h2>
+                    <ul class="list-disc pl-5 mb-4 space-y-1">
+                        <li><b>ОБНИМИ ДЕРЕВО!</b> Стой на месте. Дальше не иди.</li>
+                        <li>Не кричи, чтобы не сорвать голос — свисти в свисток!</li>
+                        <li>Не пей воду из луж и рек.</li>
+                    </ul>
+                    <h2 class="text-lg font-bold text-emerald-600 mb-2 mt-4">3. Встреча с животными</h2>
+                    <ul class="list-disc pl-5 mb-4 space-y-1">
+                        <li>Не убегай! Зверь быстрее.</li>
+                        <li>Медленно подними руки или куртку вверх (стань больше).</li>
+                        <li>Плавно отступай назад спиной.</li>
+                    </ul>
+                `;
+            }
+
+            content.innerHTML = innerHtml;
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); document.getElementById('pdf-modal-content').classList.remove('translate-y-full'); }, 10);
+        }
+
+        function closePdf() {
+            triggerTaptic();
+            var modal = document.getElementById('pdf-modal');
+            var contentBox = document.getElementById('pdf-modal-content');
+            modal.classList.add('opacity-0');
+            contentBox.classList.add('translate-y-full');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function openVideo(url) { 
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
+                window.Telegram.WebApp.openLink(url);
+            } else {
+                var iframe = document.getElementById('vk-iframe');
+                var loader = document.getElementById('video-loader');
+                iframe.classList.add('opacity-0'); 
+                if(loader) loader.classList.remove('hidden'); 
+                iframe.src = url; 
+                var m = document.getElementById('vk-player-modal'); 
+                m.classList.remove('hidden'); 
+                setTimeout(()=>m.classList.remove('opacity-0'), 10); 
+            }
+        }
+
+        function closeVideo() { 
+            var m = document.getElementById('vk-player-modal'); 
+            m.classList.add('opacity-0'); 
+            setTimeout(()=>{ m.classList.add('hidden'); document.getElementById('vk-iframe').src=''; }, 300); 
+        }
+
+        function filterPSO() {
+            var query = (document.getElementById('pso-search')?.value || '').toLowerCase();
+            var container = document.getElementById('pso-list');
+            if(!container) return;
+            var filtered = psoDatabase.filter(p => p.name.toLowerCase().includes(query) || p.city.toLowerCase().includes(query));
+            if (filtered.length === 0) { container.innerHTML = '<div class="text-center py-4 text-slate-500 text-sm">Отряды не найдены.</div>'; return; }
+            container.innerHTML = filtered.map(p => `
+                <div class="bg-white p-3 rounded-xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div><h4 class="font-bold text-slate-800 text-sm">${p.name}</h4><p class="text-xs text-slate-500"><i class="fa-solid fa-location-dot mr-1"></i>${p.city}</p></div>
+                    <div class="flex gap-2">
+                        <a href="tel:${p.phone}" class="flex-1 sm:flex-none bg-green-100 text-green-700 px-3 py-2 rounded-lg text-xs font-bold text-center"><i class="fa-solid fa-phone"></i> Вызов</a>
+                        <a href="${p.vk}" target="_blank" class="flex-1 sm:flex-none bg-blue-100 text-blue-700 px-3 py-2 rounded-lg text-xs font-bold text-center"><i class="fa-brands fa-vk text-sm"></i> Группа</a>
+                    </div>
+                </div>`).join('');
+        }
+
+        function initBlogCategories() {
+            var categories = ['Все'];
+            blogArticles.forEach(a => { if(categories.indexOf(a.category) === -1) categories.push(a.category); });
+            var container = document.getElementById('blog-categories');
+            if(container) {
+                container.innerHTML = categories.map(c => {
+                    var isActive = c === currentBlogCategory;
+                    var baseClass = isActive ? 'bg-purple-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50';
+                    return `<button onclick="setBlogCategory('${c}')" class="blog-cat-btn px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors shadow-sm ${baseClass}" data-cat="${c}">${c}</button>`;
+                }).join('');
+            }
+        }
+
+        function setBlogCategory(cat) {
+            currentBlogCategory = cat; triggerTaptic();
+            document.querySelectorAll('.blog-cat-btn').forEach(btn => {
+                var isCatActive = btn.getAttribute('data-cat') === cat;
+                btn.className = 'blog-cat-btn px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors shadow-sm ' + (isCatActive ? 'bg-purple-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50');
+            });
+            filterBlog();
+        }
+
+        function filterBlog() {
+            var query = (document.getElementById('blog-search')?.value || '').toLowerCase();
+            var container = document.getElementById('blog-list');
+            if(!container) return;
+            var filtered = blogArticles.filter(a => (currentBlogCategory === 'Все' || a.category === currentBlogCategory) && (a.title.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query)));
+            if (filtered.length === 0) { container.innerHTML = '<div class="text-center py-10"><i class="fa-solid fa-folder-open text-slate-300 text-4xl mb-3"></i><p class="text-slate-500 text-sm">Ничего не найдено.</p></div>'; return; }
+            container.innerHTML = filtered.map(a => `
+                <a href="${a.link}" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden hover:shadow-md relative">
+                    <div class="p-4 pt-5">
+                        <div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-extrabold bg-purple-100 text-purple-700 px-2.5 py-1 rounded-md uppercase tracking-wide">${a.category}</span><span class="text-[10px] text-slate-400 font-medium">${a.author}</span></div>
+                        <h3 class="font-bold text-sm text-slate-800 mb-1.5 leading-snug">${a.title}</h3>
+                        <p class="text-xs text-slate-500 line-clamp-3 mb-3">${a.desc}</p>
+                        <div class="flex items-center gap-2 text-xs text-blue-600 font-semibold">Читать статью <i class="fa-brands fa-vk text-sm"></i></div>
+                    </div>
+                </a>`).join('');
+        }
+
+        function fillAI(text) { document.getElementById('ai-input').value = text; document.getElementById('ai-input').focus(); }
+
+        function sendAIMessage() {
+            const input = document.getElementById('ai-input');
+            const btn = document.getElementById('ai-send-btn');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            input.value = ''; input.disabled = true;
+            if(btn) { btn.disabled = true; btn.classList.add('opacity-50'); }
             
             const box = document.getElementById('ai-chat-box');
             let userHtml = formatText(text);
-            box.insertAdjacentHTML('beforeend', <div class="flex gap-3 w-full max-w-[90%] animate-fadeIn ml-auto flex-row-reverse"><div class="bg-purple-600 text-white p-3 rounded-2xl rounded-tr-sm text-sm shadow-sm">${userHtml}</div></div>);
+            box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn ml-auto flex-row-reverse"><div class="bg-purple-600 text-white p-3 rounded-2xl rounded-tr-sm text-sm shadow-sm">${userHtml}</div></div>`);
             
             aiChatHistory.push({ role: "user", parts: [{ text: text }] });
             const loaderId = 'loader-' + Date.now();
-            box.insertAdjacentHTML('beforeend', <div id="${loaderId}" class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200"><i class="fa-solid fa-robot text-purple-600 text-sm"></i></div><div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-sm flex items-center h-10 shadow-sm"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>);
+            box.insertAdjacentHTML('beforeend', `<div id="${loaderId}" class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200"><i class="fa-solid fa-robot text-purple-600 text-sm"></i></div><div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-sm flex items-center h-10 shadow-sm"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>`);
             box.scrollTop = box.scrollHeight;
 
             const payload = {
@@ -16,7 +858,7 @@ if(btn) { btn.disabled = true; btn.classList.add('opacity-50'); }
                 }
             };
             
-            fetch(https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}, {
+            fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`, {
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' }, 
                 body: JSON.stringify(payload)
@@ -37,12 +879,12 @@ if(btn) { btn.disabled = true; btn.classList.add('opacity-50'); }
                 aiChatHistory.push({ role: "model", parts: [{ text: botReply }] });
                 
                 let botHtml = formatText(botReply);
-                box.insertAdjacentHTML('beforeend', <div class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200"><i class="fa-solid fa-robot text-purple-600 text-sm"></i></div><div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">${botHtml}</div></div>);
+                box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200"><i class="fa-solid fa-robot text-purple-600 text-sm"></i></div><div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">${botHtml}</div></div>`);
             })
             .catch(error => {
                 document.getElementById(loaderId)?.remove();
                 let errorDetails = error.message;
-                box.insertAdjacentHTML('beforeend', <div class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0 border border-red-200"><i class="fa-solid fa-triangle-exclamation text-red-600 text-sm"></i></div><div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">⚠️ Произошла ошибка связи с ИИ.<br>Детали: ${errorDetails}</div></div>);
+                box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0 border border-red-200"><i class="fa-solid fa-triangle-exclamation text-red-600 text-sm"></i></div><div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">⚠️ Произошла ошибка связи с ИИ.<br>Детали: ${errorDetails}</div></div>`);
                 aiChatHistory.pop();
             })
             .finally(() => {
