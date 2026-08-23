@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -115,28 +116,12 @@
         <section id="tab-ai" class="tab-content hidden">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-robot text-purple-500"></i> ИИ-Помощник</h2>
             
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 flex flex-col overflow-hidden" style="height: calc(100vh - 250px); min-height: 400px;">
-                <div class="bg-purple-50 border-b border-purple-100 p-3 text-xs text-center text-purple-800 font-medium shrink-0 flex justify-center items-center">
-                    <span><i class="fa-solid fa-shield-cat mr-1"></i> Помощник работает напрямую в приложении</span>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 text-center flex flex-col items-center justify-center mt-6" style="min-height: 300px;">
+                <div class="w-20 h-20 bg-purple-100 text-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
                 </div>
-                
-                <div id="ai-chat-box" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
-                    <div class="flex gap-3 w-full max-w-[90%]">
-                        <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-robot text-purple-600 text-sm"></i>
-                        </div>
-                        <div class="bg-slate-100 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm">
-                            Здравствуйте! Я ИИ-гид по детской безопасности. Задайте мне любой вопрос о безопасности дома, в городе или в лесу.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="p-3 border-t border-slate-100 shrink-0 bg-white flex gap-2">
-                    <input type="text" id="ai-input" placeholder="Ваш вопрос..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500" onkeypress="if(event.key === 'Enter') sendAIMessage()">
-                    <button onclick="sendAIMessage()" id="ai-send-btn" class="bg-purple-600 hover:bg-purple-700 text-white w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors">
-                        <i class="fa-solid fa-paper-plane text-sm"></i>
-                    </button>
-                </div>
+                <h3 class="font-bold text-lg mb-3">Раздел в разработке</h3>
+                <p class="text-slate-600 text-sm mb-5 max-w-xs mx-auto">Мы настраиваем безопасное подключение к нейросети. Скоро здесь появится умный гид по детской безопасности!</p>
             </div>
         </section>
 
@@ -573,83 +558,6 @@
                     vkBridge.send('VKWebAppShare', { link: shareLink }).catch(function(){});
                 }
             } catch(e) {}
-        }
-        
-        // --- ЛОГИКА ИИ-ПОМОЩНИКА БЕЗ ВВОДА КЛЮЧА ---
-        let chatHistory = [];
-        
-        const systemInstruction = {
-            role: "user",
-            parts: [{ 
-                text: "Ты профессиональный спасатель МЧС и специалист ПСО. Твоя задача - консультировать родителей по вопросам детской и лесной безопасности. Отвечай кратко, эмпатично, четко, без воды, используя алгоритмы ЛизаАлерт и МЧС. Структурируй ответы." 
-            }]
-        };
-
-        function addChatMessage(text, isUser) {
-            const box = document.getElementById('ai-chat-box');
-            if(!box) return;
-            
-            const div = document.createElement('div');
-            div.className = `flex gap-3 w-full max-w-[90%] animate-fadeIn ${isUser ? 'ml-auto flex-row-reverse' : ''}`;
-            
-            let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\* (.*?)(?=\n|$)/g, '<li class="ml-4 list-disc">$1</li>').replace(/\n/g, '<br>');
-
-            div.innerHTML = `
-                ${!isUser ? '<div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0"><i class="fa-solid fa-robot text-purple-600 text-sm"></i></div>' : ''}
-                <div class="${isUser ? 'bg-purple-600 text-white rounded-2xl rounded-tr-sm' : 'bg-slate-100 text-slate-800 rounded-2xl rounded-tl-sm'} p-3 text-sm">
-                    ${formattedText}
-                </div>
-            `;
-            box.appendChild(div);
-            box.scrollTop = box.scrollHeight;
-        }
-
-        async function sendAIMessage() {
-            const input = document.getElementById('ai-input');
-            const btn = document.getElementById('ai-send-btn');
-            const text = input.value.trim();
-            if (!text) return;
-
-            input.value = '';
-            input.disabled = true;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-sm"></i>';
-            
-            addChatMessage(text, true);
-            chatHistory.push({ role: "user", parts: [{ text: text }] });
-
-            try {
-                let contentsToSend = [...chatHistory];
-                if (contentsToSend.length === 1) contentsToSend.unshift(systemInstruction);
-
-                const apiKey = ""; // Ключ автоматически предоставляется средой
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: contentsToSend })
-                });
-
-                const data = await response.json();
-                
-                if (data.candidates && data.candidates[0].content.parts[0].text) {
-                    const botReply = data.candidates[0].content.parts[0].text;
-                    chatHistory.push({ role: "model", parts: [{ text: botReply }] });
-                    addChatMessage(botReply, false);
-                } else {
-                    console.error("API Error:", data);
-                    addChatMessage("Извините, произошла техническая ошибка на стороне сервера.", false);
-                    chatHistory.pop();
-                }
-            } catch (e) {
-                console.error(e);
-                addChatMessage("Ошибка соединения. Пожалуйста, попробуйте позже.", false);
-                chatHistory.pop();
-            } finally {
-                input.disabled = false;
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-paper-plane text-sm"></i>';
-                input.focus();
-            }
         }
 
         window.addEventListener('DOMContentLoaded', initApp);
