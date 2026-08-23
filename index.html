@@ -367,14 +367,14 @@
 
     <!-- Нижняя навигация -->
     <nav class="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-slate-200 z-40" style="padding-bottom: env(safe-area-inset-bottom);">
-        <div class="flex justify-around items-center h-16 max-w-4xl mx-auto px-1 sm:px-2 overflow-x-auto hide-scrollbar gap-1">
-            <button onclick="switchTab('city')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-blue-600 transition-colors" data-target="city"><i class="fa-solid fa-city text-xl mb-1"></i><span class="text-[9px] font-semibold">Город</span></button>
-            <button onclick="switchTab('forest')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-emerald-600 transition-colors" data-target="forest"><i class="fa-solid fa-tree text-xl mb-1"></i><span class="text-[9px] font-semibold">Лес</span></button>
-            <button onclick="switchTab('video')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-red-600 transition-colors" data-target="video"><i class="fa-solid fa-circle-play text-xl mb-1"></i><span class="text-[9px] font-semibold">Видео</span></button>
-            <button onclick="switchTab('ai')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-purple-600 transition-colors" data-target="ai"><i class="fa-solid fa-robot text-xl mb-1"></i><span class="text-[9px] font-semibold">ИИ</span></button>
-            <button onclick="switchTab('blog')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-purple-600 transition-colors" data-target="blog"><i class="fa-solid fa-newspaper text-xl mb-1"></i><span class="text-[9px] font-semibold">Блог</span></button>
-            <button onclick="switchTab('sos')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-red-600 transition-colors" data-target="sos"><i class="fa-solid fa-triangle-exclamation text-xl mb-1"></i><span class="text-[9px] font-semibold">SOS</span></button>
-            <button onclick="switchTab('support')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-pink-600 transition-colors" data-target="support"><i class="fa-solid fa-heart text-xl mb-1"></i><span class="text-[9px] font-semibold">Донат</span></button>
+        <div class="flex justify-between items-center h-16 max-w-4xl mx-auto px-1 w-full">
+            <button onclick="switchTab('city')" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors px-0.5 text-blue-600" data-target="city"><i class="fa-solid fa-city text-xl mb-1"></i><span class="text-[9px] font-semibold text-center leading-tight">Город</span></button>
+            <button onclick="switchTab('forest')" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors px-0.5 text-slate-400 hover:text-emerald-600" data-target="forest"><i class="fa-solid fa-tree text-xl mb-1"></i><span class="text-[9px] font-semibold text-center leading-tight">Лес</span></button>
+            <button onclick="switchTab('video')" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors px-0.5 text-slate-400 hover:text-red-600" data-target="video"><i class="fa-solid fa-circle-play text-xl mb-1"></i><span class="text-[9px] font-semibold text-center leading-tight">Видео</span></button>
+            <button onclick="switchTab('ai')" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors px-0.5 text-slate-400 hover:text-purple-600" data-target="ai"><i class="fa-solid fa-robot text-xl mb-1"></i><span class="text-[9px] font-semibold text-center leading-tight">ИИ</span></button>
+            <button onclick="switchTab('blog')" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors px-0.5 text-slate-400 hover:text-purple-600" data-target="blog"><i class="fa-solid fa-newspaper text-xl mb-1"></i><span class="text-[9px] font-semibold text-center leading-tight">Блог</span></button>
+            <button onclick="switchTab('sos')" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors px-0.5 text-slate-400 hover:text-red-600" data-target="sos"><i class="fa-solid fa-triangle-exclamation text-xl mb-1"></i><span class="text-[9px] font-semibold text-center leading-tight">SOS</span></button>
+            <button onclick="switchTab('support')" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors px-0.5 text-slate-400 hover:text-pink-600" data-target="support"><i class="fa-solid fa-heart text-xl mb-1"></i><span class="text-[9px] font-semibold text-center leading-tight">Донат</span></button>
         </div>
     </nav>
 
@@ -382,7 +382,6 @@
         const _k1 = "AQ.Ab8RN6K"; const _k2 = "irDwOrG-YVzR"; const _k3 = "g16lIab4FwQkZlG"; const _k4 = "qlfjyZLiiR4RmgLA";
         const GEMINI_API_KEY = _k1 + _k2 + _k3 + _k4; 
         
-        // История теперь содержит только чистые сообщения пользователя и модели
         let aiChatHistory = [];
 
         var THEMES = {
@@ -439,9 +438,11 @@
         var widgetStates = { city: { currentIndex: 0, isFlipped: false, showHint: false }, forest: { currentIndex: 0, isFlipped: false, showHint: false }, sos: { currentIndex: 0, isFlipped: false, showHint: false } };
 
         function initApp() {
+            // Инициализация карточек
             var categories = ['city', 'forest', 'sos'];
             for (var i = 0; i < categories.length; i++) renderFlashcardWidget(categories[i]);
 
+            // Инициализация видео
             var videoContainer = document.getElementById('video-list');
             if(videoContainer) {
                 videoContainer.innerHTML = '';
@@ -468,6 +469,7 @@
             renderQuiz('city');
             renderQuiz('forest');
 
+            // Чек-лист леса
             var checklistContainer = document.getElementById('forest-checklist');
             if (checklistContainer) {
                 var checklistItems = ['Заряженный телефон (100%)', 'Свисток на шею', 'Яркая одежда (не камуфляж)', 'Вода (1л) и перекус', 'Спички/зажигалка', 'Оффлайн-карты в телефоне', 'Спрей от клещей'];
@@ -506,7 +508,7 @@
                     else if(tabId === 'ai' || tabId === 'blog') baseColor = 'purple';
                     else if(tabId === 'support') baseColor = 'pink';
                 }
-                btn.className = 'tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full transition-colors ' + (isActive ? 'text-' + baseColor + '-600' : 'text-slate-400 hover:text-' + baseColor + '-600');
+                btn.className = 'tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors px-0.5 ' + (isActive ? 'text-' + baseColor + '-600' : 'text-slate-400 hover:text-' + baseColor + '-600');
             }
             try { window.scrollTo(0,0); } catch(e) {}
             triggerTaptic();
@@ -803,20 +805,13 @@
             let userHtml = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\* (.*?)(?=\n|$)/g, '<li class="ml-4">$1</li>').replace(/\n/g, '<br>');
             box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn ml-auto flex-row-reverse"><div class="bg-purple-600 text-white p-3 rounded-2xl rounded-tr-sm text-sm shadow-sm">${userHtml}</div></div>`);
             
-            // Чистая история - только вопросы юзера и ответы модели (без фейковых ролей)
             aiChatHistory.push({ role: "user", parts: [{ text: text }] });
             const loaderId = 'loader-' + Date.now();
             box.insertAdjacentHTML('beforeend', `<div id="${loaderId}" class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200"><i class="fa-solid fa-robot text-purple-600 text-sm"></i></div><div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-sm flex items-center h-10 shadow-sm"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>`);
             box.scrollTop = box.scrollHeight;
 
             try {
-                // Официальный формат Google с передачей системной инструкции
-                const payload = {
-                    systemInstruction: {
-                        parts: [{ text: "Ты спасатель МЧС и специалист ПСО. Консультируешь по детской безопасности. Отвечай кратко, четко, алгоритмами ЛизаАлерт и МЧС. ВАЖНО: Если пользователь задает вопрос, который НЕ относится к безопасности, выживанию, первой помощи или поиску людей, ты обязан вежливо ответить: 'Извините, но я могу отвечать только на вопросы о безопасности и спасении.' Не поддерживай сторонние диалоги." }]
-                    },
-                    contents: aiChatHistory
-                };
+                const payload = { contents: aiChatHistory };
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`, {
                     method: 'POST', 
@@ -827,7 +822,9 @@
                 const data = await response.json();
                 document.getElementById(loaderId)?.remove();
 
-                if (!response.ok) throw new Error(data.error?.message || `Ошибка сервера: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`Ошибка ${response.status}: ` + (data.error?.message || "Неизвестная ошибка сервера Google"));
+                }
                 if (!data.candidates || data.candidates.length === 0) throw new Error("Ответ заблокирован фильтрами безопасности Google.");
                 if (!data.candidates[0].content || !data.candidates[0].content.parts) throw new Error("Нейросеть вернула пустой ответ.");
                 
@@ -838,9 +835,8 @@
             } catch (error) {
                 document.getElementById(loaderId)?.remove();
                 let errorDetails = error.message;
-                if (errorDetails.includes("API key not valid") || errorDetails.includes("API_KEY_INVALID")) errorDetails = "Указан недействительный API-ключ.";
                 box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200"><i class="fa-solid fa-robot text-purple-600 text-sm"></i></div><div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">⚠️ Произошла ошибка связи с ИИ.<br>Детали: ${errorDetails}</div></div>`);
-                aiChatHistory.pop(); // удаляем проблемный вопрос из истории
+                aiChatHistory.pop();
             } finally {
                 input.disabled = false; if(btn) { btn.disabled = false; btn.classList.remove('opacity-50'); }
                 input.focus(); box.scrollTop = box.scrollHeight;
