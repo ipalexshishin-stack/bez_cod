@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Код Безопасности</title>
     
-    <!-- 1. ИНИЦИАЛИЗАЦИЯ ВКОНТАКТЕ ДО ЗАГРУЗКИ СТИЛЕЙ (Устраняет белый экран и вылеты) -->
+    <!-- Устраняем белый экран -->
     <script src="https://cdn.jsdelivr.net/npm/@vkontakte/vk-bridge@2.14.2/dist/browser.min.js"></script>
     <script>
         try {
@@ -15,7 +15,6 @@
         } catch(e) {}
     </script>
     
-    <!-- 2. СТИЛИ И ШРИФТЫ -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -37,11 +36,12 @@
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden selection:bg-blue-100 flex flex-col h-screen">
 
-    <!-- СИСТЕМА ОТЛАВЛИВАНИЯ КРИТИЧЕСКИХ ОШИБОК (Защита от белого экрана) -->
     <div id="crash-fallback" class="hidden fixed inset-0 z-[9999] bg-slate-50 p-6 flex-col items-center justify-center text-center">
         <i class="fa-solid fa-triangle-exclamation text-red-500 text-5xl mb-4"></i>
         <h2 class="text-xl font-bold mb-2">Ошибка соединения</h2>
@@ -50,7 +50,6 @@
     </div>
 
     <script>
-        // Глобальный перехватчик ошибок
         window.onerror = function(msg, url, line) {
             var fallback = document.getElementById('crash-fallback');
             var errText = document.getElementById('crash-error-text');
@@ -70,7 +69,6 @@
                     <i class="fa-solid fa-shield-halved text-blue-600 text-xl"></i>
                     <h1 class="font-bold text-lg tracking-tight">Код Безопасности</h1>
                 </div>
-                <!-- 100% рабочая ссылка в новом окне без JS -->
                 <a href="https://vk.com/im/channels/-239286076" target="_blank" rel="noopener noreferrer" class="mt-1 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold px-2.5 py-1 rounded-full w-max transition-colors inline-flex items-center">
                     <i class="fa-solid fa-plus mr-1"></i>Подписаться
                 </a>
@@ -89,7 +87,6 @@
 
     <main class="w-full max-w-4xl mx-auto p-4 flex-1 overflow-y-auto relative pb-32" style="-webkit-overflow-scrolling: touch;">
         
-        <!-- Вкладка ГОРОД -->
         <section id="tab-city" class="tab-content">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-city text-blue-500"></i> В городе</h2>
             <div id="flashcard-widget-city" class="mb-6"></div>
@@ -103,7 +100,6 @@
             </div>
         </section>
 
-        <!-- Вкладка ЛЕС -->
         <section id="tab-forest" class="tab-content hidden">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-tree text-emerald-500"></i> В лесу</h2>
             <div id="flashcard-widget-forest" class="mb-6"></div>
@@ -115,21 +111,35 @@
                 </div>
             </div>
         </section>
-
-        <!-- Вкладка НОВОСТИ -->
-        <section id="tab-news" class="tab-content hidden">
-            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-rss text-orange-500"></i> Новости</h2>
+        
+        <section id="tab-ai" class="tab-content hidden">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-robot text-purple-500"></i> ИИ-Помощник</h2>
             
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
-                <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-4">
-                    <i class="fa-solid fa-person-digging text-2xl"></i>
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 flex flex-col overflow-hidden" style="height: calc(100vh - 250px); min-height: 400px;">
+                <div class="bg-purple-50 border-b border-purple-100 p-3 text-xs text-center text-purple-800 font-medium shrink-0 flex justify-center items-center">
+                    <span><i class="fa-solid fa-shield-cat mr-1"></i> Помощник работает напрямую в приложении</span>
                 </div>
-                <h3 class="font-bold text-lg text-slate-800 mb-2">Раздел в разработке</h3>
-                <p class="text-sm text-slate-500 max-w-[250px] mx-auto">Скоро здесь появится умная лента актуальных новостей о детской безопасности.</p>
+                
+                <div id="ai-chat-box" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
+                    <div class="flex gap-3 w-full max-w-[90%]">
+                        <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-robot text-purple-600 text-sm"></i>
+                        </div>
+                        <div class="bg-slate-100 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm">
+                            Здравствуйте! Я ИИ-гид по детской безопасности. Задайте мне любой вопрос о безопасности дома, в городе или в лесу.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-3 border-t border-slate-100 shrink-0 bg-white flex gap-2">
+                    <input type="text" id="ai-input" placeholder="Ваш вопрос..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500" onkeypress="if(event.key === 'Enter') sendAIMessage()">
+                    <button onclick="sendAIMessage()" id="ai-send-btn" class="bg-purple-600 hover:bg-purple-700 text-white w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors">
+                        <i class="fa-solid fa-paper-plane text-sm"></i>
+                    </button>
+                </div>
             </div>
         </section>
 
-        <!-- Вкладка ВИДЕОУРОКИ -->
         <section id="tab-video" class="tab-content hidden">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-circle-play text-red-500"></i> Видеоуроки</h2>
             <div class="grid gap-4 sm:grid-cols-2" id="video-list">
@@ -137,7 +147,6 @@
             </div>
         </section>
 
-        <!-- Вкладка БЛОГ -->
         <section id="tab-blog" class="tab-content hidden">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-newspaper text-purple-500"></i> Блог</h2>
             
@@ -146,8 +155,23 @@
             </div>
 
             <div class="space-y-4">
-                
-                <!-- Статья 1 -->
+                <a href="https://vk.com/@shishin_85-ot-idei-do-vk-mini-app-kak-my-sozdali-kod-bezopasnosti-20-g" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden hover:shadow-md relative">
+                    <div class="absolute top-0 right-0 bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-1 rounded-bl-lg flex items-center gap-1">
+                        <i class="fa-solid fa-star"></i> Эксклюзив для Донов
+                    </div>
+                    <div class="p-4 pt-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-[10px] font-extrabold bg-purple-100 text-purple-700 px-2.5 py-1 rounded-md uppercase tracking-wide">Гайд</span>
+                            <span class="text-[10px] text-slate-400 font-medium">Александр Шишин</span>
+                        </div>
+                        <h3 class="font-bold text-sm text-slate-800 mb-1.5 leading-snug">Как мы создали мини-приложение, которое спасает жизни?</h3>
+                        <p class="text-xs text-slate-500 line-clamp-3 mb-3">Выложили подробный разбор «подкапотной» части VK Mini App «Код Безопасности». Решение проблемы белых экранов на iOS, правильная встройка видео и борьба со ссылками — всё внутри.</p>
+                        <div class="flex items-center gap-2 text-xs text-blue-600 font-semibold">
+                            Читать статью <i class="fa-brands fa-vk"></i>
+                        </div>
+                    </div>
+                </a>
+
                 <a href="https://vk.com/wall16426067_31772" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden hover:shadow-md">
                     <div class="p-4">
                         <div class="flex items-center gap-2 mb-2">
@@ -162,7 +186,6 @@
                     </div>
                 </a>
 
-                <!-- Статья 2 -->
                 <a href="https://vk.com/wall16426067_31773" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden hover:shadow-md">
                     <div class="p-4">
                         <div class="flex items-center gap-2 mb-2">
@@ -177,7 +200,6 @@
                     </div>
                 </a>
 
-                <!-- Статья 3 -->
                 <a href="https://vk.com/wall16426067_31787" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden hover:shadow-md">
                     <div class="p-4">
                         <div class="flex items-center gap-2 mb-2">
@@ -191,24 +213,9 @@
                         </div>
                     </div>
                 </a>
-
-                <!-- Канал -->
-                 <a href="https://vk.com/im/channels/-239286076" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden hover:shadow-md">
-                    <div class="p-4">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-[10px] font-extrabold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md uppercase tracking-wide">Канал</span>
-                        </div>
-                        <h3 class="font-bold text-sm text-slate-800 mb-1.5">Больше полезных материалов</h3>
-                        <p class="text-xs text-slate-500 mb-3">Свежие публикации, разборы ситуаций и советы по безопасности детей смотрите в официальном канале проекта.</p>
-                        <div class="flex items-center gap-2 text-xs text-blue-600 font-semibold">
-                            Перейти в канал <i class="fa-solid fa-arrow-right"></i>
-                        </div>
-                    </div>
-                </a>
             </div>
         </section>
 
-        <!-- Вкладка SOS -->
         <section id="tab-sos" class="tab-content hidden">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-red-500"></i> Экстренно</h2>
             <div id="flashcard-widget-sos" class="mb-6"></div>
@@ -220,19 +227,9 @@
                     <!-- Заполняется JS -->
                 </div>
                 
-                <!-- 100% рабочая ссылка в новом окне без JS -->
                 <a href="https://vk.com/search?c[q]=Поисково-спасательный%20отряд&c[section]=communities" target="_blank" rel="noopener noreferrer" class="mt-4 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl text-sm transition-colors active:scale-95 flex items-center justify-center">
                     <i class="fa-solid fa-magnifying-glass mr-2"></i> Искать другие города в ВК
                 </a>
-            </div>
-
-            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
-                <h3 class="font-bold text-lg mb-4 text-center">Ресурсы проекта</h3>
-                <div class="space-y-3">
-                    <!-- 100% рабочие ссылки в новом окне без JS -->
-                    <a href="https://vk.com/im/channels/-239286076" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF]/10 hover:bg-[#0077FF]/20 text-[#0077FF] font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all"><i class="fa-solid fa-bullhorn text-lg"></i> Канал проекта</a>
-                    <a href="https://vk.com/shishin_85" target="_blank" rel="noopener noreferrer" class="w-full bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all"><i class="fa-brands fa-vk text-lg"></i> Написать автору</a>
-                </div>
             </div>
 
             <button onclick="shareApp()" class="w-full bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-bold py-3.5 rounded-2xl shadow-sm transition-colors active:scale-95 mb-4">
@@ -240,7 +237,6 @@
             </button>
         </section>
 
-        <!-- Вкладка ДОНАТ -->
         <section id="tab-support" class="tab-content hidden">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-heart text-pink-500"></i> Поддержка</h2>
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4 text-center">
@@ -249,13 +245,11 @@
                 <p class="text-slate-600 text-sm mb-5">Ваша помощь позволяет нам снимать новые ролики и поддерживать работу приложения.</p>
                 
                 <div class="space-y-3">
-                    <!-- 100% надежная ссылка на VK Donut -->
                     <a href="https://vk.com/id16426067?w=donut_payment16426067&levelId=3514" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
                         <i class="fa-brands fa-vk text-xl"></i>
                         Оформить VK Donut
                     </a>
                     
-                    <!-- Ссылка на маркет ПСО -->
                     <a href="https://vk.com/market-32585861" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
                         <i class="fa-solid fa-shop text-lg"></i>
                         Магазин ПСО "Ты не один"
@@ -266,23 +260,19 @@
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
                 <h3 class="font-bold text-lg mb-4 text-center">Полезные ресурсы</h3>
                 <div class="space-y-3">
-                    <!-- Ссылка на HR Пульс (Max) -->
                     <a href="https://max.ru/channel_hrpuls35" target="_blank" rel="noopener noreferrer" class="w-full bg-[#1A202C] hover:bg-[#2D3748] text-white font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all">
                         <i class="fa-solid fa-briefcase text-lg"></i> Поиск работы (HR Пульс)
                     </a>
-                    <!-- 100% рабочая ссылка в новом окне без JS -->
-                    <a href="https://vk.com/shishin_85" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF]/10 hover:bg-[#0077FF]/20 text-[#0077FF] font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all"><i class="fa-brands fa-vk text-lg"></i> Написать автору ВКонтакте</a>
+                    <a href="https://vk.com/shishin_85" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF]/10 hover:bg-[#0077FF]/20 text-[#0077FF] font-semibold py-3 rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all"><i class="fa-brands fa-vk text-lg"></i> Написать автору</a>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Кнопка 112 -->
     <a href="tel:112" style="bottom: calc(5rem + env(safe-area-inset-bottom));" class="fixed right-4 z-50 bg-red-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(220,38,38,0.5)] active:scale-90 transition-transform">
         <i class="fa-solid fa-phone-volume text-2xl animate-pulse"></i>
     </a>
 
-    <!-- Модальное окно видео -->
     <div id="vk-player-modal" class="fixed inset-0 z-[110] bg-black/95 hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300">
         <button onclick="closeVideo()" class="absolute top-6 right-4 sm:top-8 sm:right-8 text-white/70 hover:text-white w-12 h-12 flex items-center justify-center bg-white/10 rounded-full backdrop-blur-sm transition-all active:scale-95 z-[120]">
             <i class="fa-solid fa-xmark text-2xl"></i>
@@ -294,13 +284,12 @@
         </div>
     </div>
 
-    <!-- Навигация с жесткой фиксацией краев -->
     <nav class="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-slate-200 z-40" style="padding-bottom: env(safe-area-inset-bottom);">
-        <div class="flex justify-around items-center h-16 max-w-4xl mx-auto px-1 sm:px-2 overflow-x-auto hide-scrollbar">
+        <div class="flex justify-around items-center h-16 max-w-4xl mx-auto px-1 sm:px-2 overflow-x-auto hide-scrollbar gap-1">
             <button onclick="switchTab('city')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-blue-600 transition-colors" data-target="city"><i class="fa-solid fa-city text-xl mb-1"></i><span class="text-[9px] font-semibold">Город</span></button>
             <button onclick="switchTab('forest')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-emerald-600 transition-colors" data-target="forest"><i class="fa-solid fa-tree text-xl mb-1"></i><span class="text-[9px] font-semibold">Лес</span></button>
             <button onclick="switchTab('video')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-red-600 transition-colors" data-target="video"><i class="fa-solid fa-circle-play text-xl mb-1"></i><span class="text-[9px] font-semibold">Видео</span></button>
-            <button onclick="switchTab('news')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-orange-600 transition-colors" data-target="news"><i class="fa-solid fa-rss text-xl mb-1"></i><span class="text-[9px] font-semibold">Новости</span></button>
+            <button onclick="switchTab('ai')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-purple-600 transition-colors" data-target="ai"><i class="fa-solid fa-robot text-xl mb-1"></i><span class="text-[9px] font-semibold">ИИ</span></button>
             <button onclick="switchTab('blog')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-purple-600 transition-colors" data-target="blog"><i class="fa-solid fa-newspaper text-xl mb-1"></i><span class="text-[9px] font-semibold">Блог</span></button>
             <button onclick="switchTab('sos')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-red-600 transition-colors" data-target="sos"><i class="fa-solid fa-triangle-exclamation text-xl mb-1"></i><span class="text-[9px] font-semibold">SOS</span></button>
             <button onclick="switchTab('support')" class="tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full text-slate-400 hover:text-pink-600 transition-colors" data-target="support"><i class="fa-solid fa-heart text-xl mb-1"></i><span class="text-[9px] font-semibold">Донат</span></button>
@@ -308,7 +297,6 @@
     </nav>
 
     <script>
-        // БРОНЕБОЙНЫЙ JS: Исключительно старые стандарты (for вместо forEach) для 100% поддержки старых телефонов
         var THEMES = {
             city: { bgLight: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100', bgMain: 'bg-blue-500', hover: 'hover:bg-blue-600', icon: 'fa-city' },
             forest: { bgLight: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', bgMain: 'bg-emerald-500', hover: 'hover:bg-emerald-600', icon: 'fa-tree' },
@@ -346,30 +334,20 @@
         var vkVideos = {
             'Безопасность в городе': 'https://vk.com/video_ext.php?oid=16426067&id=456240850&hash=xxxx',
             'Дети и животные': 'https://vk.com/video_ext.php?oid=16426067&id=456240849&hash=xxxx&t=6m33s',
-            'Безопасность на воде': 'https://vk.com/video_ext.php?oid=16426067&id=456240774&hash=xxxx',
+            'Безопасность на воде': 'https://vk.com/video_ext.php?oid=16426067&id=456240774&hash=b34de54a3233887f&hd=2&t=23s',
             'Безопасное окно': 'https://vk.com/video_ext.php?oid=16426067&id=456240832&hash=xxxx&t=2m18s',
             'Встреча со змеей': 'https://vk.com/video_ext.php?oid=16426067&id=456240835&hash=xxxx&t=2m22s'
         };
 
         var psoDatabase = [
-            { name: "ПСО Ты не один", city: "Вологодская область", phone: "89115056898", vk: "https://vk.com/pso_tyneodin" },
+            { name: "ПСО Ты не один", city: "Вологодская область", phone: "89115056898", vk: "https://vk.com/tyneodin35" },
             { name: "ПСО ЮК-Спас", city: "Вологодская область", phone: "89211238880", vk: "https://vk.com/deti35" },
-            { name: "ПСО Азимут", city: "Вологодская область", phone: "89115183366", vk: "https://vk.com/pso.azimut" },
+            { name: "ПСО Азимут", city: "Вологодская область", phone: "89115183366", vk: "https://vk.com/pso_azimut35" },
             { name: "ПСО Тотьма-Спас", city: "Вологодская область", phone: "89210663189", vk: "https://vk.com/totmaspas35" },
-            { name: "ПСО Устюг-Спас", city: "Вологодская область", phone: "89215329864", vk: "https://vk.com/poisk_vu" },
             { name: "ПСО ЛизаАлерт Тверь", city: "Тверская область", phone: "88007005452", vk: "https://vk.com/lizaalerttver" },
-            { name: "ПСО ОренСпас", city: "Оренбургская область", phone: "83532222982", vk: "https://vk.com/orenspas" },
             { name: "ПСО ЛизаАлерт Питер", city: "Санкт-Петербург", phone: "88007005452", vk: "https://vk.com/lizaalert_piter" },
             { name: "ПСО ЛизаАлерт Свердловская область", city: "Екатеринбург", phone: "88007005452", vk: "https://vk.com/lizaalertekb" },
-            { name: "ПСО ЛизаАлерт", city: "Федеральный отряд", phone: "88007005452", vk: "https://vk.com/lizaalert_real" },
-            { name: "ПСО Сальвар", city: "Смоленская область", phone: "84812636333", vk: "https://vk.com/pso_salvar" },
-            { name: "ПСО Волонтер", city: "Нижегородская область", phone: "88312915151", vk: "https://vk.com/poiskdetei52" },
-            { name: "ПСО Поиск 71", city: "Тульская область", phone: "89029002615", vk: "https://vk.com/poisk71" },
-            { name: "ПСО ЛизаАлерт Новосибирск", city: "Новосибирская область", phone: "88007005452", vk: "https://vk.com/lizaalert_novosib" },
-            { name: "ПСО ЛизаАлерт Киров", city: "Кировская область", phone: "88007005452", vk: "https://vk.com/lizaalert_kirov" },
-            { name: "ПСО Черноземье", city: "Воронежская область", phone: "89601319009", vk: "https://vk.com/vrn_pso_chernozemye" },
-            { name: "ПСО Сова", city: "Тверская область", phone: "89106463434", vk: "https://vk.com/poisk_tver" },
-            { name: "ПСО Доброспас", city: "Омская область", phone: "89994701008", vk: "https://vk.com/dobrospasomsk" }
+            { name: "ПСО ЛизаАлерт", city: "Федеральный отряд", phone: "88007005452", vk: "https://vk.com/lizaalert_real" }
         ];
 
         var widgetStates = {
@@ -379,7 +357,6 @@
         };
 
         function initApp() {
-            // Отрисовываем всё железобетонно
             var categories = ['city', 'forest', 'sos'];
             for (var i = 0; i < categories.length; i++) {
                 renderFlashcardWidget(categories[i]);
@@ -424,7 +401,6 @@
                 }
             }
 
-            // Фоновый запрос имени
             try {
                 if (typeof vkBridge !== 'undefined') {
                     vkBridge.send('VKWebAppGetUserInfo').then(function(user) {
@@ -442,7 +418,6 @@
         }
 
         function switchTab(tabId) {
-            // Классический цикл for вместо forEach для старых телефонов
             var tabs = document.querySelectorAll('.tab-content');
             for (var i = 0; i < tabs.length; i++) {
                 tabs[i].classList.add('hidden');
@@ -456,12 +431,13 @@
                 var btn = btns[j];
                 var isActive = btn.getAttribute('data-target') === tabId;
                 var baseColor = 'slate';
-                if(btn.className.indexOf('hover:text-blue') !== -1 || tabId === 'city') baseColor = 'blue';
-                if(btn.className.indexOf('hover:text-emerald') !== -1 || tabId === 'forest') baseColor = 'emerald';
-                if(btn.className.indexOf('hover:text-red') !== -1 || tabId === 'video' || tabId === 'sos') baseColor = 'red';
-                if(btn.className.indexOf('hover:text-orange') !== -1 || tabId === 'news') baseColor = 'orange';
-                if(btn.className.indexOf('hover:text-purple') !== -1 || tabId === 'blog') baseColor = 'purple';
-                if(btn.className.indexOf('hover:text-pink') !== -1 || tabId === 'support') baseColor = 'pink';
+                
+                // Назначаем цвета активным иконкам
+                if(btn.getAttribute('data-target') === 'city') baseColor = 'blue';
+                else if(btn.getAttribute('data-target') === 'forest') baseColor = 'emerald';
+                else if(btn.getAttribute('data-target') === 'video' || btn.getAttribute('data-target') === 'sos') baseColor = 'red';
+                else if(btn.getAttribute('data-target') === 'ai' || btn.getAttribute('data-target') === 'blog') baseColor = 'purple';
+                else if(btn.getAttribute('data-target') === 'support') baseColor = 'pink';
                 
                 btn.className = 'tab-btn flex flex-col items-center justify-center w-full min-w-[50px] h-full transition-colors ' + (isActive ? 'text-' + baseColor + '-600' : 'text-slate-400 hover:text-' + baseColor + '-600');
             }
@@ -580,7 +556,6 @@
                         </div>
                     <div class="flex gap-2">
                         <a href="tel:${p.phone}" class="flex-1 sm:flex-none bg-green-100 hover:bg-green-200 text-green-700 px-3 py-2 rounded-lg text-xs font-bold flex justify-center items-center transition-colors"><i class="fa-solid fa-phone mr-1"></i> Вызов</a>
-                        <!-- Прямая 100% рабочая ссылка -->
                         <a href="${p.vk}" target="_blank" rel="noopener noreferrer" class="flex-1 sm:flex-none bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-2 rounded-lg text-xs font-bold flex justify-center items-center transition-colors"><i class="fa-brands fa-vk text-sm mr-1"></i> Группа</a>
                     </div>
                 </div>`;
@@ -599,8 +574,84 @@
                 }
             } catch(e) {}
         }
+        
+        // --- ЛОГИКА ИИ-ПОМОЩНИКА БЕЗ ВВОДА КЛЮЧА ---
+        let chatHistory = [];
+        
+        const systemInstruction = {
+            role: "user",
+            parts: [{ 
+                text: "Ты профессиональный спасатель МЧС и специалист ПСО. Твоя задача - консультировать родителей по вопросам детской и лесной безопасности. Отвечай кратко, эмпатично, четко, без воды, используя алгоритмы ЛизаАлерт и МЧС. Структурируй ответы." 
+            }]
+        };
 
-        // Запуск интерфейса после построения страницы
+        function addChatMessage(text, isUser) {
+            const box = document.getElementById('ai-chat-box');
+            if(!box) return;
+            
+            const div = document.createElement('div');
+            div.className = `flex gap-3 w-full max-w-[90%] animate-fadeIn ${isUser ? 'ml-auto flex-row-reverse' : ''}`;
+            
+            let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\* (.*?)(?=\n|$)/g, '<li class="ml-4 list-disc">$1</li>').replace(/\n/g, '<br>');
+
+            div.innerHTML = `
+                ${!isUser ? '<div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0"><i class="fa-solid fa-robot text-purple-600 text-sm"></i></div>' : ''}
+                <div class="${isUser ? 'bg-purple-600 text-white rounded-2xl rounded-tr-sm' : 'bg-slate-100 text-slate-800 rounded-2xl rounded-tl-sm'} p-3 text-sm">
+                    ${formattedText}
+                </div>
+            `;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function sendAIMessage() {
+            const input = document.getElementById('ai-input');
+            const btn = document.getElementById('ai-send-btn');
+            const text = input.value.trim();
+            if (!text) return;
+
+            input.value = '';
+            input.disabled = true;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-sm"></i>';
+            
+            addChatMessage(text, true);
+            chatHistory.push({ role: "user", parts: [{ text: text }] });
+
+            try {
+                let contentsToSend = [...chatHistory];
+                if (contentsToSend.length === 1) contentsToSend.unshift(systemInstruction);
+
+                const apiKey = ""; // Ключ автоматически предоставляется средой
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: contentsToSend })
+                });
+
+                const data = await response.json();
+                
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const botReply = data.candidates[0].content.parts[0].text;
+                    chatHistory.push({ role: "model", parts: [{ text: botReply }] });
+                    addChatMessage(botReply, false);
+                } else {
+                    console.error("API Error:", data);
+                    addChatMessage("Извините, произошла техническая ошибка на стороне сервера.", false);
+                    chatHistory.pop();
+                }
+            } catch (e) {
+                console.error(e);
+                addChatMessage("Ошибка соединения. Пожалуйста, попробуйте позже.", false);
+                chatHistory.pop();
+            } finally {
+                input.disabled = false;
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane text-sm"></i>';
+                input.focus();
+            }
+        }
+
         window.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
