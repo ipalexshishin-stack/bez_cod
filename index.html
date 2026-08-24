@@ -168,34 +168,80 @@
 
             <!-- Полезные приложения -->
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
-                <h3 class="font-bold text-lg mb-3 text-slate-800 flex items-center gap-2"><i class="fa-solid fa-mobile-screen text-blue-500"></i> Полезные приложения</h3>
-                <p class="text-sm text-slate-600 mb-4 leading-relaxed">Рекомендуем установить на телефоны дополнительные сервисы для безопасности детей (сообщества ВК):</p>
-                <div class="space-y-3">
-                    <a href="https://vk.com/zastupnik_app" onclick="openLink('https://vk.com/zastupnik_app', event)" target="_blank" rel="noopener noreferrer" class="flex items-start gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
-                        <div class="w-10 h-10 bg-red-100 text-red-500 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-shield-heart text-lg"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">Заступник</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Бесплатное приложение для вызова помощи. Группа ВКонтакте</div>
-                        </div>
-                        <div class="flex items-center justify-center w-6"><i class="fa-brands fa-vk text-xl text-blue-500"></i></div>
-                    </a>
+                <h3 class="font-bold text-lg mb-3 text-slate-800 flex items-center gap-2"><i class="fa-solid fa-mobile-screen text-blue-500"></i> Приложения для безопасности</h3>
+                <p class="text-sm text-slate-600 mb-4 leading-relaxed">Рекомендуем установить на телефоны дополнительные сервисы родительского контроля:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     
-                    <a href="https://vk.com/findmykids" onclick="openLink('https://vk.com/findmykids', event)" target="_blank" rel="noopener noreferrer" class="flex items-start gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
-                        <div class="w-10 h-10 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-location-dot text-lg"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">Где мои дети</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">GPS-трекер и родительский контроль. Группа ВКонтакте</div>
-                        </div>
-                        <div class="flex items-center justify-center w-6"><i class="fa-brands fa-vk text-xl text-blue-500"></i></div>
-                    </a>
-
-                    <a href="https://vk.com/obereg_poisk" onclick="openLink('https://vk.com/obereg_poisk', event)" target="_blank" rel="noopener noreferrer" class="flex items-start gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
-                        <div class="w-10 h-10 bg-purple-100 text-purple-500 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-magnifying-glass-location text-lg"></i></div>
+                    <!-- Оберег Поиск -->
+                    <a href="https://vk.ru/obereg.poisk" onclick="openLink('https://vk.ru/obereg.poisk', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                        <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-hands-holding-child text-lg"></i></div>
                         <div class="flex-1">
                             <div class="font-bold text-sm text-slate-800">Оберег Поиск</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Система безопасности и координации поиска. Группа ВКонтакте</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Поиск пропавших и безопасность</div>
                         </div>
-                        <div class="flex items-center justify-center w-6"><i class="fa-brands fa-vk text-xl text-blue-500"></i></div>
+                    </a>
+
+                    <!-- Kids360 -->
+                    <a href="https://www.rustore.ru/catalog/app/app.kids360.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="openLink('https://www.rustore.ru/catalog/app/app.kids360.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                        <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-hourglass-half text-lg"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">Kids360</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Контроль времени и приложений</div>
+                        </div>
+                    </a>
+
+                    <!-- MoveToPlay -->
+                    <a href="https://www.rustore.ru/catalog/app/app.movetoplay.mtp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="openLink('https://www.rustore.ru/catalog/app/app.movetoplay.mtp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                        <div class="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-person-running text-lg"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">MoveToPlay</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Экранное время через активность</div>
+                        </div>
+                    </a>
+
+                    <!-- GeoLoc -->
+                    <a href="https://www.rustore.ru/catalog/app/app.geoloc?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="openLink('https://www.rustore.ru/catalog/app/app.geoloc?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                        <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-location-crosshairs text-lg"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">GeoLoc</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Семейный GPS-локатор</div>
+                        </div>
+                    </a>
+
+                    <!-- Kroha -->
+                    <a href="https://www.rustore.ru/catalog/app/ru.ritg.parentalcontrol?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="openLink('https://www.rustore.ru/catalog/app/ru.ritg.parentalcontrol?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                        <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-mobile-screen-button text-lg"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">Кроха (Kroha)</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Родительский контроль и зрение</div>
+                        </div>
+                    </a>
+
+                    <!-- Где мои дети -->
+                    <a href="https://www.rustore.ru/catalog/app/ru.gdemoideti.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button" onclick="openLink('https://www.rustore.ru/catalog/app/ru.gdemoideti.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                        <div class="w-10 h-10 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-map-pin text-lg"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">Где мои дети</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">GPS-трекер и звук вокруг</div>
+                        </div>
+                    </a>
+
+                    <!-- КиберНяня -->
+                    <a href="https://www.rustore.ru/catalog/app/com.thecybernanny.adroapp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button" onclick="openLink('https://www.rustore.ru/catalog/app/com.thecybernanny.adroapp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                        <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-user-shield text-lg"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">КиберНяня</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Комплексный контроль и защита</div>
+                        </div>
+                    </a>
+
+                    <!-- Alerton -->
+                    <a href="https://www.rustore.ru/catalog/app/ru.profsoft.alerton?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button" onclick="openLink('https://www.rustore.ru/catalog/app/ru.profsoft.alerton?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                        <div class="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-bell text-lg"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">Alerton</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Тревожная кнопка и оповещения</div>
+                        </div>
                     </a>
                 </div>
             </div>
@@ -205,22 +251,31 @@
                 <h3 class="font-bold text-lg mb-3 text-slate-800 flex items-center gap-2"><i class="fa-solid fa-route text-emerald-500"></i> Геолокация и запись треков</h3>
                 <p class="text-sm text-slate-600 mb-4 leading-relaxed">Эти приложения работают без интернета по спутникам (GPS). Обязательно установите перед походом в лес, чтобы записать маршрут и выйти обратно к машине:</p>
                 <div class="space-y-3">
-                    <a href="https://vk.com/geotracker" onclick="openLink('https://vk.com/geotracker', event)" target="_blank" rel="noopener noreferrer" class="flex items-start gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                    <a href="https://www.rustore.ru/catalog/app/com.gpr.geotracker?ysclid=mt79ji69fk825147137" onclick="openLink('https://www.rustore.ru/catalog/app/com.gpr.geotracker?ysclid=mt79ji69fk825147137', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-map-pin text-lg"></i></div>
                         <div class="flex-1">
                             <div class="font-bold text-sm text-slate-800">Геотрекер (GeoTracker)</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Лучшее приложение для записи трека в лесу. Группа ВКонтакте</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Лучшее приложение для записи трека в лесу</div>
                         </div>
-                        <div class="flex items-center justify-center w-6"><i class="fa-brands fa-vk text-xl text-blue-500"></i></div>
+                        <div class="flex items-center justify-center w-6"><i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-emerald-600 transition-colors"></i></div>
                     </a>
                     
-                    <a href="https://vk.com/osmand.russia" onclick="openLink('https://vk.com/osmand.russia', event)" target="_blank" rel="noopener noreferrer" class="flex items-start gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                    <a href="https://www.rustore.ru/catalog/app/net.osmand?ysclid=mt79imz6v3753835951" onclick="openLink('https://www.rustore.ru/catalog/app/net.osmand?ysclid=mt79imz6v3753835951', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-map text-lg"></i></div>
                         <div class="flex-1">
                             <div class="font-bold text-sm text-slate-800">OsmAnd</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Подробные офлайн-карты для ориентирования. Группа ВКонтакте</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Подробные офлайн-карты для ориентирования</div>
                         </div>
-                        <div class="flex items-center justify-center w-6"><i class="fa-brands fa-vk text-xl text-blue-500"></i></div>
+                        <div class="flex items-center justify-center w-6"><i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-orange-600 transition-colors"></i></div>
+                    </a>
+
+                    <a href="https://www.rustore.ru/catalog/app/com.bodunov.galileo?ysclid=mt79ln30tv601032622" onclick="openLink('https://www.rustore.ru/catalog/app/com.bodunov.galileo?ysclid=mt79ln30tv601032622', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                        <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-location-arrow text-lg"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-slate-800">Guru Maps (Galileo)</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Векторные карты и надежные GPS-треки</div>
+                        </div>
+                        <div class="flex items-center justify-center w-6"><i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-blue-600 transition-colors"></i></div>
                     </a>
                 </div>
             </div>
