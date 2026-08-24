@@ -888,7 +888,15 @@
             .catch(error => {
                 document.getElementById(loaderId)?.remove();
                 let errorDetails = error.message;
-                box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0 border border-red-200"><i class="fa-solid fa-triangle-exclamation text-red-600 text-sm"></i></div><div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">⚠️ Произошла ошибка связи с ИИ.<br>Детали: ${errorDetails}</div></div>`);
+                
+                // Красивый перехват технических ошибок Google
+                if (errorDetails.includes('Quota exceeded') || errorDetails.includes('429')) {
+                    errorDetails = "Бот перегружен (превышен бесплатный лимит ответов в минуту). Пожалуйста, подождите 1 минуту и повторите вопрос.";
+                } else if (errorDetails.includes('API_KEY_INVALID')) {
+                    errorDetails = "Неверный или заблокированный API-ключ.";
+                }
+
+                box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0 border border-red-200"><i class="fa-solid fa-triangle-exclamation text-red-600 text-sm"></i></div><div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">⚠️ Ошибка связи с ИИ.<br><span class="font-medium text-red-600">${errorDetails}</span></div></div>`);
                 aiChatHistory.pop();
             })
             .finally(() => {
