@@ -83,7 +83,7 @@
     <!-- Шапка с профилем и кнопкой Поделиться -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-40 bg-opacity-90 backdrop-blur-md shrink-0">
         <div class="px-4 py-3 flex items-center justify-between max-w-4xl mx-auto w-full">
-            <div class="flex gap-3 items-center">
+            <div class="flex gap-3 items-center cursor-pointer active:scale-95 transition-transform" onclick="switchTab('home')" title="На главную">
                 <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center shrink-0 border border-blue-100 overflow-hidden relative shadow-sm">
                     <i id="default-avatar-icon" class="fa-solid fa-shield-halved text-blue-500 text-lg"></i>
                     <img id="user-avatar-img" src="" alt="Профиль" class="w-full h-full object-cover hidden absolute inset-0 z-10">
@@ -113,8 +113,76 @@
 
     <main class="w-full max-w-4xl mx-auto p-4 flex-1 overflow-y-auto relative pb-32" style="-webkit-overflow-scrolling: touch;">
         
+        <!-- Вкладка: Главная -->
+        <section id="tab-home" class="tab-content">
+            <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-blue-500"></i> Главная</h2>
+
+            <!-- Приветствие -->
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
+                <h3 class="font-bold text-lg mb-2 text-slate-800">Добро пожаловать!</h3>
+                <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+                    «Код Безопасности» — это ваш карманный справочник по выживанию в городе и лесу. Выберите нужный раздел в нижнем меню, чтобы начать обучение, или используйте быстрый доступ:
+                </p>
+                <div class="grid grid-cols-4 gap-2 text-center text-[10px] font-bold text-slate-700">
+                    <div onclick="switchTab('city')" class="bg-blue-50 p-2 rounded-xl border border-blue-100 cursor-pointer active:scale-95 transition-transform"><i class="fa-solid fa-city text-blue-500 mb-1 text-lg block"></i>Город</div>
+                    <div onclick="switchTab('forest')" class="bg-emerald-50 p-2 rounded-xl border border-emerald-100 cursor-pointer active:scale-95 transition-transform"><i class="fa-solid fa-tree text-emerald-500 mb-1 text-lg block"></i>Лес</div>
+                    <div onclick="switchTab('ai')" class="bg-purple-50 p-2 rounded-xl border border-purple-100 cursor-pointer active:scale-95 transition-transform"><i class="fa-solid fa-robot text-purple-500 mb-1 text-lg block"></i>ИИ-бот</div>
+                    <div onclick="switchTab('sos')" class="bg-red-50 p-2 rounded-xl border border-red-100 cursor-pointer active:scale-95 transition-transform"><i class="fa-solid fa-triangle-exclamation text-red-500 mb-1 text-lg block"></i>SOS</div>
+                </div>
+            </div>
+
+            <!-- Блок: Как помочь (Выделенный) -->
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-5 rounded-3xl shadow-sm border border-orange-200 mb-6 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 text-orange-500/10 text-6xl"><i class="fa-solid fa-bullhorn"></i></div>
+                <h3 class="font-extrabold text-lg mb-3 text-orange-900 flex items-center gap-2 relative z-10"><i class="fa-solid fa-fire-flame-curved text-orange-500"></i> Как помочь проекту?</h3>
+                <p class="text-sm text-orange-800 mb-4 relative z-10 leading-relaxed font-medium">Мы развиваем приложение своими силами. Лучшая помощь — это ваше участие и распространение!</p>
+                <ul class="space-y-3 text-sm text-orange-900 relative z-10">
+                    <li class="flex gap-3 items-start"><i class="fa-solid fa-share-nodes text-orange-500 mt-1 text-sm"></i><span><b>Поделитесь с друзьями:</b> отправьте ссылку на приложение в родительские чаты (садик, школа).</span></li>
+                    <li class="flex gap-3 items-start"><i class="fa-solid fa-star text-orange-500 mt-1 text-sm"></i><span><b>Поддержите монетой:</b> оформите VK Donut для оплаты серверов и создания новых роликов.</span></li>
+                    <li class="flex gap-3 items-start"><i class="fa-solid fa-comment-dots text-orange-500 mt-1 text-sm"></i><span><b>Дайте обратную связь:</b> напишите, что стоит улучшить или добавить.</span></li>
+                </ul>
+                <button onclick="shareApp()" class="mt-5 w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2 relative z-10">
+                    <i class="fa-solid fa-paper-plane"></i> Рассказать друзьям
+                </button>
+            </div>
+
+            <!-- FAQ -->
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
+                <h3 class="font-bold text-lg mb-4 text-slate-800">Частые вопросы (FAQ)</h3>
+                <div class="space-y-4">
+                    <div class="border-b border-slate-100 pb-4">
+                        <h4 class="font-bold text-sm text-slate-800 mb-1.5 flex items-center gap-2"><i class="fa-solid fa-circle-question text-blue-500"></i> Это полностью бесплатно?</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Да, весь функционал приложения абсолютно бесплатный и доступен без дополнительных скачиваний и скрытых подписок.</p>
+                    </div>
+                    <div class="border-b border-slate-100 pb-4">
+                        <h4 class="font-bold text-sm text-slate-800 mb-1.5 flex items-center gap-2"><i class="fa-solid fa-circle-question text-blue-500"></i> Откуда берет ответы ИИ-Помощник?</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Бот работает на базе модели Gemini, но ему заданы строгие системные ограничения: он консультирует только на основе официальных алгоритмов МЧС и ЛизаАлерт.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-slate-800 mb-1.5 flex items-center gap-2"><i class="fa-solid fa-circle-question text-blue-500"></i> Как распечатать памятку?</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Перейдите в раздел «Город» или «Лес», нажмите на кнопку «Скачать Памятку», а затем используйте системную кнопку «Печать / Сохранить как PDF».</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Контакт разработчика -->
+            <div class="bg-slate-800 p-5 rounded-3xl shadow-sm border border-slate-700 mb-4 text-white relative overflow-hidden">
+                <div class="absolute -right-4 -bottom-4 text-slate-700 text-6xl"><i class="fa-solid fa-envelope"></i></div>
+                <h3 class="font-bold text-lg mb-2 flex items-center gap-2 relative z-10"><i class="fa-solid fa-at text-blue-400"></i> Связь с разработчиком</h3>
+                <p class="text-sm text-slate-300 mb-4 relative z-10">Нашли техническую ошибку, есть идея или хотите предложить сотрудничество?</p>
+                <a href="https://vk.com/id16426067" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors active:scale-95 border border-white/10 relative z-10 group">
+                    <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center shrink-0 border-2 border-white/20 group-hover:scale-105 transition-transform"><i class="fa-solid fa-user-shield"></i></div>
+                    <div class="flex-1">
+                        <div class="font-bold text-sm">Александр Шишин</div>
+                        <div class="text-[10px] text-slate-300">Автор проекта (Написать в ЛС)</div>
+                    </div>
+                    <i class="fa-brands fa-vk text-xl text-blue-400 group-hover:text-white transition-colors"></i>
+                </a>
+            </div>
+        </section>
+
         <!-- Вкладка: Город -->
-        <section id="tab-city" class="tab-content">
+        <section id="tab-city" class="tab-content hidden">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-city text-blue-500"></i> В городе</h2>
             
             <button onclick="openPdfMaterial('city')" class="w-full mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 rounded-2xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
