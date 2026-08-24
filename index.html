@@ -551,9 +551,9 @@
         ];
 
         var vkVideos = {
-            'Безопасность в городе': 'https://vk.com/video_ext.php?oid=16426067&id=456240774&t=23s',
-            'Дети и животные': 'https://vk.com/video_ext.php?oid=16426067&id=456240849&t=6m33s',
-            'Безопасность на воде': 'https://vk.com/video_ext.php?oid=16426067&id=456240774&t=23s'
+            'Безопасность в городе': { url: 'https://vk.com/video_ext.php?oid=16426067&id=456240774&t=23s', cover: 'https://placehold.co/600x338/3b82f6/ffffff?font=Montserrat&text=В+городе' },
+            'Дети и животные': { url: 'https://vk.com/video_ext.php?oid=16426067&id=456240849&t=6m33s', cover: 'https://placehold.co/600x338/10b981/ffffff?font=Montserrat&text=Дети+и+животные' },
+            'Безопасность на воде': { url: 'https://vk.com/video_ext.php?oid=16426067&id=456240774&t=23s', cover: 'https://placehold.co/600x338/0ea5e9/ffffff?font=Montserrat&text=На+воде' }
         };
 
         var psoDatabase = [
@@ -620,10 +620,12 @@
                 videoContainer.innerHTML = '';
                 for (var title in vkVideos) {
                     if (vkVideos.hasOwnProperty(title)) {
+                        var video = vkVideos[title];
                         videoContainer.innerHTML += `
-                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group cursor-pointer flex flex-col" onclick="openVideo('${vkVideos[title]}')">
-                                <div class="relative pb-[56.25%] bg-slate-200">
-                                    <div class="absolute inset-0 flex items-center justify-center bg-slate-800/20 group-hover:bg-slate-800/40 transition-colors">
+                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group cursor-pointer flex flex-col" onclick="openVideo('${video.url}')">
+                                <div class="relative pb-[56.25%] bg-slate-200 overflow-hidden">
+                                    <img src="${video.cover}" alt="${title}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-slate-900/30 group-hover:bg-slate-900/50 transition-colors">
                                         <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                                             <i class="fa-solid fa-play text-red-500 text-xl ml-1"></i>
                                         </div>
