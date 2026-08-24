@@ -104,7 +104,7 @@
                 <button onclick="shareApp()" class="flex items-center justify-center w-8 h-8 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full transition-colors active:scale-95" title="Поделиться">
                     <i class="fa-solid fa-share-nodes text-sm"></i>
                 </button>
-                <a href="https://vk.com/id16426067?w=donut_payment16426067&levelId=3514" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-8 h-8 sm:w-auto sm:px-3 sm:py-1.5 bg-orange-50 hover:bg-orange-100 border border-orange-100 text-orange-500 rounded-full transition-colors active:scale-95">
+                <a href="https://vk.ru/im/channels/-239286076?cmid=13" onclick="openLink('https://vk.ru/im/channels/-239286076?cmid=13', event)" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-8 h-8 sm:w-auto sm:px-3 sm:py-1.5 bg-orange-50 hover:bg-orange-100 border border-orange-100 text-orange-500 rounded-full transition-colors active:scale-95">
                     <i class="fa-solid fa-star text-xs"></i><span class="hidden sm:inline sm:ml-1.5 text-xs font-bold">VK Donut</span>
                 </a>
             </div>
@@ -144,6 +144,22 @@
                 <button onclick="shareApp()" class="mt-5 w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2 relative z-10">
                     <i class="fa-solid fa-paper-plane"></i> Рассказать друзьям
                 </button>
+            </div>
+
+            <!-- Партнеры и Маркет -->
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
+                <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2"><i class="fa-solid fa-handshake text-blue-500"></i> Поддержка и партнеры</h3>
+                <div class="space-y-3">
+                    <a href="https://vk.ru/im/channels/-239286076?cmid=13" onclick="openLink('https://vk.ru/im/channels/-239286076?cmid=13', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
+                        <i class="fa-brands fa-vk text-xl"></i> Оформить VK Donut
+                    </a>
+                    <a href="https://vk.com/market-32585861" onclick="openLink('https://vk.com/market-32585861', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-shop text-lg"></i> Маркет
+                    </a>
+                    <a href="https://vk.com/svarche" onclick="openLink('https://vk.com/svarche', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-fire-flame-curved text-lg"></i> СварЧе (Партнер)
+                    </a>
+                </div>
             </div>
 
             <!-- FAQ -->
@@ -365,13 +381,13 @@
                 <p class="text-slate-600 text-sm mb-5">Ваша помощь позволяет нам снимать новые ролики и поддерживать работу приложения.</p>
                 
                 <div class="space-y-3">
-                    <a href="https://vk.com/id16426067?w=donut_payment16426067&levelId=3514" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
+                    <a href="https://vk.ru/im/channels/-239286076?cmid=13" onclick="openLink('https://vk.ru/im/channels/-239286076?cmid=13', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
                         <i class="fa-brands fa-vk text-xl"></i> Оформить VK Donut
                     </a>
-                    <a href="https://yoomoney.ru/to/4100119571558687" target="_blank" rel="noopener noreferrer" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
+                    <a href="https://yoomoney.ru/to/4100119571558687" onclick="openLink('https://yoomoney.ru/to/4100119571558687', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
                         <i class="fa-solid fa-wallet text-lg"></i> Перевод по СБП / Карте
                     </a>
-                    <a href="https://vk.com/market-32585861" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
+                    <a href="https://vk.com/market-32585861" onclick="openLink('https://vk.com/market-32585861', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
                         <i class="fa-solid fa-shop text-lg"></i> Маркет
                     </a>
                 </div>
@@ -633,6 +649,16 @@
                             <span class="text-sm font-medium text-slate-700">${checklistItems[k]}</span>
                         </label>`;
                 }
+            }
+        }
+
+        function openLink(url, event) {
+            if (event) event.preventDefault();
+            triggerTaptic();
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
+                window.Telegram.WebApp.openLink(url);
+            } else {
+                window.open(url, '_blank', 'noopener,noreferrer');
             }
         }
 
