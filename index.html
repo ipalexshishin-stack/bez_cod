@@ -651,6 +651,19 @@
     </nav>
 
     <script>
+        // Глобальный перехватчик ошибок ДО всего остального кода
+        window.onerror = function(msg, url, line) {
+            console.error("Глобальная ошибка: ", msg, url, line);
+            var fallback = document.getElementById('crash-fallback');
+            var errText = document.getElementById('crash-error-text');
+            if (fallback && errText) {
+                fallback.classList.remove('hidden');
+                fallback.classList.add('flex');
+                errText.textContent = "Деталь: " + msg + " (Строка: " + line + ")";
+            }
+            return false;
+        };
+
         // Инициализация API (Ключ разделен, чтобы GitHub не блокировал сохранение)
         const _k1 = "AQ.Ab8RN6K"; 
         const _k2 = "irDwOrG-YVzR"; 
@@ -724,10 +737,75 @@
         var quizStates = { city: { current: 0, score: 0, completed: false }, forest: { current: 0, score: 0, completed: false } };
         var widgetStates = { city: { currentIndex: 0, isFlipped: false, showHint: false }, forest: { currentIndex: 0, isFlipped: false, showHint: false }, sos: { currentIndex: 0, isFlipped: false, showHint: false } };
 
+        var checklistItems = [
+            "Яркая одежда (не камуфляж!)",
+            "Заряженный телефон (100%)",
+            "Вода (минимум 1 литр)",
+            "Свисток на шею",
+            "Перекус (батончики, орехи)"
+        ];
+
         function formatText(text) {
             return text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
                        .replace(/\* (.*?)(?=\n|$)/g, '<li class="ml-4">$1</li>')
                        .replace(/\n/g, '<br>');
+        }
+
+        // БЕЗОПАСНОЕ ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (Вынесено вверх)
+        function switchTab(tabId, btnElement) {
+            try {
+                // 1. Скрываем все вкладки
+                var tabs = document.querySelectorAll('.tab-content');
+                for (var i = 0; i < tabs.length; i++) {
+                    tabs[i].classList.add('hidden');
+                }
+                
+                // 2. Показываем нужную
+                var activeTab = document.getElementById('tab-' + tabId);
+                if(activeTab) {
+                    activeTab.classList.remove('hidden');
+                } else {
+                    console.error("Не найдена вкладка:", tabId);
+                    // Если вкладка не найдена, принудительно показываем главную
+                    var homeTab = document.getElementById('tab-home');
+                    if (homeTab) homeTab.classList.remove('hidden');
+                }
+                
+                // 3. Управление кнопкой 112
+                var btn112 = document.getElementById('btn-112');
+                if (btn112) {
+                    if (tabId === 'ai') { btn112.style.display = 'none'; } 
+                    else { btn112.style.display = 'flex'; }
+                }
+                
+                // 4. Обновление активной кнопки в нижнем меню
+                var btns = document.querySelectorAll('.tab-btn');
+                for (var j = 0; j < btns.length; j++) {
+                    var btn = btns[j];
+                    var isActive = btn.getAttribute('data-target') === tabId;
+                    var baseColor = 'slate';
+                    if(isActive) {
+                        if(tabId === 'city') baseColor = 'blue';
+                        else if(tabId === 'forest') baseColor = 'emerald';
+                        else if(tabId === 'video' || tabId === 'sos') baseColor = 'red';
+                        else if(tabId === 'ai' || tabId === 'blog') baseColor = 'purple';
+                        else if(tabId === 'support') baseColor = 'pink';
+                    }
+                    btn.className = 'tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors ' + (isActive ? 'text-' + baseColor + '-600' : 'text-slate-400 hover:text-' + baseColor + '-600');
+                }
+                
+                // 5. Сброс скролла наверх
+                try { 
+                    var scrollContainer = document.getElementById('main-scroll-container');
+                    if (scrollContainer) scrollContainer.scrollTo(0,0);
+                    window.scrollTo(0,0); 
+                } catch(e) {}
+                
+                // 6. Вибрация
+                triggerTaptic();
+            } catch (error) {
+                console.error("Ошибка при переключении вкладки:", error);
+            }
         }
 
         function initApp() {
@@ -752,20 +830,26 @@
                 }
             } catch(e) { console.log('vkBridge error:', e); }
 
-            var categories = ['city', 'forest', 'sos'];
-            for (var i = 0; i < categories.length; i++) renderFlashcardWidget(categories[i]);
+            // Безопасный рендеринг карточек
+            try {
+                var categories = ['city', 'forest', 'sos'];
+                for (var i = 0; i < categories.length; i++) {
+                    renderFlashcardWidget(categories[i]);
+                }
+            } catch (e) { console.error("Ошибка рендера карточек:", e); }
 
-            var videoContainer = document.getElementById('video-list');
-            if(videoContainer) {
-                videoContainer.innerHTML = '';
-                for (var title in vkVideos) {
-                    if (vkVideos.hasOwnProperty(title)) {
-                        var video = vkVideos[title];
+            // Безопасный рендеринг видео
+            try {
+                var videoContainer = document.getElementById('video-list');
+                if(videoContainer) {
+                    videoContainer.innerHTML = '';
+                    for (var title in vkVideos) {
+                        var v = vkVideos[title];
                         videoContainer.innerHTML += `
-                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group cursor-pointer flex flex-col" onclick="openVideo('${video.url}')">
-                                <div class="relative pb-[56.25%] bg-slate-200 overflow-hidden">
-                                    <img src="${video.cover}" onerror="this.onerror=null; this.src='${video.fallback}'" alt="${title}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                    <div class="absolute inset-0 flex items-center justify-center bg-slate-900/30 group-hover:bg-slate-900/50 transition-colors">
+                            <div onclick="openVideo('${v.url}')" class="bg-white rounded-2xl shadow-sm border border-slate-100 cursor-pointer overflow-hidden group active:scale-95 transition-transform relative">
+                                <div class="relative w-full pb-[56.25%] bg-slate-200">
+                                    <img src="${v.cover}" onerror="this.onerror=null; this.src='${v.fallback}';" alt="${title}" class="absolute top-0 left-0 w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
                                         <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                                             <i class="fa-solid fa-play text-red-500 text-xl ml-1"></i>
                                         </div>
@@ -775,26 +859,28 @@
                             </div>`;
                     }
                 }
-            }
+            } catch (e) { console.error("Ошибка рендера видео:", e); }
 
-            filterPSO();
-            initBlogCategories();
-            filterBlog();
-            renderQuiz('city');
-            renderQuiz('forest');
+            // Безопасный вызов остальных функций
+            try { filterPSO(); } catch(e) {}
+            try { initBlogCategories(); } catch(e) {}
+            try { filterBlog(); } catch(e) {}
+            try { renderQuiz('city'); } catch(e) {}
+            try { renderQuiz('forest'); } catch(e) {}
 
-            var checklistContainer = document.getElementById('forest-checklist');
-            if (checklistContainer) {
-                var checklistItems = ['Заряженный телефон (100%)', 'Свисток на шею', 'Яркая одежда (не камуфляж)', 'Вода (1л) и перекус', 'Спички/зажигалка', 'Оффлайн-карты в телефоне', 'Спрей от клещей'];
-                checklistContainer.innerHTML = '';
-                for (var k = 0; k < checklistItems.length; k++) {
-                    checklistContainer.innerHTML += `
-                        <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors border border-slate-100">
-                            <input type="checkbox" class="w-5 h-5 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500" onchange="triggerTaptic()">
-                            <span class="text-sm font-medium text-slate-700">${checklistItems[k]}</span>
-                        </label>`;
+            try {
+                var checklistContainer = document.getElementById('forest-checklist');
+                if (checklistContainer) {
+                    checklistContainer.innerHTML = '';
+                    for (var k = 0; k < checklistItems.length; k++) {
+                        checklistContainer.innerHTML += `
+                            <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors border border-slate-100">
+                                <input type="checkbox" class="w-5 h-5 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500" onchange="triggerTaptic()">
+                                <span class="text-sm font-medium text-slate-700">${checklistItems[k]}</span>
+                            </label>`;
+                    }
                 }
-            }
+            } catch(e) { console.error("Ошибка рендера чек-листа:", e); }
         }
 
         function openLink(url, event) {
@@ -819,35 +905,7 @@
             } catch(e) {}
         }
 
-        function switchTab(tabId, btnElement) {
-            var tabs = document.querySelectorAll('.tab-content');
-            for (var i = 0; i < tabs.length; i++) tabs[i].classList.add('hidden');
-            var activeTab = document.getElementById('tab-' + tabId);
-            if(activeTab) activeTab.classList.remove('hidden');
-            
-            var btn112 = document.getElementById('btn-112');
-            if (btn112) {
-                if (tabId === 'ai') { btn112.style.display = 'none'; } 
-                else { btn112.style.display = 'flex'; }
-            }
-            
-            var btns = document.querySelectorAll('.tab-btn');
-            for (var j = 0; j < btns.length; j++) {
-                var btn = btns[j];
-                var isActive = btn.getAttribute('data-target') === tabId;
-                var baseColor = 'slate';
-                if(isActive) {
-                    if(tabId === 'city') baseColor = 'blue';
-                    else if(tabId === 'forest') baseColor = 'emerald';
-                    else if(tabId === 'video' || tabId === 'sos') baseColor = 'red';
-                    else if(tabId === 'ai' || tabId === 'blog') baseColor = 'purple';
-                    else if(tabId === 'support') baseColor = 'pink';
-                }
-                btn.className = 'tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors ' + (isActive ? 'text-' + baseColor + '-600' : 'text-slate-400 hover:text-' + baseColor + '-600');
-            }
-            try { document.getElementById('main-scroll-container').scrollTo(0,0); } catch(e) {}
-            triggerTaptic();
-        }
+        // Функция switchTab была перенесена выше
 
         function triggerTaptic() {
             try { if (typeof vkBridge !== 'undefined') vkBridge.send('VKWebAppTapticSelectionChanged'); } catch(e) {}
@@ -1198,26 +1256,25 @@
             });
         }
 
-        // Запуск приложения
+        // НАДЕЖНЫЙ ЗАПУСК ПРИЛОЖЕНИЯ
         window.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM загружен, начинаем инициализацию...");
+            
+            // 1. Принудительно показываем главную страницу сразу же, до работы любых других скриптов
+            try {
+                switchTab('home');
+                console.log("Вкладка Home показана успешно.");
+            } catch (e) {
+                console.error("Критическая ошибка: не удалось показать стартовый экран", e);
+            }
+
+            // 2. Инициализируем остальные данные приложения
             try {
                 initApp();
-                // Принудительно показываем главную страницу при загрузке
-                var homeBtn = document.getElementById('btn-nav-home');
-                if (homeBtn) {
-                    switchTab('home', homeBtn);
-                } else {
-                    switchTab('home');
-                }
+                console.log("Приложение инициализировано успешно.");
             } catch(e) {
-                console.error("Ошибка при инициализации приложения:", e);
-                var fallback = document.getElementById('crash-fallback');
-                var errText = document.getElementById('crash-error-text');
-                if (fallback && errText) {
-                    fallback.classList.remove('hidden');
-                    fallback.classList.add('flex');
-                    errText.textContent = "Ошибка запуска: " + e.message;
-                }
+                console.error("Ошибка при инициализации данных приложения:", e);
+                // Показываем fallback только если упало что-то критичное, но UI не блочим
             }
         });
     </script>
