@@ -1284,7 +1284,7 @@
         }
 
         // НАДЕЖНЫЙ ЗАПУСК ПРИЛОЖЕНИЯ
-        window.addEventListener('DOMContentLoaded', function() {
+        function startApp() {
             console.log("DOM загружен, начинаем инициализацию...");
             
             // 1. Принудительно показываем главную страницу сразу же, до работы любых других скриптов
@@ -1303,7 +1303,13 @@
                 console.error("Ошибка при инициализации данных приложения:", e);
                 // Показываем fallback только если упало что-то критичное, но UI не блочим
             }
-        });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startApp);
+        } else {
+            startApp();
+        }
     </script>
 </body>
 </html>
