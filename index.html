@@ -58,7 +58,8 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-100 flex flex-col min-h-screen supports-[min-height:100dvh]:min-h-[100dvh]">
+<!-- Снимаем жесткие ограничения высоты с body, возвращаем классический скролл страницы -->
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-100 flex flex-col min-h-screen">
 
     <div id="crash-fallback" class="hidden fixed inset-0 z-[9999] bg-slate-50 p-6 flex-col items-center justify-center text-center">
         <i class="fa-solid fa-triangle-exclamation text-red-500 text-5xl mb-4"></i>
@@ -80,8 +81,8 @@
         };
         </script>
 
-    <!-- Шапка с профилем и кнопкой Поделиться -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-[100] bg-opacity-90 backdrop-blur-md shrink-0 shadow-sm">
+    <!-- Шапка теперь прилипает к верху при скролле (sticky) и гарантированно поверх контента -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 w-full z-[100] shadow-sm">
         <div class="px-4 py-3 flex items-center justify-between max-w-4xl mx-auto w-full">
             <div class="flex gap-3 items-center cursor-pointer active:scale-95 transition-transform" onclick="switchTab('home')" title="На главную">
                 <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center shrink-0 border border-blue-100 overflow-hidden relative shadow-sm">
@@ -111,7 +112,9 @@
         </div>
     </header>
 
-    <main class="w-full max-w-4xl mx-auto p-4 flex-1 relative pb-28">
+    <!-- Основной контент. Убираем flex-1 и overflow-y-auto, так как теперь скроллится весь body -->
+    <!-- Добавляем pb-24 (отступ снизу), чтобы контент никогда не перекрывался нижним меню -->
+    <main id="main-scroll-container" class="w-full max-w-4xl mx-auto p-4 relative z-10 pb-24">
         
         <!-- Вкладка: Главная -->
         <section id="tab-home" class="tab-content">
@@ -615,7 +618,7 @@
     </main>
 
     <!-- Плавающая кнопка 112 -->
-    <a id="btn-112" href="tel:112" style="bottom: calc(5.5rem + env(safe-area-inset-bottom));" class="fixed right-6 md:right-[calc(50%-22rem)] z-[90] bg-red-600/90 backdrop-blur-sm text-white w-12 h-12 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(220,38,38,0.4)] active:scale-90 transition-all hover:bg-red-700">
+    <a id="btn-112" href="tel:112" style="bottom: calc(4.5rem + env(safe-area-inset-bottom));" class="fixed right-6 md:right-[calc(50%-22rem)] z-[90] bg-red-600/90 backdrop-blur-sm text-white w-12 h-12 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(220,38,38,0.4)] active:scale-90 transition-all hover:bg-red-700">
         <i class="fa-solid fa-phone-volume text-xl animate-pulse"></i>
     </a>
 
@@ -635,39 +638,15 @@
         </div>
     </div>
 
-    <!-- Модальное окно PDF/Печать -->
-    <div id="pdf-modal" class="fixed inset-0 z-[130] bg-slate-900/60 hidden flex-col items-center justify-end sm:justify-center opacity-0 transition-opacity duration-300 backdrop-blur-sm">
-        <div class="w-full max-w-2xl bg-white sm:rounded-2xl rounded-t-3xl shadow-2xl overflow-hidden flex flex-col h-[85vh] sm:h-[80vh] transform transition-transform translate-y-full sm:translate-y-0" id="pdf-modal-content">
-            
-            <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50 no-print">
-                <h3 class="font-bold text-lg text-slate-800" id="pdf-title">Памятка</h3>
-                <button onclick="closePdf()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300 transition-colors">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <div class="flex-1 overflow-y-auto p-6 text-sm text-slate-700 bg-white" id="printable-pdf-content">
-                <!-- Контент для печати заполняется JS -->
-            </div>
-
-            <div class="p-4 border-t border-slate-100 bg-white no-print gap-3 flex flex-col sm:flex-row">
-                <button onclick="window.print()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-sm transition-colors active:scale-95 flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-print"></i> Печать / Сохранить как PDF
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Нижняя навигация -->
-    <nav class="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-slate-200 z-[100]" style="padding-bottom: env(safe-area-inset-bottom);">
+    <!-- Нижняя навигация. Фиксируем её жестко внизу экрана (fixed bottom-0) поверх всего -->
+    <nav class="bg-white border-t border-slate-200 fixed bottom-0 left-0 right-0 w-full z-[100] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]" style="padding-bottom: env(safe-area-inset-bottom);">
         <div class="flex items-center h-16 max-w-4xl mx-auto w-full px-1">
-            <button onclick="switchTab('city', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-blue-600" data-target="city"><i class="fa-solid fa-city text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Город</span></button>
+            <button onclick="switchTab('home', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-blue-600" data-target="home" id="btn-nav-home"><i class="fa-solid fa-house text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Главная</span></button>
+            <button onclick="switchTab('city', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-blue-600" data-target="city"><i class="fa-solid fa-city text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Город</span></button>
             <button onclick="switchTab('forest', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-emerald-600" data-target="forest"><i class="fa-solid fa-tree text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Лес</span></button>
             <button onclick="switchTab('video', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-red-600" data-target="video"><i class="fa-solid fa-circle-play text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Видео</span></button>
             <button onclick="switchTab('ai', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-purple-600" data-target="ai"><i class="fa-solid fa-robot text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">ИИ</span></button>
-            <button onclick="switchTab('blog', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-purple-600" data-target="blog"><i class="fa-solid fa-newspaper text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Блог</span></button>
             <button onclick="switchTab('sos', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-red-600" data-target="sos"><i class="fa-solid fa-triangle-exclamation text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">SOS</span></button>
-            <button onclick="switchTab('support', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-pink-600" data-target="support"><i class="fa-solid fa-heart text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Донат</span></button>
         </div>
     </nav>
 
@@ -866,7 +845,7 @@
                 }
                 btn.className = 'tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors ' + (isActive ? 'text-' + baseColor + '-600' : 'text-slate-400 hover:text-' + baseColor + '-600');
             }
-            try { window.scrollTo(0,0); } catch(e) {}
+            try { document.getElementById('main-scroll-container').scrollTo(0,0); } catch(e) {}
             triggerTaptic();
         }
 
@@ -1120,7 +1099,7 @@
             var filtered = blogArticles.filter(a => (currentBlogCategory === 'Все' || a.category === currentBlogCategory) && (a.title.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query)));
             if (filtered.length === 0) { container.innerHTML = '<div class="text-center py-10"><i class="fa-solid fa-folder-open text-slate-300 text-4xl mb-3"></i><p class="text-slate-500 text-sm">Ничего не найдено.</p></div>'; return; }
             container.innerHTML = filtered.map(a => `
-                <a href="${a.link}" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden hover:shadow-md relative">
+                <a href="${a.link}" onclick="openLink('${a.link}', event)" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden hover:shadow-md relative">
                     <div class="p-4 pt-5">
                         <div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-extrabold bg-purple-100 text-purple-700 px-2.5 py-1 rounded-md uppercase tracking-wide">${a.category}</span><span class="text-[10px] text-slate-400 font-medium">${a.author}</span></div>
                         <h3 class="font-bold text-sm text-slate-800 mb-1.5 leading-snug">${a.title}</h3>
@@ -1212,12 +1191,35 @@
                 aiChatHistory.pop();
             })
             .finally(() => {
-                input.disabled = false; if(btn) { btn.disabled = false; btn.classList.remove('opacity-50'); }
-                input.focus(); box.scrollTop = box.scrollHeight;
+                if(input) input.disabled = false; 
+                if(btn) { btn.disabled = false; btn.classList.remove('opacity-50'); }
+                if(input) input.focus(); 
+                if(box) box.scrollTop = box.scrollHeight;
             });
         }
 
-        window.addEventListener('DOMContentLoaded', initApp);
+        // Запуск приложения
+        window.addEventListener('DOMContentLoaded', function() {
+            try {
+                initApp();
+                // Принудительно показываем главную страницу при загрузке
+                var homeBtn = document.getElementById('btn-nav-home');
+                if (homeBtn) {
+                    switchTab('home', homeBtn);
+                } else {
+                    switchTab('home');
+                }
+            } catch(e) {
+                console.error("Ошибка при инициализации приложения:", e);
+                var fallback = document.getElementById('crash-fallback');
+                var errText = document.getElementById('crash-error-text');
+                if (fallback && errText) {
+                    fallback.classList.remove('hidden');
+                    fallback.classList.add('flex');
+                    errText.textContent = "Ошибка запуска: " + e.message;
+                }
+            }
+        });
     </script>
 </body>
 </html>
