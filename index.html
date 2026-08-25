@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Код Безопасности</title>
     
-    <!-- Устраняем белый экран -->
+    <!-- Подключение VK Bridge и Telegram Web App -->
     <script src="https://cdn.jsdelivr.net/npm/@vkontakte/vk-bridge@2.14.2/dist/browser.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Безопасная инициализация VK Bridge -->
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             try {
@@ -25,43 +25,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
+        html, body { margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
-
         .card-perspective { perspective: 1000px; }
-        .card-flipper {
-            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-            transform-style: preserve-3d;
-            position: relative;
-        }
+        .card-flipper { transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; position: relative; }
         .card-flipper.flipped { transform: rotateY(180deg); }
-        .card-front, .card-back {
-            backface-visibility: hidden;
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-        }
+        .card-front, .card-back { backface-visibility: hidden; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .card-back { transform: rotateY(180deg); }
-        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        .typing-indicator span {
-            animation: blink 1.4s infinite both;
-            height: 6px; width: 6px; background: #8b5cf6;
-            border-radius: 50%; display: inline-block; margin: 0 1px;
-        }
+        .typing-indicator span { animation: blink 1.4s infinite both; height: 6px; width: 6px; background: #8b5cf6; border-radius: 50%; display: inline-block; margin: 0 1px; }
         .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
         .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes blink { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
-
-        /* Стили для печати (PDF) */
         @media print {
             body * { visibility: hidden; }
             #printable-pdf-content, #printable-pdf-content * { visibility: visible; }
@@ -71,6 +49,7 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-100">
+
     <div id="crash-fallback" class="hidden fixed inset-0 z-[9999] bg-slate-50 p-6 flex-col items-center justify-center text-center">
         <i class="fa-solid fa-triangle-exclamation text-red-500 text-5xl mb-4"></i>
         <h2 class="text-xl font-bold mb-2">Ошибка соединения</h2>
@@ -78,10 +57,22 @@
         <button onclick="window.location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold shadow-sm transition-colors active:scale-95">Перезагрузить</button>
     </div>
 
+    <script>
+        window.onerror = function(msg, url, line) {
+            console.error("Глобальная ошибка: ", msg, url, line);
+            var fallback = document.getElementById('crash-fallback');
+            var errText = document.getElementById('crash-error-text');
+            if (fallback && errText) {
+                fallback.classList.remove('hidden');
+                fallback.classList.add('flex');
+                errText.textContent = "Деталь: " + msg + " (Строка: " + line + ")";
+            }
+            return false;
+        };
+    </script>
+
     <header class="bg-white border-b border-slate-200 sticky top-0 w-full z-[100] shadow-sm">
         <div class="px-4 py-3 flex items-center justify-between max-w-4xl mx-auto w-full">
-            
-            <!-- Левая часть: Аватар и Название -->
             <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
                 <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 border border-blue-200 relative cursor-pointer active:scale-95 transition-transform overflow-hidden" onclick="switchTab('home')" title="На главную">
                     <div id="default-avatar-icon" class="relative z-20 flex items-center justify-center w-full h-full"><i class="fa-solid fa-shield-halved text-base sm:text-lg"></i></div>
@@ -94,8 +85,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Правая часть: Поделиться, Подписка и Донат -->
             <div class="flex items-center gap-2 shrink-0 ml-2">
                 <button onclick="shareApp()" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-full transition-colors active:scale-95 shadow-sm shrink-0" title="Поделиться">
                     <i class="fa-solid fa-share-nodes text-xs sm:text-sm"></i>
@@ -105,9 +94,7 @@
                     <span class="text-[10px] sm:text-xs font-bold hidden sm:inline-block">Подписка</span>
                 </a>
                 <a href="https://vk.ru/im/channels/-239286076?cmid=13" onclick="openLink('https://vk.ru/im/channels/-239286076?cmid=13', event)" target="_blank" rel="noopener noreferrer" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-[#0077FF] hover:bg-[#005CE6] text-white rounded-full transition-colors active:scale-95 shadow-sm shrink-0" title="Оформить VK Donut">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.06 1.48c.35-.03.73.16.9.52l2.36 5.09a.86.86 0 00.7.49l5.48.58c.38.04.68.32.77.69.09.37-.05.77-.34 1l-4.14 3.7a.86.86 0 00-.27.81l1.17 5.37c.09.4-.08.8-.42.99a.9.9 0 01-1-.07l-4.73-3.1a.86.86 0 00-.91 0l-4.73 3.1a.9.9 0 01-1 .07c-.34-.2-.51-.6-.42-.99l1.17-5.37a.86.86 0 00-.27-.81L2.24 9.85c-.29-.23-.43-.63-.34-1 .09-.37.39-.65.77-.69l5.48-.58a.86.86 0 00.7-.49l2.36-5.09c.17-.36.55-.55.9-.52zM12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z"></path>
-                    </svg>
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.06 1.48c.35-.03.73.16.9.52l2.36 5.09a.86.86 0 00.7.49l5.48.58c.38.04.68.32.77.69.09.37-.05.77-.34 1l-4.14 3.7a.86.86 0 00-.27.81l1.17 5.37c.09.4-.08.8-.42.99a.9.9 0 01-1-.07l-4.73-3.1a.86.86 0 00-.91 0l-4.73 3.1a.9.9 0 01-1 .07c-.34-.2-.51-.6-.42-.99l1.17-5.37a.86.86 0 00-.27-.81L2.24 9.85c-.29-.23-.43-.63-.34-1 .09-.37.39-.65.77-.69l5.48-.58a.86.86 0 00.7-.49l2.36-5.09c.17-.36.55-.55.9-.52zM12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z"></path></svg>
                 </a>
             </div>
         </div>
@@ -115,33 +102,20 @@
 
     <main id="main-scroll-container" class="w-full max-w-4xl mx-auto p-4 relative z-10 pb-28">
         
-        <!-- Вкладка: Главная -->
         <section id="tab-home" class="tab-content">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-blue-500"></i> Главная</h2>
 
-            <!-- Приветствие -->
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
                 <h3 class="font-bold text-lg mb-2 text-slate-800">Добро пожаловать!</h3>
-                <p class="text-sm text-slate-600 mb-4 leading-relaxed">
-                    «Код Безопасности» — это ваш карманный справочник по выживанию в городе и лесу. Выберите нужный раздел в нижнем меню, чтобы начать обучение, или используйте быстрый доступ:
-                </p>
+                <p class="text-sm text-slate-600 mb-4 leading-relaxed">«Код Безопасности» — это ваш карманный справочник по выживанию в городе и лесу. Выберите нужный раздел в нижнем меню, чтобы начать обучение, или используйте быстрый доступ:</p>
                 <div class="grid grid-cols-4 gap-2 text-center text-[10px] font-bold text-slate-700">
                     <div onclick="switchTab('city')" class="bg-blue-50 p-2 rounded-xl border border-blue-100 cursor-pointer active:scale-95 transition-transform"><i class="fa-solid fa-city text-blue-500 mb-1 text-lg block"></i>Город</div>
                     <div onclick="switchTab('forest')" class="bg-emerald-50 p-2 rounded-xl border border-emerald-100 cursor-pointer active:scale-95 transition-transform"><i class="fa-solid fa-tree text-emerald-500 mb-1 text-lg block"></i>Лес</div>
-                    <div onclick="switchTab('ai')" class="bg-purple-50 p-2 rounded-xl border border-purple-100 cursor-pointer active:scale-95 transition-transform relative overflow-hidden group">
-                        <i class="fa-solid fa-robot text-purple-500 mb-1 text-lg block relative z-10"></i>
-                        <span class="relative z-10">ИИ-бот</span>
-                        <!-- Заглушка для ИИ -->
-                        <div class="absolute inset-0 bg-slate-100/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                             <i class="fa-solid fa-wrench text-slate-400 mb-0.5"></i>
-                             <span class="text-[8px] text-slate-500 leading-tight">Тех.<br>работы</span>
-                        </div>
-                    </div>
+                    <div onclick="switchTab('ai')" class="bg-purple-50 p-2 rounded-xl border border-purple-100 cursor-pointer active:scale-95 transition-transform"><i class="fa-solid fa-robot text-purple-500 mb-1 text-lg block"></i>ИИ-бот</div>
                     <div onclick="switchTab('sos')" class="bg-red-50 p-2 rounded-xl border border-red-100 cursor-pointer active:scale-95 transition-transform"><i class="fa-solid fa-triangle-exclamation text-red-500 mb-1 text-lg block"></i>SOS</div>
                 </div>
             </div>
 
-            <!-- Блок: Как помочь (Выделенный) -->
             <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-5 rounded-3xl shadow-sm border border-orange-200 mb-6 relative overflow-hidden">
                 <div class="absolute -right-4 -top-4 text-orange-500/10 text-6xl"><i class="fa-solid fa-bullhorn"></i></div>
                 <h3 class="font-extrabold text-lg mb-3 text-orange-900 flex items-center gap-2 relative z-10"><i class="fa-solid fa-fire-flame-curved text-orange-500"></i> Как помочь проекту?</h3>
@@ -152,168 +126,98 @@
                     <li class="flex gap-3 items-start"><i class="fa-solid fa-comment-dots text-orange-500 mt-1 text-sm"></i><span><b>Дайте обратную связь:</b> напишите, что стоит улучшить или добавить.</span></li>
                     <li class="flex gap-3 items-start"><i class="fa-solid fa-thumbtack text-orange-500 mt-1 text-sm"></i><span><b>Админам сообществ:</b> добавьте приложение в меню и ссылки вашей группы. Лучшая поддержка — закрепленный пост с рекомендацией нашего сервиса!</span></li>
                 </ul>
-                <button onclick="shareApp()" class="mt-5 w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2 relative z-10">
-                    <i class="fa-solid fa-paper-plane"></i> Рассказать друзьям
-                </button>
+                <button onclick="shareApp()" class="mt-5 w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2 relative z-10"><i class="fa-solid fa-paper-plane"></i> Рассказать друзьям</button>
             </div>
 
-            <!-- Партнеры и Маркет -->
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
                 <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2"><i class="fa-solid fa-handshake text-blue-500"></i> Поддержка и партнеры</h3>
                 <div class="space-y-3">
-                    <a href="https://vk.ru/im/channels/-239286076?cmid=13" onclick="openLink('https://vk.ru/im/channels/-239286076?cmid=13', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
-                        <i class="fa-brands fa-vk text-xl"></i> Оформить VK Donut
-                    </a>
-                    <a href="https://vk.com/market-32585861" onclick="openLink('https://vk.com/market-32585861', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-shop text-lg"></i> Маркет
-                    </a>
-                    <a href="https://vk.com/svarche" onclick="openLink('https://vk.com/svarche', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-fire-flame-curved text-lg"></i> СварЧе (Партнер)
-                    </a>
-                    <a href="https://vk.ru/hrpuls" onclick="openLink('https://vk.ru/hrpuls', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-briefcase text-lg"></i> HR Пульс (Партнер)
-                    </a>
+                    <a href="https://vk.ru/im/channels/-239286076?cmid=13" onclick="openLink('https://vk.ru/im/channels/-239286076?cmid=13', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-brands fa-vk text-xl"></i> Оформить VK Donut</a>
+                    <a href="https://vk.com/market-32585861" onclick="openLink('https://vk.com/market-32585861', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-solid fa-shop text-lg"></i> Маркет</a>
+                    <a href="https://vk.com/svarche" onclick="openLink('https://vk.com/svarche', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-solid fa-fire-flame-curved text-lg"></i> СварЧе (Партнер)</a>
+                    <a href="https://vk.ru/hrpuls" onclick="openLink('https://vk.ru/hrpuls', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-solid fa-briefcase text-lg"></i> HR Пульс (Партнер)</a>
                 </div>
             </div>
 
-            <!-- Спецблок: МЧС России -->
             <div class="bg-gradient-to-br from-blue-50 to-sky-50 p-5 rounded-3xl shadow-sm border border-blue-200 mb-6 relative overflow-hidden">
                 <div class="absolute -right-4 -top-4 text-blue-500/10 text-6xl"><i class="fa-solid fa-shield-halved"></i></div>
                 <h3 class="font-bold text-lg mb-2 text-blue-900 flex items-center gap-2 relative z-10"><i class="fa-solid fa-star-of-life text-blue-500"></i> МЧС России</h3>
                 <p class="text-sm text-blue-800 mb-4 relative z-10 leading-relaxed font-medium">Официальное приложение. Ваш личный помощник в экстренных ситуациях: быстрый вызов спасателей, инструкции по первой помощи и оповещения о ЧС.</p>
-                
                 <a href="https://www.rustore.ru/catalog/app/io.citizens.security" onclick="openLink('https://www.rustore.ru/catalog/app/io.citizens.security', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 bg-white hover:bg-blue-50 rounded-2xl transition-colors border border-blue-100 active:scale-95 shadow-sm relative z-10 group">
                     <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-star-of-life text-xl"></i></div>
-                    <div class="flex-1">
-                        <div class="font-extrabold text-base text-slate-800">МЧС России</div>
-                        <div class="text-xs text-slate-500 mt-0.5">Скачать официальное приложение</div>
-                    </div>
+                    <div class="flex-1"><div class="font-extrabold text-base text-slate-800">МЧС России</div><div class="text-xs text-slate-500 mt-0.5">Скачать официальное приложение</div></div>
                     <div class="flex items-center justify-center w-8"><i class="fa-solid fa-download text-blue-400 group-hover:text-blue-600 transition-colors text-lg"></i></div>
                 </a>
             </div>
 
-            <!-- Спецблок: Оберег Поиск -->
             <div class="bg-gradient-to-br from-orange-50 to-red-50 p-5 rounded-3xl shadow-sm border border-orange-200 mb-6 relative overflow-hidden">
                 <div class="absolute -right-4 -top-4 text-orange-500/10 text-6xl"><i class="fa-solid fa-hands-holding-child"></i></div>
                 <h3 class="font-bold text-lg mb-2 text-orange-900 flex items-center gap-2 relative z-10"><i class="fa-solid fa-satellite-dish text-orange-500"></i> Поиск пропавших людей</h3>
                 <p class="text-sm text-orange-800 mb-4 relative z-10 leading-relaxed font-medium">Оберег Поиск — это специализированное приложение для координации поисков и обеспечения безопасности детей и взрослых.</p>
-                
                 <a href="https://obereg-poisk.ru/download/" onclick="openLink('https://obereg-poisk.ru/download/', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 bg-white hover:bg-orange-50 rounded-2xl transition-colors border border-orange-100 active:scale-95 shadow-sm relative z-10 group">
                     <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-hands-holding-child text-xl"></i></div>
-                    <div class="flex-1">
-                        <div class="font-extrabold text-base text-slate-800">Оберег Поиск</div>
-                        <div class="text-xs text-slate-500 mt-0.5">Скачать официальное приложение</div>
-                    </div>
+                    <div class="flex-1"><div class="font-extrabold text-base text-slate-800">Оберег Поиск</div><div class="text-xs text-slate-500 mt-0.5">Скачать официальное приложение</div></div>
                     <div class="flex items-center justify-center w-8"><i class="fa-solid fa-download text-orange-400 group-hover:text-orange-600 transition-colors text-lg"></i></div>
                 </a>
             </div>
 
-            <!-- Полезные приложения (Родительский контроль) -->
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
                 <h3 class="font-bold text-lg mb-3 text-slate-800 flex items-center gap-2"><i class="fa-solid fa-mobile-screen text-blue-500"></i> Родительский контроль</h3>
                 <p class="text-sm text-slate-600 mb-4 leading-relaxed">Рекомендуем установить на телефоны дополнительные сервисы родительского контроля:</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    
-                    <!-- Kids360 -->
                     <a href="https://www.rustore.ru/catalog/app/app.kids360.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="openLink('https://www.rustore.ru/catalog/app/app.kids360.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-hourglass-half text-lg"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">Kids360</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Контроль времени и приложений</div>
-                        </div>
+                        <div class="flex-1"><div class="font-bold text-sm text-slate-800">Kids360</div><div class="text-[10px] text-slate-500 mt-0.5">Контроль времени и приложений</div></div>
                     </a>
-
-                    <!-- MoveToPlay -->
                     <a href="https://www.rustore.ru/catalog/app/app.movetoplay.mtp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="openLink('https://www.rustore.ru/catalog/app/app.movetoplay.mtp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-person-running text-lg"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">MoveToPlay</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Экранное время через активность</div>
-                        </div>
+                        <div class="flex-1"><div class="font-bold text-sm text-slate-800">MoveToPlay</div><div class="text-[10px] text-slate-500 mt-0.5">Экранное время через активность</div></div>
                     </a>
-
-                    <!-- GeoLoc -->
                     <a href="https://www.rustore.ru/catalog/app/app.geoloc?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="openLink('https://www.rustore.ru/catalog/app/app.geoloc?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-location-crosshairs text-lg"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">GeoLoc</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Семейный GPS-локатор</div>
-                        </div>
+                        <div class="flex-1"><div class="font-bold text-sm text-slate-800">GeoLoc</div><div class="text-[10px] text-slate-500 mt-0.5">Семейный GPS-локатор</div></div>
                     </a>
-
-                    <!-- Kroha -->
                     <a href="https://www.rustore.ru/catalog/app/ru.ritg.parentalcontrol?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="openLink('https://www.rustore.ru/catalog/app/ru.ritg.parentalcontrol?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-mobile-screen-button text-lg"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">Кроха (Kroha)</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Родительский контроль и зрение</div>
-                        </div>
+                        <div class="flex-1"><div class="font-bold text-sm text-slate-800">Кроха (Kroha)</div><div class="text-[10px] text-slate-500 mt-0.5">Родительский контроль и зрение</div></div>
                     </a>
-
-                    <!-- Где мои дети -->
                     <a href="https://www.rustore.ru/catalog/app/ru.gdemoideti.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button" onclick="openLink('https://www.rustore.ru/catalog/app/ru.gdemoideti.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-map-pin text-lg"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">Где мои дети</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">GPS-трекер и звук вокруг</div>
-                        </div>
+                        <div class="flex-1"><div class="font-bold text-sm text-slate-800">Где мои дети</div><div class="text-[10px] text-slate-500 mt-0.5">GPS-трекер и звук вокруг</div></div>
                     </a>
-
-                    <!-- КиберНяня -->
                     <a href="https://www.rustore.ru/catalog/app/com.thecybernanny.adroapp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button" onclick="openLink('https://www.rustore.ru/catalog/app/com.thecybernanny.adroapp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-user-shield text-lg"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">КиберНяня</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Комплексный контроль и защита</div>
-                        </div>
+                        <div class="flex-1"><div class="font-bold text-sm text-slate-800">КиберНяня</div><div class="text-[10px] text-slate-500 mt-0.5">Комплексный контроль и защита</div></div>
                     </a>
-
-                    <!-- Alerton -->
                     <a href="https://www.rustore.ru/catalog/app/ru.profsoft.alerton?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button" onclick="openLink('https://www.rustore.ru/catalog/app/ru.profsoft.alerton?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-bell text-lg"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">Alerton</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Тревожная кнопка и оповещения</div>
-                        </div>
+                        <div class="flex-1"><div class="font-bold text-sm text-slate-800">Alerton</div><div class="text-[10px] text-slate-500 mt-0.5">Тревожная кнопка и оповещения</div></div>
                     </a>
                 </div>
             </div>
 
-            <!-- Навигация и трекеры -->
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
                 <h3 class="font-bold text-lg mb-3 text-slate-800 flex items-center gap-2"><i class="fa-solid fa-route text-emerald-500"></i> Геолокация и запись треков</h3>
                 <p class="text-sm text-slate-600 mb-4 leading-relaxed">Эти приложения работают без интернета по спутникам (GPS). Обязательно установите перед походом в лес, чтобы записать маршрут и выйти обратно к машине:</p>
                 <div class="space-y-3">
                     <a href="https://www.rustore.ru/catalog/app/com.gpr.geotracker?ysclid=mt79ji69fk825147137" onclick="openLink('https://www.rustore.ru/catalog/app/com.gpr.geotracker?ysclid=mt79ji69fk825147137', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-map-pin text-lg"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">Геотрекер (GeoTracker)</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Лучшее приложение для запись трека в лесу</div>
-                        </div>
+                        <div class="flex-1"><div class="font-bold text-sm text-slate-800">Геотрекер (GeoTracker)</div><div class="text-[10px] text-slate-500 mt-0.5">Лучшее приложение для запись трека в лесу</div></div>
                         <div class="flex items-center justify-center w-6"><i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-emerald-600 transition-colors"></i></div>
                     </a>
-                    
                     <a href="https://www.rustore.ru/catalog/app/net.osmand?ysclid=mt79imz6v3753835951" onclick="openLink('https://www.rustore.ru/catalog/app/net.osmand?ysclid=mt79imz6v3753835951', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-map text-lg"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">OsmAnd</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Подробные офлайн-карты для ориентирования</div>
-                        </div>
+                        <div class="flex-1"><div class="font-bold text-sm text-slate-800">OsmAnd</div><div class="text-[10px] text-slate-500 mt-0.5">Подробные офлайн-карты для ориентирования</div></div>
                         <div class="flex items-center justify-center w-6"><i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-orange-600 transition-colors"></i></div>
                     </a>
-
                     <a href="https://www.rustore.ru/catalog/app/com.bodunov.galileo?ysclid=mt79ln30tv601032622" onclick="openLink('https://www.rustore.ru/catalog/app/com.bodunov.galileo?ysclid=mt79ln30tv601032622', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-location-arrow text-lg"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">Guru Maps (Galileo)</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Векторные карты и надежные GPS-треки</div>
-                        </div>
+                        <div class="flex-1"><div class="font-bold text-sm text-slate-800">Guru Maps (Galileo)</div><div class="text-[10px] text-slate-500 mt-0.5">Векторные карты и надежные GPS-треки</div></div>
                         <div class="flex items-center justify-center w-6"><i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-blue-600 transition-colors"></i></div>
                     </a>
                 </div>
             </div>
 
-            <!-- FAQ -->
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
                 <h3 class="font-bold text-lg mb-4 text-slate-800">Частые вопросы (FAQ)</h3>
                 <div class="space-y-4">
@@ -342,28 +246,22 @@
                 </div>
             </div>
 
-            <!-- Контакт разработчика -->
             <div class="bg-slate-800 p-5 rounded-3xl shadow-sm border border-slate-700 mb-4 text-white relative overflow-hidden">
                 <div class="absolute -right-4 -bottom-4 text-slate-700 text-6xl"><i class="fa-solid fa-envelope"></i></div>
                 <h3 class="font-bold text-lg mb-2 flex items-center gap-2 relative z-10"><i class="fa-solid fa-at text-blue-400"></i> Связь с разработчиком</h3>
                 <p class="text-sm text-slate-300 mb-4 relative z-10">Нашли техническую ошибку, есть идея или хотите предложить сотрудничество?</p>
                 <a href="https://vk.com/id16426067" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors active:scale-95 border border-white/10 relative z-10 group">
                     <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center shrink-0 border-2 border-white/20 group-hover:scale-105 transition-transform"><i class="fa-solid fa-user-shield"></i></div>
-                    <div class="flex-1">
-                        <div class="font-bold text-sm">Александр Шишин</div>
-                        <div class="text-[10px] text-slate-300">Автор проекта (Написать в ЛС)</div>
-                    </div>
+                    <div class="flex-1"><div class="font-bold text-sm">Александр Шишин</div><div class="text-[10px] text-slate-300">Автор проекта (Написать в ЛС)</div></div>
                     <i class="fa-brands fa-vk text-xl text-blue-400 group-hover:text-white transition-colors"></i>
                 </a>
             </div>
         </section>
 
-        <!-- Вкладка: Город -->
         <section id="tab-city" class="tab-content hidden">
             <div class="text-[11px] text-slate-500 mb-3 flex items-center gap-2">
                 <span onclick="switchTab('home')" class="cursor-pointer hover:text-blue-600 font-medium transition-colors active:scale-95 inline-block"><i class="fa-solid fa-house text-slate-400 mr-0.5"></i> Главная</span>
-                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
-                <span class="text-slate-800 font-bold">Город</span>
+                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i><span class="text-slate-800 font-bold">Город</span>
             </div>
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-city text-blue-500"></i> В городе</h2>
             
@@ -373,14 +271,9 @@
 
             <div id="flashcard-widget-city" class="mb-6"></div>
             
-            <!-- Интерактивный тест -->
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
-                <h3 class="font-bold text-lg mb-3 flex items-center gap-2 text-slate-800">
-                    <i class="fa-solid fa-gamepad text-blue-500"></i> Мини-игра: Проверь себя
-                </h3>
-                <div id="quiz-container-city" class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
-                    <!-- Рендерится через JS -->
-                </div>
+                <h3 class="font-bold text-lg mb-3 flex items-center gap-2 text-slate-800"><i class="fa-solid fa-gamepad text-blue-500"></i> Мини-игра: Проверь себя</h3>
+                <div id="quiz-container-city" class="bg-slate-50 border border-slate-200 rounded-2xl p-4"></div>
             </div>
 
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
@@ -392,12 +285,10 @@
             </div>
         </section>
 
-        <!-- Вкладка: Лес -->
         <section id="tab-forest" class="tab-content hidden">
             <div class="text-[11px] text-slate-500 mb-3 flex items-center gap-2">
                 <span onclick="switchTab('home')" class="cursor-pointer hover:text-emerald-600 font-medium transition-colors active:scale-95 inline-block"><i class="fa-solid fa-house text-slate-400 mr-0.5"></i> Главная</span>
-                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
-                <span class="text-slate-800 font-bold">Лес</span>
+                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i><span class="text-slate-800 font-bold">Лес</span>
             </div>
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-tree text-emerald-500"></i> В лесу</h2>
             
@@ -407,56 +298,51 @@
 
             <div id="flashcard-widget-forest" class="mb-6"></div>
             
-            <!-- Интерактивный тест -->
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
-                <h3 class="font-bold text-lg mb-3 flex items-center gap-2 text-slate-800">
-                    <i class="fa-solid fa-compass text-emerald-500"></i> Игра: Выживание в лесу
-                </h3>
-                <div id="quiz-container-forest" class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4">
-                    <!-- Рендерится через JS -->
-                </div>
+                <h3 class="font-bold text-lg mb-3 flex items-center gap-2 text-slate-800"><i class="fa-solid fa-compass text-emerald-500"></i> Игра: Выживание в лесу</h3>
+                <div id="quiz-container-forest" class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4"></div>
             </div>
 
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
                 <h3 class="font-bold text-lg mb-3 text-slate-800">Чек-лист перед выходом</h3>
-                <div id="forest-checklist" class="space-y-3">
-                    <!-- Заполняется JS -->
-                </div>
+                <div id="forest-checklist" class="space-y-3"></div>
             </div>
         </section>
         
-        <!-- Вкладка: ИИ -->
         <section id="tab-ai" class="tab-content hidden">
             <div class="text-[11px] text-slate-500 mb-3 flex items-center gap-2 shrink-0">
                 <span onclick="switchTab('home')" class="cursor-pointer hover:text-purple-600 font-medium transition-colors active:scale-95 inline-block"><i class="fa-solid fa-house text-slate-400 mr-0.5"></i> Главная</span>
-                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
-                <span class="text-slate-800 font-bold">ИИ-Помощник</span>
+                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i><span class="text-slate-800 font-bold">ИИ-Помощник</span>
             </div>
             <h2 class="text-2xl font-extrabold mb-2 flex items-center gap-2 shrink-0"><i class="fa-solid fa-robot text-purple-500"></i> ИИ-Помощник</h2>
             <p class="text-xs text-slate-500 mb-4 shrink-0">Задайте любой вопрос о безопасности детей</p>
             
-            <!-- Заглушка вместо чата -->
-            <div class="flex flex-col bg-slate-50 rounded-3xl shadow-sm border border-slate-200 overflow-hidden h-[60vh] sm:h-[500px] items-center justify-center text-center p-6 relative">
-                <div class="absolute inset-0 bg-white/50 backdrop-blur-[2px] z-0"></div>
-                <div class="relative z-10 flex flex-col items-center">
-                    <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4 border border-slate-200 shadow-inner">
-                        <i class="fa-solid fa-wrench text-4xl text-slate-400 animate-pulse"></i>
+            <div class="flex flex-col bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden h-[60vh] sm:h-[500px]">
+                <div id="ai-chat-box" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-slate-50/50">
+                    <div class="flex gap-3 w-full max-w-[90%] animate-fadeIn">
+                        <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200">
+                            <i class="fa-solid fa-robot text-purple-600 text-sm"></i>
+                        </div>
+                        <div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">
+                            Здравствуйте! Я ИИ-гид по детской безопасности. Задайте мне вопрос, например:<br><br>
+                            <span class="text-purple-600 font-medium cursor-pointer hover:underline" onclick="fillAI('Что собрать в аптечку для леса?')">- Что собрать в аптечку для леса?</span><br>
+                            <span class="text-purple-600 font-medium cursor-pointer hover:underline" onclick="fillAI('Как научить ребенка не уходить с чужими?')">- Как научить ребенка не уходить с чужими?</span>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-xl text-slate-800 mb-2">Ведутся технические работы</h3>
-                    <p class="text-sm text-slate-500 max-w-xs leading-relaxed">
-                        ИИ-помощник временно недоступен. Мы обновляем базу знаний и улучшаем алгоритмы, чтобы сделать его ответы еще более точными и полезными.
-                    </p>
-                    <button onclick="switchTab('home')" class="mt-6 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-xl shadow-sm transition-colors active:scale-95">Вернуться на главную</button>
+                </div>
+                <div class="p-3 bg-white border-t border-slate-100 flex gap-2 shrink-0 relative">
+                    <textarea id="ai-input" rows="1" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none max-h-24" placeholder="Ваш вопрос..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendAIMessage(); }"></textarea>
+                    <button id="ai-send-btn" onclick="sendAIMessage()" class="bg-purple-600 hover:bg-purple-700 text-white w-12 h-12 rounded-xl flex items-center justify-center transition-colors shadow-sm shrink-0 active:scale-95 disabled:opacity-50 disabled:active:scale-100">
+                        <i class="fa-solid fa-paper-plane text-sm ml-0.5"></i>
+                    </button>
                 </div>
             </div>
         </section>
 
-        <!-- Вкладка: Видеоуроки -->
         <section id="tab-video" class="tab-content hidden">
             <div class="text-[11px] text-slate-500 mb-3 flex items-center gap-2">
                 <span onclick="switchTab('home')" class="cursor-pointer hover:text-red-600 font-medium transition-colors active:scale-95 inline-block"><i class="fa-solid fa-house text-slate-400 mr-0.5"></i> Главная</span>
-                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
-                <span class="text-slate-800 font-bold">Видеоуроки</span>
+                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i><span class="text-slate-800 font-bold">Видеоуроки</span>
             </div>
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-circle-play text-red-500"></i> Видеоуроки</h2>
             
@@ -464,17 +350,13 @@
                 <i class="fa-solid fa-mobile-screen text-lg"></i> Смотреть короткие VK Клипы
             </a>
 
-            <div class="grid gap-4 sm:grid-cols-2" id="video-list">
-                <!-- Заполняется JS -->
-            </div>
+            <div class="grid gap-4 sm:grid-cols-2" id="video-list"></div>
         </section>
 
-        <!-- Вкладка: Блог -->
         <section id="tab-blog" class="tab-content hidden">
             <div class="text-[11px] text-slate-500 mb-3 flex items-center gap-2">
                 <span onclick="switchTab('home')" class="cursor-pointer hover:text-purple-600 font-medium transition-colors active:scale-95 inline-block"><i class="fa-solid fa-house text-slate-400 mr-0.5"></i> Главная</span>
-                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
-                <span class="text-slate-800 font-bold">Блог</span>
+                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i><span class="text-slate-800 font-bold">Блог</span>
             </div>
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-newspaper text-purple-500"></i> Блог</h2>
             
@@ -488,23 +370,16 @@
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
                     <input type="text" id="blog-search" placeholder="Поиск статей..." class="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" onkeyup="filterBlog()">
                 </div>
-                
-                <div id="blog-categories" class="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
-                    <!-- Заполняется JS -->
-                </div>
+                <div id="blog-categories" class="flex gap-2 overflow-x-auto hide-scrollbar pb-1"></div>
             </div>
 
-            <div class="space-y-4" id="blog-list">
-                <!-- Заполняется JS -->
-            </div>
+            <div class="space-y-4" id="blog-list"></div>
         </section>
 
-        <!-- Вкладка: SOS -->
         <section id="tab-sos" class="tab-content hidden">
             <div class="text-[11px] text-slate-500 mb-3 flex items-center gap-2">
                 <span onclick="switchTab('home')" class="cursor-pointer hover:text-red-600 font-medium transition-colors active:scale-95 inline-block"><i class="fa-solid fa-house text-slate-400 mr-0.5"></i> Главная</span>
-                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
-                <span class="text-slate-800 font-bold">SOS</span>
+                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i><span class="text-slate-800 font-bold">SOS</span>
             </div>
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-red-500"></i> Экстренно</h2>
             <div id="flashcard-widget-sos" class="mb-6"></div>
@@ -512,106 +387,42 @@
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
                 <h3 class="font-bold text-lg mb-3">Поиск отрядов ПСО</h3>
                 <input type="text" id="pso-search" placeholder="Введите город (например, Вологда)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" onkeyup="filterPSO()">
-                <div id="pso-list" class="space-y-3 max-h-60 overflow-y-auto">
-                    <!-- Заполняется JS -->
-                </div>
-                
+                <div id="pso-list" class="space-y-3 max-h-60 overflow-y-auto"></div>
                 <a href="https://vk.com/search?c[q]=Поисково-спасательный%20отряд&c[section]=communities" target="_blank" rel="noopener noreferrer" class="mt-4 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl text-sm transition-colors active:scale-95 flex items-center justify-center">
                     <i class="fa-solid fa-magnifying-glass mr-2"></i> Искать другие города в ВК
                 </a>
             </div>
         </section>
 
-        <!-- Вкладка: Поддержка -->
         <section id="tab-support" class="tab-content hidden">
             <div class="text-[11px] text-slate-500 mb-3 flex items-center gap-2">
                 <span onclick="switchTab('home')" class="cursor-pointer hover:text-pink-600 font-medium transition-colors active:scale-95 inline-block"><i class="fa-solid fa-house text-slate-400 mr-0.5"></i> Главная</span>
-                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
-                <span class="text-slate-800 font-bold">Поддержка</span>
+                <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i><span class="text-slate-800 font-bold">Поддержка</span>
             </div>
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-heart text-pink-500"></i> Поддержка</h2>
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4 text-center">
                 <div class="w-16 h-16 bg-pink-100 text-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="fa-solid fa-hand-holding-heart"></i></div>
                 <h3 class="font-bold text-lg mb-2">Поддержите проект</h3>
                 <p class="text-slate-600 text-sm mb-5">Ваша помощь позволяет нам снимать новые ролики и поддерживать работу приложения.</p>
-                
                 <div class="space-y-3">
-                    <a href="https://vk.ru/im/channels/-239286076?cmid=13" onclick="openLink('https://vk.ru/im/channels/-239286076?cmid=13', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
-                        <i class="fa-brands fa-vk text-xl"></i> Оформить VK Donut
-                    </a>
-                    <a href="https://yoomoney.ru/to/4100119571558687" onclick="openLink('https://yoomoney.ru/to/4100119571558687', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-wallet text-lg"></i> Перевод по СБП / Карте
-                    </a>
-                    <a href="https://vk.com/market-32585861" onclick="openLink('https://vk.com/market-32585861', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-shop text-lg"></i> Маркет
-                    </a>
+                    <a href="https://vk.ru/im/channels/-239286076?cmid=13" onclick="openLink('https://vk.ru/im/channels/-239286076?cmid=13', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0077FF] hover:bg-[#005CE6] text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-brands fa-vk text-xl"></i> Оформить VK Donut</a>
+                    <a href="https://yoomoney.ru/to/4100119571558687" onclick="openLink('https://yoomoney.ru/to/4100119571558687', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-solid fa-wallet text-lg"></i> Перевод по СБП / Карте</a>
+                    <a href="https://vk.com/market-32585861" onclick="openLink('https://vk.com/market-32585861', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-solid fa-shop text-lg"></i> Маркет</a>
                 </div>
             </div>
 
-            <!-- Команда и партнеры -->
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
                 <h3 class="font-bold text-lg mb-4 text-slate-800 border-b border-slate-100 pb-2">Команда и партнеры</h3>
                 <div class="space-y-4">
                     <a href="https://vk.com/id16426067" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95">
                         <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-user-shield"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">Александр Шишин</div>
-                            <div class="text-xs text-slate-500">Автор проекта, специалист по безопасности</div>
-                        </div>
+                        <div class="flex-1"><div class="font-bold text-sm text-slate-800">Александр Шишин</div><div class="text-xs text-slate-500">Автор проекта, специалист по безопасности</div></div>
                         <i class="fa-brands fa-vk text-blue-500 text-lg"></i>
                     </a>
-
                     <a href="https://vk.ru/im/channels/-239286076" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95">
                         <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-users"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-slate-800">Канал проекта</div>
-                            <div class="text-xs text-slate-500">Подписывайтесь на обновления</div>
-                        </div>
+                        <div class="flex-1"><div class="font-bold text-sm text-slate-800">Канал проекта</div><div class="text-xs text-slate-500">Подписывайтесь на обновления</div></div>
                         <i class="fa-brands fa-vk text-blue-500 text-lg"></i>
-                    </a>
-
-                    <a href="https://vk.ru/hrpuls" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-800 hover:bg-slate-900 rounded-xl transition-colors shadow-sm active:scale-95 mt-4 group">
-                        <div class="w-10 h-10 bg-white/10 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/20 transition-colors"><i class="fa-solid fa-briefcase"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-white flex items-center gap-2">
-                                HR Пульс <span class="bg-blue-500 text-white text-[8px] uppercase font-bold px-1.5 py-0.5 rounded">Партнер</span>
-                            </div>
-                            <div class="text-xs text-slate-300">Свежие вакансии и карьера</div>
-                        </div>
-                        <i class="fa-solid fa-arrow-right text-slate-400 group-hover:text-white transition-colors"></i>
-                    </a>
-                    
-                    <a href="https://vk.ru/svarche" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-orange-600 hover:bg-orange-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
-                        <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-fire-flame-curved"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-white flex items-center gap-2">
-                                СварЧе <span class="bg-red-500 text-white text-[8px] uppercase font-bold px-1.5 py-0.5 rounded">Партнер</span>
-                            </div>
-                            <div class="text-xs text-orange-200">Сварочные работы в Череповце</div>
-                        </div>
-                        <i class="fa-solid fa-arrow-right text-orange-300 group-hover:text-white transition-colors"></i>
-                    </a>
-
-                    <a href="https://vk.com/pso.azimut" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
-                        <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-map-location-dot"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-white flex items-center gap-2">
-                                ПСО «Азимут» <span class="bg-red-500 text-white text-[8px] uppercase font-bold px-1.5 py-0.5 rounded">Партнер</span>
-                            </div>
-                            <div class="text-xs text-indigo-200">Поисково-спасательный отряд</div>
-                        </div>
-                        <i class="fa-solid fa-arrow-right text-indigo-200 group-hover:text-white transition-colors"></i>
-                    </a>
-
-                    <a href="https://vk.ru/pso_tyneodin" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-teal-600 hover:bg-teal-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
-                        <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-users-viewfinder"></i></div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm text-white flex items-center gap-2">
-                                ПСО «Ты не один» <span class="bg-red-500 text-white text-[8px] uppercase font-bold px-1.5 py-0.5 rounded">Партнер</span>
-                            </div>
-                            <div class="text-xs text-teal-100">Поисково-спасательный отряд</div>
-                        </div>
-                        <i class="fa-solid fa-arrow-right text-teal-200 group-hover:text-white transition-colors"></i>
                     </a>
                 </div>
             </div>
@@ -631,12 +442,10 @@
         </div>
     </nav>
 
-    <!-- Плавающая кнопка 112 -->
-    <a id="btn-112" href="tel:112" style="bottom: calc(1rem + env(safe-area-inset-bottom));" class="fixed right-6 md:right-[calc(50%-22rem)] z-[90] bg-red-600/90 backdrop-blur-sm text-white w-12 h-12 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(220,38,38,0.4)] active:scale-90 transition-all hover:bg-red-700">
+    <a id="btn-112" href="tel:112" style="bottom: calc(5rem + env(safe-area-inset-bottom));" class="fixed right-6 md:right-[calc(50%-22rem)] z-[90] bg-red-600/90 backdrop-blur-sm text-white w-12 h-12 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(220,38,38,0.4)] active:scale-90 transition-all hover:bg-red-700">
         <i class="fa-solid fa-phone-volume text-xl animate-pulse"></i>
     </a>
 
-    <!-- Модальное окно видео -->
     <div id="vk-player-modal" class="fixed inset-0 z-[110] bg-black/95 hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300">
         <button onclick="closeVideo()" class="absolute top-6 right-4 sm:top-8 sm:right-8 text-white/70 hover:text-white w-12 h-12 flex items-center justify-center bg-white/10 rounded-full backdrop-blur-sm transition-all active:scale-95 z-[120]">
             <i class="fa-solid fa-xmark text-2xl"></i>
@@ -652,7 +461,6 @@
         </div>
     </div>
 
-    <!-- ВОЗВРАЩАЕМ ПРОПАВШЕЕ МОДАЛЬНОЕ ОКНО ДЛЯ ПАМЯТОК PDF -->
     <div id="pdf-modal" class="fixed inset-0 z-[120] bg-black/60 hidden flex-col justify-end transition-opacity opacity-0 duration-300">
         <div class="flex-1 w-full" onclick="closePdf()"></div>
         <div id="pdf-modal-content" class="bg-white w-full max-w-4xl mx-auto rounded-t-3xl p-6 transform translate-y-full transition-transform duration-300 max-h-[85vh] flex flex-col relative">
@@ -661,28 +469,20 @@
                 <h2 id="pdf-title" class="font-bold text-xl text-slate-800">Памятка</h2>
                 <button onclick="closePdf()" class="w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-full active:scale-95 transition-colors"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div id="printable-pdf-content" class="overflow-y-auto flex-1 pr-2 text-slate-700 space-y-4 pb-6">
-                <!-- Заполняется JS -->
-            </div>
+            <div id="printable-pdf-content" class="overflow-y-auto flex-1 pr-2 text-slate-700 space-y-4 pb-6"></div>
             <button onclick="window.print()" class="w-full mt-4 bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-colors active:scale-95 flex justify-center items-center gap-2"><i class="fa-solid fa-print"></i> Печать / Сохранить как PDF</button>
         </div>
     </div>
 
     <script>
-        // Глобальный перехватчик ошибок ДО всего остального кода
-        window.onerror = function(msg, url, line) {
-            console.error("Глобальная ошибка: ", msg, url, line);
-            var fallback = document.getElementById('crash-fallback');
-            var errText = document.getElementById('crash-error-text');
-            if (fallback && errText) {
-                fallback.classList.remove('hidden');
-                fallback.classList.add('flex');
-                errText.textContent = "Деталь: " + msg + " (Строка: " + line + ")";
-            }
-            return false;
-        };
+        const _k1 = "AQ.Ab8RN6K"; 
+        const _k2 = "irDwOrG-YVzR"; 
+        const _k3 = "g16lIab4FwQkZlG"; 
+        const _k4 = "qlfjyZLiiR4RmgLA";
+        const GEMINI_API_KEY = _k1 + _k2 + _k3 + _k4; 
+        
+        let aiChatHistory = [];
 
-        // База данных приложения
         var THEMES = {
             city: { bgLight: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100', bgMain: 'bg-blue-500', hover: 'hover:bg-blue-600', icon: 'fa-city', hoverBorder: 'hover:border-blue-400', hoverBg: 'hover:bg-blue-50' },
             forest: { bgLight: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', bgMain: 'bg-emerald-500', hover: 'hover:bg-emerald-600', icon: 'fa-tree', hoverBorder: 'hover:border-emerald-400', hoverBg: 'hover:bg-emerald-50' },
@@ -701,27 +501,13 @@
         ];
 
         var vkVideos = {
-            'Безопасность в городе': { 
-                url: 'https://vk.com/video_ext.php?oid=16426067&id=456240774&t=23s', 
-                cover: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=600&q=80',
-                fallback: 'https://placehold.co/600x338/3b82f6/ffffff?font=Montserrat&text=В+городе'
-            },
-            'Дети и животные': { 
-                url: 'https://vk.com/video_ext.php?oid=16426067&id=456240849&t=6m33s', 
-                cover: 'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=600&q=80',
-                fallback: 'https://placehold.co/600x338/10b981/ffffff?font=Montserrat&text=Дети+и+животные'
-            },
-            'Безопасность на воде': { 
-                url: 'https://vk.com/video_ext.php?oid=16426067&id=456240774&t=23s', 
-                cover: 'https://images.unsplash.com/photo-1571556942661-0f73583be456?auto=format&fit=crop&w=600&q=80', 
-                fallback: 'https://placehold.co/600x338/0ea5e9/ffffff?font=Montserrat&text=На+воде'
-            }
+            'Безопасность в городе': { url: 'https://vk.com/video_ext.php?oid=16426067&id=456240774&t=23s', cover: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=600&q=80', fallback: 'https://placehold.co/600x338/3b82f6/ffffff?font=Montserrat&text=В+городе' },
+            'Дети и животные': { url: 'https://vk.com/video_ext.php?oid=16426067&id=456240849&t=6m33s', cover: 'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=600&q=80', fallback: 'https://placehold.co/600x338/10b981/ffffff?font=Montserrat&text=Дети+и+животные' },
+            'Безопасность на воде': { url: 'https://vk.com/video_ext.php?oid=16426067&id=456240774&t=23s', cover: 'https://images.unsplash.com/photo-1571556942661-0f73583be456?auto=format&fit=crop&w=600&q=80', fallback: 'https://placehold.co/600x338/0ea5e9/ffffff?font=Montserrat&text=На+воде' }
         };
 
         var psoDatabase = [
-            { name: "ПСО Ты не один", city: "Вологодская область", phone: "89115056898", vk: "https://vk.ru/pso_tyneodin" },
-            { name: "ПСО ЮК-Спас", city: "Вологодская область", phone: "89211238880", vk: "https://vk.com/deti35" },
-            { name: "ПСО Азимут", city: "Вологодская область", phone: "89115183366", vk: "https://vk.com/pso.azimut" }
+            { name: "ПСО Ты не один", city: "Вологодская область", phone: "89115056898", vk: "https://vk.ru/pso_tyneodin" }
         ];
 
         var blogArticles = [
@@ -747,9 +533,9 @@
             ]
         };
 
-        // Восстановленные переменные состояния
         var quizStates = { city: { current: 0, score: 0, completed: false }, forest: { current: 0, score: 0, completed: false } };
         var widgetStates = { city: { currentIndex: 0, isFlipped: false, showHint: false }, forest: { currentIndex: 0, isFlipped: false, showHint: false }, sos: { currentIndex: 0, isFlipped: false, showHint: false } };
+        
         var checklistItems = [
             "Яркая одежда (не камуфляж!)",
             "Заряженный телефон (100%)",
@@ -758,122 +544,18 @@
             "Перекус (батончики, орехи)"
         ];
 
-        // БЕЗОПАСНОЕ ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
-        function switchTab(tabId) {
-            try {
-                // 1. Скрываем все вкладки
-                var tabs = document.querySelectorAll('.tab-content');
-                for (var i = 0; i < tabs.length; i++) {
-                    tabs[i].classList.add('hidden');
-                }
-                
-                // 2. Показываем нужную
-                var activeTab = document.getElementById('tab-' + tabId);
-                if(activeTab) {
-                    activeTab.classList.remove('hidden');
-                } else {
-                    console.error("Не найдена вкладка:", tabId);
-                    // Если вкладка не найдена, принудительно показываем главную
-                    var homeTab = document.getElementById('tab-home');
-                    if (homeTab) homeTab.classList.remove('hidden');
-                }
-                
-                // 3. Управление кнопкой 112 (скрываем на всех вкладках, где она мешает)
-                var btn112 = document.getElementById('btn-112');
-                if (btn112) {
-                    btn112.style.bottom = '1rem'; // Возвращаем кнопку вниз, так как меню нет
-                }
-                
-                // 5. Сброс скролла наверх
-                try { 
-                    var scrollContainer = document.getElementById('main-scroll-container');
-                    if (scrollContainer) scrollContainer.scrollTo(0,0);
-                    window.scrollTo(0,0); 
-                } catch(e) {}
-                
-                // 6. Вибрация
-                triggerTaptic();
-            } catch (error) {
-                console.error("Ошибка при переключении вкладки:", error);
-            }
+        function formatText(text) {
+            return text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                       .replace(/\* (.*?)(?=\n|$)/g, '<li class="ml-4">$1</li>')
+                       .replace(/\n/g, '<br>');
         }
 
-        function initApp() {
-            try {
-                if (typeof vkBridge !== 'undefined') {
-                    vkBridge.send('VKWebAppGetUserInfo').then(function(data) {
-                        if (data && data.first_name) {
-                            var nameDisplay = document.getElementById('user-name-display');
-                            var avatarImg = document.getElementById('user-avatar-img');
-                            var defaultIcon = document.getElementById('default-avatar-icon');
-                            
-                            if (nameDisplay) nameDisplay.innerText = data.first_name;
-                            if (avatarImg && data.photo_100) {
-                                avatarImg.src = data.photo_100;
-                                avatarImg.classList.remove('hidden');
-                                if (defaultIcon) defaultIcon.classList.add('hidden');
-                            }
-                        }
-                    }).catch(function(err) {
-                        console.log('Ошибка профиля VK:', err);
-                    });
-                }
-            } catch(e) { console.log('vkBridge error:', e); }
-
-            // Безопасный рендеринг карточек
-            try {
-                var categories = ['city', 'forest', 'sos'];
-                for (var i = 0; i < categories.length; i++) {
-                    renderFlashcardWidget(categories[i]);
-                }
-            } catch (e) { console.error("Ошибка рендера карточек:", e); }
-
-            // Безопасный рендеринг видео
-            try {
-                var videoContainer = document.getElementById('video-list');
-                if(videoContainer) {
-                    videoContainer.innerHTML = '';
-                    for (var title in vkVideos) {
-                        var v = vkVideos[title];
-                        videoContainer.innerHTML += `
-                            <div onclick="openVideo('${v.url}')" class="bg-white rounded-2xl shadow-sm border border-slate-100 cursor-pointer overflow-hidden group active:scale-95 transition-transform relative">
-                                <div class="relative w-full pb-[56.25%] bg-slate-200">
-                                    <img src="${v.cover}" onerror="this.onerror=null; this.src='${v.fallback}';" alt="${title}" class="absolute top-0 left-0 w-full h-full object-cover">
-                                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-                                        <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                            <i class="fa-solid fa-play text-red-500 text-xl ml-1"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="p-4"><h3 class="font-bold text-slate-800 text-sm mb-1">${title}</h3></div>
-                            </div>`;
-                    }
-                }
-            } catch (e) { console.error("Ошибка рендера видео:", e); }
-
-            // Безопасный вызов остальных функций
-            try { filterPSO(); } catch(e) {}
-            try { initBlogCategories(); } catch(e) {}
-            try { filterBlog(); } catch(e) {}
-            try { renderQuiz('city'); } catch(e) {}
-            try { renderQuiz('forest'); } catch(e) {}
-
-            try {
-                var checklistContainer = document.getElementById('forest-checklist');
-                if (checklistContainer) {
-                    checklistContainer.innerHTML = '';
-                    for (var k = 0; k < checklistItems.length; k++) {
-                        checklistContainer.innerHTML += `
-                            <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors border border-slate-100">
-                                <input type="checkbox" class="w-5 h-5 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500" onchange="triggerTaptic()">
-                                <span class="text-sm font-medium text-slate-700">${checklistItems[k]}</span>
-                            </label>`;
-                    }
-                }
-            } catch(e) { console.error("Ошибка рендера чек-листа:", e); }
+        function triggerTaptic() {
+            try { if (typeof vkBridge !== 'undefined') vkBridge.send('VKWebAppTapticSelectionChanged'); } catch(e) {}
         }
 
         function openLink(url, event) {
+            if(url === '#') { if (event) event.preventDefault(); return; }
             if (event) event.preventDefault();
             triggerTaptic();
             if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
@@ -895,8 +577,55 @@
             } catch(e) {}
         }
 
-        function triggerTaptic() {
-            try { if (typeof vkBridge !== 'undefined') vkBridge.send('VKWebAppTapticSelectionChanged'); } catch(e) {}
+        function switchTab(tabId, btnElement) {
+            try {
+                var tabs = document.querySelectorAll('.tab-content');
+                for (var i = 0; i < tabs.length; i++) {
+                    tabs[i].classList.add('hidden');
+                }
+                
+                var activeTab = document.getElementById('tab-' + tabId);
+                if(activeTab) {
+                    activeTab.classList.remove('hidden');
+                } else {
+                    var homeTab = document.getElementById('tab-home');
+                    if (homeTab) homeTab.classList.remove('hidden');
+                }
+                
+                var btn112 = document.getElementById('btn-112');
+                if (btn112) {
+                    if (tabId === 'ai') {
+                        btn112.style.display = 'none';
+                    } else {
+                        btn112.style.display = 'flex';
+                    }
+                }
+                
+                var btns = document.querySelectorAll('.tab-btn');
+                for (var j = 0; j < btns.length; j++) {
+                    var btn = btns[j];
+                    var isActive = btn.getAttribute('data-target') === tabId;
+                    var baseColor = 'slate';
+                    if(isActive) {
+                        if(tabId === 'city') baseColor = 'blue';
+                        else if(tabId === 'forest') baseColor = 'emerald';
+                        else if(tabId === 'video' || tabId === 'sos') baseColor = 'red';
+                        else if(tabId === 'ai' || tabId === 'blog') baseColor = 'purple';
+                        else if(tabId === 'support') baseColor = 'pink';
+                    }
+                    btn.className = 'tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors ' + (isActive ? 'text-' + baseColor + '-600' : 'text-slate-400 hover:text-' + baseColor + '-600');
+                }
+                
+                try { 
+                    var scrollContainer = document.getElementById('main-scroll-container');
+                    if (scrollContainer) scrollContainer.scrollTo(0,0);
+                    window.scrollTo(0,0); 
+                } catch(e) {}
+                
+                triggerTaptic();
+            } catch (error) {
+                console.error("Ошибка при переключении вкладки:", error);
+            }
         }
 
         function renderFlashcardWidget(category) {
@@ -1005,6 +734,173 @@
         function nextQuizStep(cat) { triggerTaptic(); quizStates[cat].current++; if (quizStates[cat].current >= quizData[cat].length) quizStates[cat].completed = true; renderQuiz(cat); }
         function restartQuiz(cat) { triggerTaptic(); quizStates[cat] = { current: 0, score: 0, completed: false }; renderQuiz(cat); }
 
+        function initBlogCategories() {
+            var categories = ['Все'];
+            blogArticles.forEach(a => { if(categories.indexOf(a.category) === -1) categories.push(a.category); });
+            var container = document.getElementById('blog-categories');
+            if(container) {
+                container.innerHTML = categories.map(c => {
+                    var isActive = c === currentBlogCategory;
+                    var baseClass = isActive ? 'bg-purple-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50';
+                    return `<button onclick="setBlogCategory('${c}')" class="blog-cat-btn px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors shadow-sm ${baseClass}" data-cat="${c}">${c}</button>`;
+                }).join('');
+            }
+        }
+
+        function setBlogCategory(cat) {
+            currentBlogCategory = cat; triggerTaptic();
+            document.querySelectorAll('.blog-cat-btn').forEach(btn => {
+                var isCatActive = btn.getAttribute('data-cat') === cat;
+                btn.className = 'blog-cat-btn px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors shadow-sm ' + (isCatActive ? 'bg-purple-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50');
+            });
+            filterBlog();
+        }
+
+        function fillBlogSearch(query) {
+            var searchInput = document.getElementById('blog-search');
+            if(searchInput) {
+                searchInput.value = query;
+                filterBlog();
+            }
+        }
+
+        function filterBlog() {
+            var query = (document.getElementById('blog-search')?.value || '').toLowerCase();
+            var container = document.getElementById('blog-list');
+            if(!container) return;
+            var filtered = blogArticles.filter(a => (currentBlogCategory === 'Все' || a.category === currentBlogCategory) && (a.title.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query)));
+            if (filtered.length === 0) { container.innerHTML = '<div class="text-center py-10"><i class="fa-solid fa-folder-open text-slate-300 text-4xl mb-3"></i><p class="text-slate-500 text-sm">Ничего не найдено.</p></div>'; return; }
+            
+            var logoUrl = 'Gemini_Generated_Image_9p8hzd9p8hzd9p8h.png';
+            
+            container.innerHTML = filtered.map(a => {
+                var coverUrl = a.author === "ПСО «Ты не один»" ? logoUrl : 'https://images.unsplash.com/photo-1550592704-6c76defa9985?auto=format&fit=crop&w=600&q=80';
+                if(a.title.includes("Тревожная кнопка 2.0")) { coverUrl = 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80'; }
+                if(a.title.includes("Опасность змей")) { coverUrl = 'https://images.unsplash.com/photo-1531386151447-fd76ad50012f?auto=format&fit=crop&w=600&q=80'; }
+                if(a.title.includes("на воде")) { coverUrl = 'https://images.unsplash.com/photo-1571556942661-0f73583be456?auto=format&fit=crop&w=600&q=80'; }
+                if(a.category === "Город") { coverUrl = 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=600&q=80'; }
+                if(a.author === "ПСО «Ты не один»") { coverUrl = logoUrl; }
+                
+                var escapedLink = a.link.replace(/'/g, "\\'");
+                
+                return `
+                <a href="${a.link}" onclick="openLink('${escapedLink}', event)" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden hover:shadow-md relative">
+                    <div class="h-32 w-full bg-slate-200 overflow-hidden relative">
+                        <img src="${coverUrl}" alt="Обложка" class="w-full h-full object-cover" onerror="this.src='${logoUrl}'">
+                    </div>
+                    <div class="p-4 pt-5">
+                        <div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-extrabold bg-purple-100 text-purple-700 px-2.5 py-1 rounded-md uppercase tracking-wide">${a.category}</span><span class="text-[10px] text-slate-400 font-medium">${a.author}</span></div>
+                        <h3 class="font-bold text-sm text-slate-800 mb-1.5 leading-snug">${a.title}</h3>
+                        <p class="text-xs text-slate-500 line-clamp-3 mb-3">${a.desc}</p>
+                        <div class="flex items-center gap-2 text-xs text-blue-600 font-semibold">Читать статью <i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                </a>`
+            }).join('');
+        }
+
+        function filterPSO() {
+            var query = (document.getElementById('pso-search')?.value || '').toLowerCase();
+            var container = document.getElementById('pso-list');
+            if(!container) return;
+            var filtered = psoDatabase.filter(p => p.name.toLowerCase().includes(query) || p.city.toLowerCase().includes(query));
+            if (filtered.length === 0) { container.innerHTML = '<div class="text-center py-4 text-slate-500 text-sm">Отряды не найдены.</div>'; return; }
+            container.innerHTML = filtered.map(p => `
+                <div class="bg-white p-3 rounded-xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div><h4 class="font-bold text-slate-800 text-sm">${p.name}</h4><p class="text-xs text-slate-500"><i class="fa-solid fa-location-dot mr-1"></i>${p.city}</p></div>
+                    <div class="flex gap-2">
+                        <a href="tel:${p.phone}" class="flex-1 sm:flex-none bg-green-100 text-green-700 px-3 py-2 rounded-lg text-xs font-bold text-center"><i class="fa-solid fa-phone"></i> Вызов</a>
+                        <a href="${p.vk}" target="_blank" class="flex-1 sm:flex-none bg-blue-100 text-blue-700 px-3 py-2 rounded-lg text-xs font-bold text-center"><i class="fa-brands fa-vk text-sm"></i> Группа</a>
+                    </div>
+                </div>`).join('');
+        }
+
+        function fillAI(text) { document.getElementById('ai-input').value = text; document.getElementById('ai-input').focus(); }
+
+        function fetchWithBackoff(url, options, retries = 4, delay = 1000) {
+            return fetch(url, options).then(response => {
+                if (response.status === 429 && retries > 0) {
+                    return new Promise(resolve => setTimeout(resolve, delay))
+                        .then(() => fetchWithBackoff(url, options, retries - 1, delay * 2));
+                }
+                return response;
+            }).catch(error => {
+                if (retries > 0) {
+                    return new Promise(resolve => setTimeout(resolve, delay))
+                        .then(() => fetchWithBackoff(url, options, retries - 1, delay * 2));
+                }
+                throw error;
+            });
+        }
+
+        function sendAIMessage() {
+            const input = document.getElementById('ai-input');
+            const btn = document.getElementById('ai-send-btn');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            input.value = ''; input.disabled = true;
+            if(btn) { btn.disabled = true; btn.classList.add('opacity-50'); }
+            
+            const box = document.getElementById('ai-chat-box');
+            let userHtml = formatText(text);
+            box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn ml-auto flex-row-reverse"><div class="bg-purple-600 text-white p-3 rounded-2xl rounded-tr-sm text-sm shadow-sm">${userHtml}</div></div>`);
+            
+            aiChatHistory.push({ role: "user", parts: [{ text: text }] });
+            const loaderId = 'loader-' + Date.now();
+            box.insertAdjacentHTML('beforeend', `<div id="${loaderId}" class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200"><i class="fa-solid fa-robot text-purple-600 text-sm"></i></div><div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-sm flex items-center h-10 shadow-sm"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>`);
+            box.scrollTop = box.scrollHeight;
+
+            const payload = {
+                contents: aiChatHistory,
+                systemInstruction: {
+                    parts: [{ text: "Ты спасатель МЧС, консультируешь по детской безопасности. Отвечай кратко, эмпатично, списками. Если вопрос не про безопасность или спасение, вежливо отказывайся отвечать." }]
+                }
+            };
+            
+            fetchWithBackoff(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json().then(data => ({ response, data })).catch(() => ({ response, data: { error: { message: "Сбой обработки ответа сервером" } } })))
+            .then(({ response, data }) => {
+                document.getElementById(loaderId)?.remove();
+
+                if (!response.ok) { 
+                    throw new Error(data.error?.message || "Ваш API-ключ отклонен сервером Google."); 
+                }
+                
+                if (!data.candidates || data.candidates.length === 0) { 
+                    throw new Error("Ответ заблокирован фильтрами безопасности Google. Попробуйте переформулировать вопрос."); 
+                }
+                
+                let botReply = data.candidates[0].content.parts[0].text;
+                aiChatHistory.push({ role: "model", parts: [{ text: botReply }] });
+                
+                let botHtml = formatText(botReply);
+                box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200"><i class="fa-solid fa-robot text-purple-600 text-sm"></i></div><div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">${botHtml}</div></div>`);
+            })
+            .catch(error => {
+                document.getElementById(loaderId)?.remove();
+                let errorDetails = error.message;
+                
+                if (errorDetails.includes('Quota exceeded') || errorDetails.includes('429')) {
+                    errorDetails = "Бот перегружен (превышен бесплатный лимит ответов в минуту). Скрипт пытался достучаться несколько раз, но лимит пока не сброшен. Пожалуйста, подождите 1 минуту.";
+                } else if (errorDetails.includes('API_KEY_INVALID')) {
+                    errorDetails = "Неверный или заблокированный API-ключ.";
+                }
+
+                box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0 border border-red-200"><i class="fa-solid fa-triangle-exclamation text-red-600 text-sm"></i></div><div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">⚠️ Ошибка связи с ИИ.<br><span class="font-medium text-red-600">${errorDetails}</span></div></div>`);
+                aiChatHistory.pop();
+            })
+            .finally(() => {
+                if(input) input.disabled = false; 
+                if(btn) { btn.disabled = false; btn.classList.remove('opacity-50'); }
+                if(input) input.focus(); 
+                if(box) box.scrollTop = box.scrollHeight;
+            });
+        }
+
         function openPdfMaterial(type) {
             triggerTaptic();
             var modal = document.getElementById('pdf-modal');
@@ -1100,94 +996,86 @@
             setTimeout(()=>{ m.classList.add('hidden'); document.getElementById('vk-iframe').src=''; }, 300); 
         }
 
-        function filterPSO() {
-            var query = (document.getElementById('pso-search')?.value || '').toLowerCase();
-            var container = document.getElementById('pso-list');
-            if(!container) return;
-            var filtered = psoDatabase.filter(p => p.name.toLowerCase().includes(query) || p.city.toLowerCase().includes(query));
-            if (filtered.length === 0) { container.innerHTML = '<div class="text-center py-4 text-slate-500 text-sm">Отряды не найдены.</div>'; return; }
-            container.innerHTML = filtered.map(p => `
-                <div class="bg-white p-3 rounded-xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div><h4 class="font-bold text-slate-800 text-sm">${p.name}</h4><p class="text-xs text-slate-500"><i class="fa-solid fa-location-dot mr-1"></i>${p.city}</p></div>
-                    <div class="flex gap-2">
-                        <a href="tel:${p.phone}" class="flex-1 sm:flex-none bg-green-100 text-green-700 px-3 py-2 rounded-lg text-xs font-bold text-center"><i class="fa-solid fa-phone"></i> Вызов</a>
-                        <a href="${p.vk}" target="_blank" class="flex-1 sm:flex-none bg-blue-100 text-blue-700 px-3 py-2 rounded-lg text-xs font-bold text-center"><i class="fa-brands fa-vk text-sm"></i> Группа</a>
-                    </div>
-                </div>`).join('');
-        }
-
-        function initBlogCategories() {
-            var categories = ['Все'];
-            blogArticles.forEach(a => { if(categories.indexOf(a.category) === -1) categories.push(a.category); });
-            var container = document.getElementById('blog-categories');
-            if(container) {
-                container.innerHTML = categories.map(c => {
-                    var isActive = c === currentBlogCategory;
-                    var baseClass = isActive ? 'bg-purple-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50';
-                    return `<button onclick="setBlogCategory('${c}')" class="blog-cat-btn px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors shadow-sm ${baseClass}" data-cat="${c}">${c}</button>`;
-                }).join('');
-            }
-        }
-
-        function setBlogCategory(cat) {
-            currentBlogCategory = cat; triggerTaptic();
-            document.querySelectorAll('.blog-cat-btn').forEach(btn => {
-                var isCatActive = btn.getAttribute('data-cat') === cat;
-                btn.className = 'blog-cat-btn px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors shadow-sm ' + (isCatActive ? 'bg-purple-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50');
-            });
-            filterBlog();
-        }
-
-        function filterBlog() {
-            var query = (document.getElementById('blog-search')?.value || '').toLowerCase();
-            var container = document.getElementById('blog-list');
-            if(!container) return;
-            var filtered = blogArticles.filter(a => (currentBlogCategory === 'Все' || a.category === currentBlogCategory) && (a.title.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query)));
-            if (filtered.length === 0) { container.innerHTML = '<div class="text-center py-10"><i class="fa-solid fa-folder-open text-slate-300 text-4xl mb-3"></i><p class="text-slate-500 text-sm">Ничего не найдено.</p></div>'; return; }
-            
-            // Используем сгенерированный логотип для обложек статей ПСО "Ты не один"
-            var logoUrl = "Gemini_Generated_Image_9p8hzd9p8hzd9p8h.png";
-            
-            container.innerHTML = filtered.map(a => {
-                // Определяем обложку
-                var coverUrl = a.author === "ПСО «Ты не один»" ? logoUrl : 'https://images.unsplash.com/photo-1550592704-6c76defa9985?auto=format&fit=crop&w=600&q=80';
-                
-                // Специальная обложка для статьи про технологии/соцсети
-                if(a.title.includes("Тревожная кнопка 2.0")) {
-                    coverUrl = 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80';
+        function initApp() {
+            try {
+                if (typeof vkBridge !== 'undefined') {
+                    vkBridge.send('VKWebAppGetUserInfo').then(function(data) {
+                        if (data && data.first_name) {
+                            var nameDisplay = document.getElementById('user-name-display');
+                            var avatarImg = document.getElementById('user-avatar-img');
+                            var defaultIcon = document.getElementById('default-avatar-icon');
+                            
+                            if (nameDisplay) nameDisplay.innerText = data.first_name;
+                            if (avatarImg && data.photo_100) {
+                                avatarImg.src = data.photo_100;
+                                avatarImg.classList.remove('hidden');
+                                if (defaultIcon) defaultIcon.classList.add('hidden');
+                            }
+                        }
+                    }).catch(function(err) {});
                 }
+            } catch(e) {}
 
-                return `
-                <a href="${a.link}" onclick="openLink('${a.link}', event)" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden hover:shadow-md relative">
-                    <div class="h-32 w-full bg-slate-200 overflow-hidden relative">
-                        <img src="${coverUrl}" alt="Обложка" class="w-full h-full object-cover" onerror="this.style.display='none'">
-                    </div>
-                    <div class="p-4 pt-5">
-                        <div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-extrabold bg-purple-100 text-purple-700 px-2.5 py-1 rounded-md uppercase tracking-wide">${a.category}</span><span class="text-[10px] text-slate-400 font-medium">${a.author}</span></div>
-                        <h3 class="font-bold text-sm text-slate-800 mb-1.5 leading-snug">${a.title}</h3>
-                        <p class="text-xs text-slate-500 line-clamp-3 mb-3">${a.desc}</p>
-                        <div class="flex items-center gap-2 text-xs text-blue-600 font-semibold">Читать статью <i class="fa-brands fa-vk text-sm"></i></div>
-                    </div>
-                </a>`
-            }).join('');
+            try {
+                var categories = ['city', 'forest', 'sos'];
+                for (var i = 0; i < categories.length; i++) {
+                    renderFlashcardWidget(categories[i]);
+                }
+            } catch (e) { console.error("Ошибка рендера карточек:", e); }
+
+            try {
+                var videoContainer = document.getElementById('video-list');
+                if(videoContainer) {
+                    videoContainer.innerHTML = '';
+                    for (var title in vkVideos) {
+                        var v = vkVideos[title];
+                        videoContainer.innerHTML += `
+                            <div onclick="openVideo('${v.url}')" class="bg-white rounded-2xl shadow-sm border border-slate-100 cursor-pointer overflow-hidden group active:scale-95 transition-transform relative">
+                                <div class="relative w-full pb-[56.25%] bg-slate-200">
+                                    <img src="${v.cover}" onerror="this.onerror=null; this.src='${v.fallback}';" alt="${title}" class="absolute top-0 left-0 w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                                        <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                            <i class="fa-solid fa-play text-red-500 text-xl ml-1"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4"><h3 class="font-bold text-slate-800 text-sm mb-1">${title}</h3></div>
+                            </div>`;
+                    }
+                }
+            } catch (e) {}
+
+            try { filterPSO(); } catch(e) {}
+            try { initBlogCategories(); } catch(e) {}
+            try { filterBlog(); } catch(e) {}
+            try { renderQuiz('city'); } catch(e) {}
+            try { renderQuiz('forest'); } catch(e) {}
+
+            try {
+                var checklistContainer = document.getElementById('forest-checklist');
+                if (checklistContainer) {
+                    checklistContainer.innerHTML = '';
+                    for (var k = 0; k < checklistItems.length; k++) {
+                        checklistContainer.innerHTML += `
+                            <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors border border-slate-100">
+                                <input type="checkbox" class="w-5 h-5 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500" onchange="triggerTaptic()">
+                                <span class="text-sm font-medium text-slate-700">${checklistItems[k]}</span>
+                            </label>`;
+                    }
+                }
+            } catch(e) {}
         }
 
-        // НАДЕЖНЫЙ ЗАПУСК ПРИЛОЖЕНИЯ
         function startApp() {
-            console.log("DOM загружен, начинаем инициализацию...");
-            
             try {
                 switchTab('home');
-                console.log("Вкладка Home показана успешно.");
             } catch (e) {
-                console.error("Критическая ошибка: не удалось показать стартовый экран", e);
+                console.error("Ошибка показа стартового экрана", e);
             }
-
             try {
                 initApp();
-                console.log("Приложение инициализировано успешно.");
             } catch(e) {
-                console.error("Ошибка при инициализации данных приложения:", e);
+                console.error("Ошибка при инициализации данных:", e);
             }
         }
 
