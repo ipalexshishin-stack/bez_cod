@@ -104,7 +104,9 @@
             </div>
 
             <!-- Правая часть: Поделиться, Подписка и Донат -->
-            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-2">
+            <div class="flex items-center gap-2 shrink-0 ml-2">
+            <!-- Правая часть: Поделиться и Донат -->
+            <div class="flex items-center gap-2 shrink-0 ml-2">
                 <button onclick="shareApp()" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-full transition-colors active:scale-95 shadow-sm shrink-0" title="Поделиться">
                     <i class="fa-solid fa-share-nodes text-xs sm:text-sm"></i>
                 </button>
@@ -112,9 +114,10 @@
                     <i class="fa-solid fa-bell text-xs sm:text-sm"></i>
                     <span class="text-[10px] sm:text-xs font-bold hidden sm:inline-block">Подписка</span>
                 </a>
-                <a href="https://vk.ru/im/channels/-239286076?cmid=13" onclick="openLink('https://vk.ru/im/channels/-239286076?cmid=13', event)" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 px-3 h-8 sm:h-9 bg-[#0077FF] hover:bg-[#005CE6] text-white rounded-full transition-colors active:scale-95 shadow-sm shrink-0" title="Оформить VK Donut">
-                    <i class="fa-brands fa-vk text-xs sm:text-sm"></i>
-                    <span class="text-[10px] sm:text-xs font-bold">Донат</span>
+                <a href="https://vk.ru/im/channels/-239286076?cmid=13" onclick="openLink('https://vk.ru/im/channels/-239286076?cmid=13', event)" target="_blank" rel="noopener noreferrer" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-[#0077FF] hover:bg-[#005CE6] text-white rounded-full transition-colors active:scale-95 shadow-sm shrink-0" title="Оформить VK Donut">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.06 1.48c.35-.03.73.16.9.52l2.36 5.09a.86.86 0 00.7.49l5.48.58c.38.04.68.32.77.69.09.37-.05.77-.34 1l-4.14 3.7a.86.86 0 00-.27.81l1.17 5.37c.09.4-.08.8-.42.99a.9.9 0 01-1-.07l-4.73-3.1a.86.86 0 00-.91 0l-4.73 3.1a.9.9 0 01-1 .07c-.34-.2-.51-.6-.42-.99l1.17-5.37a.86.86 0 00-.27-.81L2.24 9.85c-.29-.23-.43-.63-.34-1 .09-.37.39-.65.77-.69l5.48-.58a.86.86 0 00.7-.49l2.36-5.09c.17-.36.55-.55.9-.52zM12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z"></path>
+                    </svg>
                 </a>
             </div>
 
