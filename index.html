@@ -105,8 +105,6 @@
 
             <!-- Правая часть: Поделиться, Подписка и Донат -->
             <div class="flex items-center gap-2 shrink-0 ml-2">
-            <!-- Правая часть: Поделиться и Донат -->
-            <div class="flex items-center gap-2 shrink-0 ml-2">
                 <button onclick="shareApp()" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-full transition-colors active:scale-95 shadow-sm shrink-0" title="Поделиться">
                     <i class="fa-solid fa-share-nodes text-xs sm:text-sm"></i>
                 </button>
@@ -489,7 +487,7 @@
             
             <div class="bg-purple-50 border border-purple-200 text-purple-800 p-4 rounded-2xl text-xs mb-5 flex items-center gap-2">
                 <i class="fa-solid fa-at text-purple-500 text-lg shrink-0"></i> 
-                <span>Статьи и разборы от автора проекта Александра Шишина.</span>
+                <span>Статьи и актуальные алгоритмы от МЧС России и экспертов ПСО.</span>
             </div>
 
             <div class="mb-5 space-y-3">
@@ -706,14 +704,18 @@
             sos: { bgLight: 'bg-red-50', text: 'text-red-600', border: 'border-red-100', bgMain: 'bg-red-500', hover: 'hover:bg-red-600', icon: 'fa-triangle-exclamation', hoverBorder: 'hover:border-red-400', hoverBg: 'hover:bg-red-50' }
         };
 
+        // ОБНОВЛЕННЫЕ ДАННЫЕ НА ОСНОВЕ ПРАВИЛ МЧС И ПСО
         var ALL_FLASHCARDS = [
-            { category: 'city', front: "Правило «Стой, где стоишь»", back: "Основное правило: оставаться на месте и ждать, пока тебя найдут.", hint: "Главное действие при потере родителей." },
-            { category: 'city', front: "Семейный пароль и его минусы", back: "В панике пароль легко забыть. Лучшая замена — правило «Круг доверия» (четкий список людей, с кем можно уходить) и обязательный звонок родителям.", hint: "Почему кодовое слово больше не надежно." },
-            { category: 'city', front: "Правило «Три О»", back: "Остановись, Оглядись, Окликни — алгоритм действий, если потерял родителей.", hint: "Первые шаги при потере." },
-            { category: 'city', front: "Островки безопасности", back: "Зона в Пятерочке/Перекрестке, где помогут потерявшемуся.<br><span class='mt-3 bg-white/10 p-2.5 rounded-xl flex items-center gap-3 border border-white/20 text-left w-full'><span class='w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center shrink-0 shadow-sm'><i class='fa-solid fa-location-dot text-white text-xl'></i></span><span class='flex flex-col'><span class='text-[12px] font-extrabold text-orange-400 uppercase leading-tight tracking-wide'>Островок<br>безопасности</span><span class='text-[10px] text-slate-300 mt-0.5'>Здесь помогут!</span></span></span>", hint: "Оранжевый знак геометки в супермаркетах." },
-            { category: 'forest', front: "Обними дерево", back: "Если потерялся в лесу — обними ближайшее дерево, стой на месте и шуми.", hint: "Что делать в лесу в первую очередь." },
-            { category: 'forest', front: "Цвет одежды в лес", back: "Яркая (красная, желтая, оранжевая). Камуфляж запрещен!", hint: "Как облегчить работу спасателям." },
-            { category: 'forest', front: "Встреча с диким зверем", back: "Замри. Не убегай! Медленно подними руки или куртку вверх (чтобы казаться больше) и плавно отступай назад, не поворачиваясь спиной.", hint: "Как вести себя с диким зверем." },
+            { category: 'city', front: "Правило «Трех О»", back: "Остановись! Оглядись! Окликни! Если ты потерялся, первое, что надо сделать, это остановиться.", hint: "Первые шаги при потере." },
+            { category: 'city', front: "Правило «Трех Н»", back: "Никогда! Никуда! Ни с кем! чужим уходить нельзя. Взрослые просят помощи только у взрослых.", hint: "Главное правило при встрече с чужим человеком." },
+            { category: 'city', front: "Безопасный взрослый", back: "На улице это полицейский или взрослый с ребёнком. В ТЦ - охранник или кассир.", hint: "К кому безопасно обратиться за помощью." },
+            { category: 'city', front: "Островки безопасности", back: "Зона в Пятерочке, Сбербанке или ВкусВилл, где помогут потерявшемуся.<br><span class='mt-3 bg-white/10 p-2.5 rounded-xl flex items-center gap-3 border border-white/20 text-left w-full'><span class='w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center shrink-0 shadow-sm'><i class='fa-solid fa-location-dot text-white text-xl'></i></span><span class='flex flex-col'><span class='text-[12px] font-extrabold text-orange-400 uppercase leading-tight tracking-wide'>Островок<br>безопасности</span><span class='text-[10px] text-slate-300 mt-0.5'>Здесь помогут!</span></span></span>", hint: "Оранжевый знак геометки в супермаркетах." },
+            { category: 'city', front: "Безопасный маршрут", back: "Ходи по освещённой, многолюдной улице. Избегай пустырей и заброшенных парков, гаражей и строек.", hint: "Как выбрать дорогу домой." },
+            { category: 'city', front: "Свой/Чужой", back: "СВОЙ — это близкие люди (родители, бабушки). ЧУЖОЙ — родственники, друзья, соседи. Уйти с «чужими» можно ТОЛЬКО с разрешения родителей.", hint: "Кого можно считать безопасным." },
+            { category: 'city', front: "Собака бывает кусачей...", back: "При встрече со стаей бродячих собак: не беги, не делай резких движений, не смотри в глаза. Медленно отходи назад. Если напали - защищай шею.", hint: "Как вести себя с собаками." },
+            { category: 'forest', front: "Обними дерево", back: "Если потерялся в лесу — обними ближайшее дерево, стой на месте и шуми. Ищут всегда взрослые!", hint: "Что делать в лесу в первую очередь." },
+            { category: 'forest', front: "Сборы в лес", back: "Только яркая одежда (не камуфляж!). С собой: заряженный телефон, вода, перекус и свисток.", hint: "Что облегчит работу спасателям." },
+            { category: 'forest', front: "Встреча со змеей или зверем", back: "Замри и не беги. Плавно отступай назад, не поворачиваясь спиной. При укусе змеи - покой и вода, никаких жгутов!", hint: "Первая помощь и поведение (МЧС)." },
             { category: 'sos', front: "Номер спасения", back: "112 — бесплатный номер. Работает без SIM-карты.", hint: "Единый телефон экстренных служб." }
         ];
 
@@ -742,23 +744,28 @@
             { name: "ПСО ЛизаАлерт", city: "Федеральный отряд", phone: "88007005452", vk: "https://vk.com/lizaalert_real" }
         ];
 
+        // ОБНОВЛЕННАЯ БАЗА СТАТЕЙ БЛОГА (Только ПСО "Ты не один" и автор проекта)
         var blogArticles = [
-            { title: "Гайд по разработке: Как мы создали «Код Безопасности» 2.0", desc: "Подробная статья о том, как создать свое VK Mini App на чистом JS и Tailwind, обойти ограничения браузеров, добавить ИИ-бота и выложить приложение на GitHub Pages.", category: "Гайд", author: "Александр Шишин", link: "https://vk.ru/im/channels/-239286076?cmid=12" },
-            { title: "Дорога в школу: инструкция по безопасности", desc: "На знакомом маршруте дети теряют бдительность. Пройдите с ребенком путь до школы ногами...", category: "Школа", author: "Александр Шишин", link: "https://vk.com/wall16426067_31772" }
+            { title: "Гайд по разработке: Как мы создали «Код Безопасности» 2.0", desc: "Подробная статья о том, как создать свое VK Mini App на чистом JS и Tailwind, обойти ограничения браузеров, добавить ИИ-бота.", category: "Гайд", author: "Александр Шишин", link: "https://vk.ru/im/channels/-239286076?cmid=12" },
+            { title: "Теряете время — теряете жизнь: как помочь в поиске", desc: "Инструкция для тех, кто хочет помочь в поиске пропавшего человека. Главные правила для волонтеров.", category: "Поиск", author: "ПСО «Ты не один»", link: "https://dzen.ru/a/aZicM_Xe1S3zyV4j" },
+            { title: "Спасательные круги в цифровом океане", desc: "Как соцсети и мессенджеры помогают искать пропавших людей. Личный опыт поисково-спасательного отряда.", category: "Интернет", author: "ПСО «Ты не один»", link: "https://dzen.ru/a/aZiY0HvuQ0wnZqIj" },
+            { title: "Как правильно организовать поиск ребёнка в толпе", desc: "Пошаговая инструкция для родителей: что делать, если ребенок потерялся в торговом центре, на вокзале или городском празднике.", category: "Город", author: "ПСО «Ты не один»", link: "https://dzen.ru/psotyneodin" },
+            { title: "Один клик = шанс на жизнь", desc: "Почему репост ориентировки важнее, чем кажется. Разбор инструментов и правил безопасного репоста.", category: "Поиск", author: "ПСО «Ты не один»", link: "https://dzen.ru/a/aZddIAbLLTbKGzyw" }
         ];
         var currentBlogCategory = 'Все';
 
         var quizData = {
             city: [
-                { q: "Ты понял, что потерялся в ТЦ. Что делать?", options: ["Бежать искать маму", "Встать на месте и ждать", "Выйти на улицу"], correct: 1, explanation: "Главное правило — Стой где стоишь! Мама найдет тебя там, где видела в последний раз." },
-                { q: "Незнакомец говорит: «Мама в беде, она просила тебя забрать!». Что делать?", options: ["Спросить семейный пароль", "Немедленно позвонить маме или папе", "Пойти с ним, чтобы спасти маму"], correct: 1, explanation: "В стрессе пароль легко забыть, а преступник может его выведать. Главное правило — обязательный личный звонок родителям перед любым шагом!" },
-                { q: "Чужой человек просит помочь найти котенка. Твои действия?", options: ["Пойду помогу", "Скажу НЕТ и отойду на 2 метра", "Помогу, если он улыбается"], correct: 1, explanation: "Взрослые должны просить помощи только у взрослых. Никаких котят!" },
-                { q: "К кому безопасно подойти на улице за помощью?", options: ["К любому дедушке", "К прохожему с собакой", "К полицейскому или женщине с ребенком"], correct: 2, explanation: "Безопасные взрослые: полиция, охранники, сотрудники магазинов и женщины с детьми." }
+                { q: "Ты понял, что потерялся в ТЦ. Что делать?", options: ["Бежать искать маму", "Остановиться, оглядеться, окликнуть", "Выйти на улицу"], correct: 1, explanation: "Примени правило «Трех О». Стой где стоишь, тебя обязательно будут искать!" },
+                { q: "Незнакомец говорит: «Мама в беде, она просила тебя забрать!». Что делать?", options: ["Спросить семейный пароль", "Громко сказать «Не знаю вас!» и отойти к безопасному взрослому", "Пойти с ним"], correct: 1, explanation: "В стрессе пароль легко забыть. Нужно обратиться к безопасному взрослому (полицейский, кассир, человек с ребенком)." },
+                { q: "Чужой человек просит помочь найти котенка. Твои действия?", options: ["Пойду помогу", "Откажусь и предложу вызвать полицию", "Помогу, если он добрый"], correct: 1, explanation: "Правило «Трех Н»! Взрослые должны просить помощи только у взрослых. Никаких котят!" },
+                { q: "К тебе бежит рычащая собака. Что делать?", options: ["Убегать со всех ног", "Кинуть в нее камнем", "Замереть, не смотреть в глаза и закрыть шею руками"], correct: 2, explanation: "Бег провоцирует инстинкт охотника. Нужно замереть, а если повалили — максимально закрыть шею и голову." },
+                { q: "Ты подошел к реке летом. Твои действия?", options: ["Сразу нырну", "Попрошу маму/папу пойти со мной", "Буду плавать на надувном матрасе"], correct: 1, explanation: "Купаться без взрослых КАТЕГОРИЧЕСКИ запрещено! Надувные матрасы опасны, их может унести течением." }
             ],
             forest: [
                 { q: "Какую куртку надеть в лес?", options: ["Зеленый камуфляж", "Черную непромокаемую", "Яркую (красную/желтую)"], correct: 2, explanation: "В камуфляже спасатели не увидят тебя даже с двух метров. Надевай самое яркое!" },
-                { q: "Ты потерялся в лесу. Твои первые действия?", options: ["Идти вперед, пока не найду дорогу", "Забраться на высокое дерево", "Обнять дерево и оставаться на месте"], correct: 2, explanation: "Сразу стой на месте! Чем дальше ты уйдешь, тем сложнее тебя будет найти." },
-                { q: "Что делать при встрече с медведем или кабаном?", options: ["Громко кричать и бежать", "Замереть, поднять руки и медленно отступать", "Кинуть в него палку"], correct: 1, explanation: "Нельзя убегать и поворачиваться спиной. Подними руки, чтобы казаться больше, и плавно отступай." }
+                { q: "Ты потерялся в лесу. Твои первые действия?", options: ["Идти вперед, пока не найду дорогу", "Забраться на высокое дерево", "Обнять дерево, оставаться на месте и шуметь"], correct: 2, explanation: "Сразу стой на месте! Отвечай шумом на шум: стучи палкой по дереву или используй свисток." },
+                { q: "Тебя укусила змея. Чего КАТЕГОРИЧЕСКИ нельзя делать?", options: ["Пить много воды", "Наложить жгут и прижечь рану", "Обеспечить покой конечности"], correct: 1, explanation: "По рекомендациям врачей, жгут и прижигание только ускорят некроз тканей. Нужен полный покой и много воды." }
             ]
         };
         var quizStates = { city: { current: 0, score: 0, completed: false }, forest: { current: 0, score: 0, completed: false } };
@@ -766,10 +773,11 @@
 
         var checklistItems = [
             "Яркая одежда (не камуфляж!)",
-            "Заряженный телефон (100%)",
-            "Вода (минимум 1 литр)",
+            "Заряженный телефон и PowerBank",
+            "Установлен оффлайн-навигатор (GeoTracker / OsmAnd)",
+            "Вода (минимум 1-1.5 литра на человека)",
             "Свисток на шею",
-            "Перекус (батончики, орехи)"
+            "Спички и перекус (батончики)"
         ];
 
         function formatText(text) {
@@ -778,7 +786,7 @@
                        .replace(/\n/g, '<br>');
         }
 
-        // БЕЗОПАСНОЕ ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (Вынесено вверх)
+        // БЕЗОПАСНОЕ ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
         function switchTab(tabId, btnElement) {
             try {
                 // 1. Скрываем все вкладки
@@ -838,24 +846,27 @@
         function initApp() {
             try {
                 if (typeof vkBridge !== 'undefined') {
-                    vkBridge.send('VKWebAppGetUserInfo').then(function(data) {
-                        if (data && data.first_name) {
-                            var nameDisplay = document.getElementById('user-name-display');
-                            var avatarImg = document.getElementById('user-avatar-img');
-                            var defaultIcon = document.getElementById('default-avatar-icon');
-                            
-                            if (nameDisplay) nameDisplay.innerText = data.first_name;
-                            if (avatarImg && data.photo_100) {
-                                avatarImg.src = data.photo_100;
-                                avatarImg.classList.remove('hidden');
-                                if (defaultIcon) defaultIcon.classList.add('hidden');
+                    // Официальная рекомендация ВК: проверяем поддержку метода перед вызовом для кроссплатформенности (Браузер/Десктоп/VK App)
+                    if (vkBridge.supports && vkBridge.supports('VKWebAppGetUserInfo')) {
+                        vkBridge.send('VKWebAppGetUserInfo').then(function(data) {
+                            if (data && data.first_name) {
+                                var nameDisplay = document.getElementById('user-name-display');
+                                var avatarImg = document.getElementById('user-avatar-img');
+                                var defaultIcon = document.getElementById('default-avatar-icon');
+                                
+                                if (nameDisplay) nameDisplay.innerText = data.first_name;
+                                if (avatarImg && data.photo_100) {
+                                    avatarImg.src = data.photo_100;
+                                    avatarImg.classList.remove('hidden');
+                                    if (defaultIcon) defaultIcon.classList.add('hidden');
+                                }
                             }
-                        }
-                    }).catch(function(err) {
-                        console.log('Ошибка профиля VK:', err);
-                    });
+                        }).catch(function(err) {
+                            console.log('VK Profile data not available outside VK App environment:', err);
+                        });
+                    }
                 }
-            } catch(e) { console.log('vkBridge error:', e); }
+            } catch(e) { console.log('vkBridge init error:', e); }
 
             // Безопасный рендеринг карточек
             try {
@@ -931,8 +942,6 @@
                 }
             } catch(e) {}
         }
-
-        // Функция switchTab была перенесена выше
 
         function triggerTaptic() {
             try { if (typeof vkBridge !== 'undefined') vkBridge.send('VKWebAppTapticSelectionChanged'); } catch(e) {}
@@ -1077,29 +1086,28 @@
                     </div>
                 `;
             } else {
-                title.innerText = 'Памятка: Лес';
+                title.innerText = 'Памятка: Лес и Природа';
                 innerHtml = `
                     <div class="border-b-2 border-emerald-500 pb-4 mb-4">
-                        <h1 class="text-2xl font-black text-slate-800 uppercase">ПРАВИЛА ВЫЖИВАНИЯ В ЛЕСУ</h1>
+                        <h1 class="text-2xl font-black text-slate-800 uppercase">ПРАВИЛА БЕЗОПАСНОСТИ НА ПРИРОДЕ</h1>
                         <p class="text-sm text-slate-500">Официальная памятка проекта "Код Безопасности"</p>
                     </div>
                     <h2 class="text-lg font-bold text-emerald-600 mb-2 mt-4">1. Сборы в лес (Строго обязательно!)</h2>
                     <ul class="list-disc pl-5 mb-4 space-y-1">
                         <li><b>Одежда:</b> Только яркая! Камуфляж убивает.</li>
                         <li><b>Телефон:</b> Заряд 100%. Оффлайн карты загружены.</li>
-                        <li><b>Аптечка:</b> Спрей от клещей, вода (1л), перекус, свисток, спички.</li>
+                        <li><b>Аптечка:</b> Спрей от клещей, вода (1-1.5л), перекус, свисток, спички.</li>
                     </ul>
                     <h2 class="text-lg font-bold text-emerald-600 mb-2 mt-4">2. Если заблудился</h2>
                     <ul class="list-disc pl-5 mb-4 space-y-1">
                         <li><b>ОБНИМИ ДЕРЕВО!</b> Стой на месте. Дальше не иди.</li>
-                        <li>Не кричи, чтобы не сорвать голос — свисти в свисток!</li>
+                        <li>Не кричи, чтобы не сорвать голос — свисти в свисток или стучи палкой по дереву!</li>
                         <li>Не пей воду из луж и рек.</li>
                     </ul>
-                    <h2 class="text-lg font-bold text-emerald-600 mb-2 mt-4">3. Встреча с животными</h2>
+                    <h2 class="text-lg font-bold text-emerald-600 mb-2 mt-4">3. Встреча с животными и змеями</h2>
                     <ul class="list-disc pl-5 mb-4 space-y-1">
-                        <li>Не убегай! Зверь быстрее.</li>
-                        <li>Медленно подними руки или куртку вверх (стань больше).</li>
-                        <li>Плавно отступай назад спиной.</li>
+                        <li>Не убегай! Зверь быстрее. При встрече с собакой или волком - медленно отступай.</li>
+                        <li><b>При укусе змеи:</b> Обеспечить покой, обильное питье, принять антигистаминное. Категорически нельзя накладывать жгут, резать или прижигать!</li>
                     </ul>
                 `;
             }
@@ -1198,7 +1206,6 @@
 
         function fetchWithBackoff(url, options, retries = 4, delay = 1000) {
             return fetch(url, options).then(response => {
-                // Если ошибка 429 (Too Many Requests / Quota Exceeded) и есть попытки
                 if (response.status === 429 && retries > 0) {
                     return new Promise(resolve => setTimeout(resolve, delay))
                         .then(() => fetchWithBackoff(url, options, retries - 1, delay * 2));
@@ -1234,11 +1241,10 @@
             const payload = {
                 contents: aiChatHistory,
                 systemInstruction: {
-                    parts: [{ text: "Ты спасатель МЧС, консультируешь по детской безопасности. Отвечай кратко, эмпатично, списками. Если вопрос не про безопасность или спасение, вежливо отказывайся отвечать." }]
+                    parts: [{ text: "Ты спасатель МЧС, консультируешь по детской безопасности. Отвечай кратко, эмпатично, списками. Если вопрос не про безопасность или спасение, вежливо отказывайся отвечать. Используй опыт ПСО Ты не один." }]
                 }
             };
             
-            // Используем fetchWithBackoff и правильную модель gemini-3-flash-preview
             fetchWithBackoff(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`, {
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' }, 
@@ -1283,11 +1289,9 @@
             });
         }
 
-        // НАДЕЖНЫЙ ЗАПУСК ПРИЛОЖЕНИЯ
         function startApp() {
             console.log("DOM загружен, начинаем инициализацию...");
             
-            // 1. Принудительно показываем главную страницу сразу же, до работы любых других скриптов
             try {
                 switchTab('home');
                 console.log("Вкладка Home показана успешно.");
@@ -1295,13 +1299,11 @@
                 console.error("Критическая ошибка: не удалось показать стартовый экран", e);
             }
 
-            // 2. Инициализируем остальные данные приложения
             try {
                 initApp();
                 console.log("Приложение инициализировано успешно.");
             } catch(e) {
                 console.error("Ошибка при инициализации данных приложения:", e);
-                // Показываем fallback только если упало что-то критичное, но UI не блочим
             }
         }
 
