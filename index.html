@@ -66,7 +66,6 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-100">
-
     <div id="crash-fallback" class="hidden fixed inset-0 z-[9999] bg-slate-50 p-6 flex-col items-center justify-center text-center">
         <i class="fa-solid fa-triangle-exclamation text-red-500 text-5xl mb-4"></i>
         <h2 class="text-xl font-bold mb-2">Ошибка соединения</h2>
@@ -104,11 +103,15 @@
                 </div>
             </div>
 
-            <!-- Правая часть: Поделиться и Донат -->
-            <div class="flex items-center gap-2 shrink-0 ml-2">
+            <!-- Правая часть: Поделиться, Подписка и Донат -->
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-2">
                 <button onclick="shareApp()" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-full transition-colors active:scale-95 shadow-sm shrink-0" title="Поделиться">
                     <i class="fa-solid fa-share-nodes text-xs sm:text-sm"></i>
                 </button>
+                <a href="https://vk.ru/im/channels/-239286076" onclick="openLink('https://vk.ru/im/channels/-239286076', event)" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 px-3 h-8 sm:h-9 bg-slate-800 hover:bg-slate-900 text-white rounded-full transition-colors active:scale-95 shadow-sm shrink-0" title="Подписаться на канал">
+                    <i class="fa-solid fa-bell text-xs sm:text-sm"></i>
+                    <span class="text-[10px] sm:text-xs font-bold hidden sm:inline-block">Подписка</span>
+                </a>
                 <a href="https://vk.ru/im/channels/-239286076?cmid=13" onclick="openLink('https://vk.ru/im/channels/-239286076?cmid=13', event)" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 px-3 h-8 sm:h-9 bg-[#0077FF] hover:bg-[#005CE6] text-white rounded-full transition-colors active:scale-95 shadow-sm shrink-0" title="Оформить VK Donut">
                     <i class="fa-brands fa-vk text-xs sm:text-sm"></i>
                     <span class="text-[10px] sm:text-xs font-bold">Донат</span>
@@ -285,7 +288,7 @@
                         <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-map-pin text-lg"></i></div>
                         <div class="flex-1">
                             <div class="font-bold text-sm text-slate-800">Геотрекер (GeoTracker)</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Лучшее приложение для записи трека в лесу</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Лучшее приложение для запись трека в лесу</div>
                         </div>
                         <div class="flex items-center justify-center w-6"><i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-emerald-600 transition-colors"></i></div>
                     </a>
@@ -628,6 +631,7 @@
             <button onclick="switchTab('forest', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-emerald-600" data-target="forest"><i class="fa-solid fa-tree text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Лес</span></button>
             <button onclick="switchTab('video', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-red-600" data-target="video"><i class="fa-solid fa-circle-play text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Видео</span></button>
             <button onclick="switchTab('ai', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-purple-600" data-target="ai"><i class="fa-solid fa-robot text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">ИИ</span></button>
+            <button onclick="switchTab('blog', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-purple-600" data-target="blog"><i class="fa-solid fa-newspaper text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Блог</span></button>
             <button onclick="switchTab('sos', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-red-600" data-target="sos"><i class="fa-solid fa-triangle-exclamation text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">SOS</span></button>
             <button onclick="switchTab('support', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-pink-600" data-target="support"><i class="fa-solid fa-heart text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Донат</span></button>
         </div>
