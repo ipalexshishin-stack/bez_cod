@@ -10,13 +10,14 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <script>
+        // Максимально безопасная инициализация VK Bridge
         document.addEventListener('DOMContentLoaded', function() {
             try {
                 if (typeof vkBridge !== 'undefined' && vkBridge.supports && vkBridge.supports('VKWebAppInit')) {
                     vkBridge.send('VKWebAppInit').catch(function(e) { console.warn("VK Bridge Init warning:", e); });
                 }
             } catch(e) {
-                console.warn("Не удалось инициализировать VK Bridge (возможно, открыто не в ВК):", e);
+                console.warn("Не удалось инициализировать VK Bridge:", e);
             }
         });
     </script>
@@ -36,10 +37,6 @@
         .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .typing-indicator span { animation: blink 1.4s infinite both; height: 6px; width: 6px; background: #8b5cf6; border-radius: 50%; display: inline-block; margin: 0 1px; }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes blink { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
         @media print {
             body * { visibility: hidden; }
             #printable-pdf-content, #printable-pdf-content * { visibility: visible; }
@@ -102,7 +99,7 @@
 
     <main id="main-scroll-container" class="w-full max-w-4xl mx-auto p-4 relative z-10 pb-28">
         
-        <section id="tab-home" class="tab-content">
+        <section id="tab-home" class="tab-content hidden">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-blue-500"></i> Главная</h2>
 
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
@@ -235,10 +232,6 @@
                         <h4 class="font-bold text-sm text-slate-800 mb-1.5 flex items-center gap-2"><i class="fa-solid fa-circle-question text-blue-500"></i> Это полностью бесплатно?</h4>
                         <p class="text-xs text-slate-600 leading-relaxed">Да, весь функционал приложения абсолютно бесплатный и доступен без дополнительных скачиваний и скрытых подписок.</p>
                     </div>
-                    <div class="border-b border-slate-100 pb-4">
-                        <h4 class="font-bold text-sm text-slate-800 mb-1.5 flex items-center gap-2"><i class="fa-solid fa-circle-question text-blue-500"></i> Откуда берет ответы ИИ-Помощник?</h4>
-                        <p class="text-xs text-slate-600 leading-relaxed">Бот работает на базе модели Gemini, но ему заданы строгие системные ограничения: он консультирует только на основе официальных алгоритмов МЧС и профессиональных спасателей.</p>
-                    </div>
                     <div>
                         <h4 class="font-bold text-sm text-slate-800 mb-1.5 flex items-center gap-2"><i class="fa-solid fa-circle-question text-blue-500"></i> Как распечатать памятку?</h4>
                         <p class="text-xs text-slate-600 leading-relaxed">Перейдите в раздел «Город» или «Лес», нажмите на кнопку «Скачать Памятку», а затем используйте системную кнопку «Печать / Сохранить как PDF».</p>
@@ -315,27 +308,14 @@
                 <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i><span class="text-slate-800 font-bold">ИИ-Помощник</span>
             </div>
             <h2 class="text-2xl font-extrabold mb-2 flex items-center gap-2 shrink-0"><i class="fa-solid fa-robot text-purple-500"></i> ИИ-Помощник</h2>
-            <p class="text-xs text-slate-500 mb-4 shrink-0">Задайте любой вопрос о безопасности детей</p>
             
-            <div class="flex flex-col bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden h-[60vh] sm:h-[500px]">
-                <div id="ai-chat-box" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-slate-50/50">
-                    <div class="flex gap-3 w-full max-w-[90%] animate-fadeIn">
-                        <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200">
-                            <i class="fa-solid fa-robot text-purple-600 text-sm"></i>
-                        </div>
-                        <div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">
-                            Здравствуйте! Я ИИ-гид по детской безопасности. Задайте мне вопрос, например:<br><br>
-                            <span class="text-purple-600 font-medium cursor-pointer hover:underline" onclick="fillAI('Что собрать в аптечку для леса?')">- Что собрать в аптечку для леса?</span><br>
-                            <span class="text-purple-600 font-medium cursor-pointer hover:underline" onclick="fillAI('Как научить ребенка не уходить с чужими?')">- Как научить ребенка не уходить с чужими?</span>
-                        </div>
-                    </div>
+            <div class="bg-purple-50 p-8 rounded-3xl shadow-sm border border-purple-100 text-center flex flex-col items-center justify-center h-[50vh] sm:h-[400px]">
+                <div class="w-20 h-20 bg-purple-100 text-purple-500 rounded-full flex items-center justify-center mb-4 text-4xl shadow-sm animate-pulse">
+                    <i class="fa-solid fa-wrench"></i>
                 </div>
-                <div class="p-3 bg-white border-t border-slate-100 flex gap-2 shrink-0 relative">
-                    <textarea id="ai-input" rows="1" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none max-h-24" placeholder="Ваш вопрос..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendAIMessage(); }"></textarea>
-                    <button id="ai-send-btn" onclick="sendAIMessage()" class="bg-purple-600 hover:bg-purple-700 text-white w-12 h-12 rounded-xl flex items-center justify-center transition-colors shadow-sm shrink-0 active:scale-95 disabled:opacity-50 disabled:active:scale-100">
-                        <i class="fa-solid fa-paper-plane text-sm ml-0.5"></i>
-                    </button>
-                </div>
+                <h3 class="font-extrabold text-xl text-purple-900 mb-2">Ведутся технические работы</h3>
+                <p class="text-sm text-purple-700 max-w-xs mx-auto leading-relaxed">В данный момент ИИ-Помощник недоступен, так как мы проводим обновление его базы знаний. Пожалуйста, зайдите позже.</p>
+                <button onclick="switchTab('home')" class="mt-6 bg-white border border-purple-200 hover:bg-purple-50 text-purple-700 px-6 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-sm active:scale-95">Вернуться на главную</button>
             </div>
         </section>
 
@@ -424,6 +404,50 @@
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">Канал проекта</div><div class="text-xs text-slate-500">Подписывайтесь на обновления</div></div>
                         <i class="fa-brands fa-vk text-blue-500 text-lg"></i>
                     </a>
+                    
+                    <a href="https://vk.ru/hrpuls" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-800 hover:bg-slate-900 rounded-xl transition-colors shadow-sm active:scale-95 mt-4 group">
+                        <div class="w-10 h-10 bg-white/10 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/20 transition-colors"><i class="fa-solid fa-briefcase"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-white flex items-center gap-2">
+                                HR Пульс <span class="bg-blue-500 text-white text-[8px] uppercase font-bold px-1.5 py-0.5 rounded">Партнер</span>
+                            </div>
+                            <div class="text-xs text-slate-300">Свежие вакансии и карьера</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-slate-400 group-hover:text-white transition-colors"></i>
+                    </a>
+                    
+                    <a href="https://vk.ru/svarche" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-orange-600 hover:bg-orange-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
+                        <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-fire-flame-curved"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-white flex items-center gap-2">
+                                СварЧе <span class="bg-red-500 text-white text-[8px] uppercase font-bold px-1.5 py-0.5 rounded">Партнер</span>
+                            </div>
+                            <div class="text-xs text-orange-200">Сварочные работы в Череповце</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-orange-300 group-hover:text-white transition-colors"></i>
+                    </a>
+
+                    <a href="https://vk.com/pso.azimut" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
+                        <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-white flex items-center gap-2">
+                                ПСО «Азимут» <span class="bg-red-500 text-white text-[8px] uppercase font-bold px-1.5 py-0.5 rounded">Партнер</span>
+                            </div>
+                            <div class="text-xs text-indigo-200">Поисково-спасательный отряд</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-indigo-200 group-hover:text-white transition-colors"></i>
+                    </a>
+
+                    <a href="https://vk.ru/pso_tyneodin" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-teal-600 hover:bg-teal-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
+                        <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-users-viewfinder"></i></div>
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-white flex items-center gap-2">
+                                ПСО «Ты не один» <span class="bg-red-500 text-white text-[8px] uppercase font-bold px-1.5 py-0.5 rounded">Партнер</span>
+                            </div>
+                            <div class="text-xs text-teal-100">Поисково-спасательный отряд</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-teal-200 group-hover:text-white transition-colors"></i>
+                    </a>
                 </div>
             </div>
         </section>
@@ -475,14 +499,6 @@
     </div>
 
     <script>
-        const _k1 = "AQ.Ab8RN6K"; 
-        const _k2 = "irDwOrG-YVzR"; 
-        const _k3 = "g16lIab4FwQkZlG"; 
-        const _k4 = "qlfjyZLiiR4RmgLA";
-        const GEMINI_API_KEY = _k1 + _k2 + _k3 + _k4; 
-        
-        let aiChatHistory = [];
-
         var THEMES = {
             city: { bgLight: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100', bgMain: 'bg-blue-500', hover: 'hover:bg-blue-600', icon: 'fa-city', hoverBorder: 'hover:border-blue-400', hoverBg: 'hover:bg-blue-50' },
             forest: { bgLight: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', bgMain: 'bg-emerald-500', hover: 'hover:bg-emerald-600', icon: 'fa-tree', hoverBorder: 'hover:border-emerald-400', hoverBg: 'hover:bg-emerald-50' },
@@ -507,7 +523,10 @@
         };
 
         var psoDatabase = [
-            { name: "ПСО Ты не один", city: "Вологодская область", phone: "89115056898", vk: "https://vk.ru/pso_tyneodin" }
+            { name: "ПСО Ты не один", city: "Вологодская область", phone: "89115056898", vk: "https://vk.ru/pso_tyneodin" },
+            { name: "ПСО ЮК-Спас", city: "Вологодская область", phone: "89211238880", vk: "https://vk.com/deti35" },
+            { name: "ПСО Азимут", city: "Вологодская область", phone: "89115183366", vk: "https://vk.com/pso.azimut" },
+            { name: "ПСО ЛизаАлерт", city: "Федеральный отряд", phone: "88007005452", vk: "https://vk.com/lizaalert_real" }
         ];
 
         var blogArticles = [
@@ -756,14 +775,6 @@
             filterBlog();
         }
 
-        function fillBlogSearch(query) {
-            var searchInput = document.getElementById('blog-search');
-            if(searchInput) {
-                searchInput.value = query;
-                filterBlog();
-            }
-        }
-
         function filterBlog() {
             var query = (document.getElementById('blog-search')?.value || '').toLowerCase();
             var container = document.getElementById('blog-list');
@@ -776,9 +787,7 @@
             container.innerHTML = filtered.map(a => {
                 var coverUrl = a.author === "ПСО «Ты не один»" ? logoUrl : 'https://images.unsplash.com/photo-1550592704-6c76defa9985?auto=format&fit=crop&w=600&q=80';
                 if(a.title.includes("Тревожная кнопка 2.0")) { coverUrl = 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80'; }
-                if(a.title.includes("Опасность змей")) { coverUrl = 'https://images.unsplash.com/photo-1531386151447-fd76ad50012f?auto=format&fit=crop&w=600&q=80'; }
-                if(a.title.includes("на воде")) { coverUrl = 'https://images.unsplash.com/photo-1571556942661-0f73583be456?auto=format&fit=crop&w=600&q=80'; }
-                if(a.category === "Город") { coverUrl = 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=600&q=80'; }
+                if(a.title.includes("Дорога в школу")) { coverUrl = 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=600&q=80'; }
                 if(a.author === "ПСО «Ты не один»") { coverUrl = logoUrl; }
                 
                 var escapedLink = a.link.replace(/'/g, "\\'");
@@ -812,93 +821,6 @@
                         <a href="${p.vk}" target="_blank" class="flex-1 sm:flex-none bg-blue-100 text-blue-700 px-3 py-2 rounded-lg text-xs font-bold text-center"><i class="fa-brands fa-vk text-sm"></i> Группа</a>
                     </div>
                 </div>`).join('');
-        }
-
-        function fillAI(text) { document.getElementById('ai-input').value = text; document.getElementById('ai-input').focus(); }
-
-        function fetchWithBackoff(url, options, retries = 4, delay = 1000) {
-            return fetch(url, options).then(response => {
-                if (response.status === 429 && retries > 0) {
-                    return new Promise(resolve => setTimeout(resolve, delay))
-                        .then(() => fetchWithBackoff(url, options, retries - 1, delay * 2));
-                }
-                return response;
-            }).catch(error => {
-                if (retries > 0) {
-                    return new Promise(resolve => setTimeout(resolve, delay))
-                        .then(() => fetchWithBackoff(url, options, retries - 1, delay * 2));
-                }
-                throw error;
-            });
-        }
-
-        function sendAIMessage() {
-            const input = document.getElementById('ai-input');
-            const btn = document.getElementById('ai-send-btn');
-            const text = input.value.trim();
-            if (!text) return;
-            
-            input.value = ''; input.disabled = true;
-            if(btn) { btn.disabled = true; btn.classList.add('opacity-50'); }
-            
-            const box = document.getElementById('ai-chat-box');
-            let userHtml = formatText(text);
-            box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn ml-auto flex-row-reverse"><div class="bg-purple-600 text-white p-3 rounded-2xl rounded-tr-sm text-sm shadow-sm">${userHtml}</div></div>`);
-            
-            aiChatHistory.push({ role: "user", parts: [{ text: text }] });
-            const loaderId = 'loader-' + Date.now();
-            box.insertAdjacentHTML('beforeend', `<div id="${loaderId}" class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200"><i class="fa-solid fa-robot text-purple-600 text-sm"></i></div><div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-sm flex items-center h-10 shadow-sm"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>`);
-            box.scrollTop = box.scrollHeight;
-
-            const payload = {
-                contents: aiChatHistory,
-                systemInstruction: {
-                    parts: [{ text: "Ты спасатель МЧС, консультируешь по детской безопасности. Отвечай кратко, эмпатично, списками. Если вопрос не про безопасность или спасение, вежливо отказывайся отвечать." }]
-                }
-            };
-            
-            fetchWithBackoff(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json().then(data => ({ response, data })).catch(() => ({ response, data: { error: { message: "Сбой обработки ответа сервером" } } })))
-            .then(({ response, data }) => {
-                document.getElementById(loaderId)?.remove();
-
-                if (!response.ok) { 
-                    throw new Error(data.error?.message || "Ваш API-ключ отклонен сервером Google."); 
-                }
-                
-                if (!data.candidates || data.candidates.length === 0) { 
-                    throw new Error("Ответ заблокирован фильтрами безопасности Google. Попробуйте переформулировать вопрос."); 
-                }
-                
-                let botReply = data.candidates[0].content.parts[0].text;
-                aiChatHistory.push({ role: "model", parts: [{ text: botReply }] });
-                
-                let botHtml = formatText(botReply);
-                box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center shrink-0 border border-purple-200"><i class="fa-solid fa-robot text-purple-600 text-sm"></i></div><div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">${botHtml}</div></div>`);
-            })
-            .catch(error => {
-                document.getElementById(loaderId)?.remove();
-                let errorDetails = error.message;
-                
-                if (errorDetails.includes('Quota exceeded') || errorDetails.includes('429')) {
-                    errorDetails = "Бот перегружен (превышен бесплатный лимит ответов в минуту). Скрипт пытался достучаться несколько раз, но лимит пока не сброшен. Пожалуйста, подождите 1 минуту.";
-                } else if (errorDetails.includes('API_KEY_INVALID')) {
-                    errorDetails = "Неверный или заблокированный API-ключ.";
-                }
-
-                box.insertAdjacentHTML('beforeend', `<div class="flex gap-3 w-full max-w-[90%] animate-fadeIn"><div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0 border border-red-200"><i class="fa-solid fa-triangle-exclamation text-red-600 text-sm"></i></div><div class="bg-white border border-slate-200 text-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm shadow-sm">⚠️ Ошибка связи с ИИ.<br><span class="font-medium text-red-600">${errorDetails}</span></div></div>`);
-                aiChatHistory.pop();
-            })
-            .finally(() => {
-                if(input) input.disabled = false; 
-                if(btn) { btn.disabled = false; btn.classList.remove('opacity-50'); }
-                if(input) input.focus(); 
-                if(box) box.scrollTop = box.scrollHeight;
-            });
         }
 
         function openPdfMaterial(type) {
@@ -1012,9 +934,9 @@
                                 if (defaultIcon) defaultIcon.classList.add('hidden');
                             }
                         }
-                    }).catch(function(err) {});
+                    }).catch(function(err) { console.log('Ошибка профиля VK:', err); });
                 }
-            } catch(e) {}
+            } catch(e) { console.log('vkBridge error:', e); }
 
             try {
                 var categories = ['city', 'forest', 'sos'];
@@ -1043,7 +965,7 @@
                             </div>`;
                     }
                 }
-            } catch (e) {}
+            } catch (e) { console.error("Ошибка рендера видео:", e); }
 
             try { filterPSO(); } catch(e) {}
             try { initBlogCategories(); } catch(e) {}
@@ -1063,19 +985,19 @@
                             </label>`;
                     }
                 }
-            } catch(e) {}
+            } catch(e) { console.error("Ошибка рендера чек-листа:", e); }
         }
 
         function startApp() {
             try {
                 switchTab('home');
             } catch (e) {
-                console.error("Ошибка показа стартового экрана", e);
+                console.error("Критическая ошибка: не удалось показать стартовый экран", e);
             }
             try {
                 initApp();
             } catch(e) {
-                console.error("Ошибка при инициализации данных:", e);
+                console.error("Ошибка при инициализации данных приложения:", e);
             }
         }
 
