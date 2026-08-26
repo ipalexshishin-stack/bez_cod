@@ -6,13 +6,15 @@
     <title>Код Безопасности</title>
     
     <!-- Подключение VK Bridge -->
-    <script src="https://cdn.jsdelivr.net/npm/@vkontakte/vk-bridge@2.14.2/dist/browser.min.js"></script>
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     
     <script>
         // Максимально безопасная и немедленная инициализация VK Bridge
         try {
             if (window.vkBridge) {
                 window.vkBridge.send('VKWebAppInit').catch(function(e) { console.warn("VK Bridge Init warning:", e); });
+            } else {
+                console.warn("VK Bridge is not available globally.");
             }
         } catch(e) {
             console.warn("Не удалось инициализировать VK Bridge:", e);
