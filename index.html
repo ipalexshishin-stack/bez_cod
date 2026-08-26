@@ -5,29 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Код Безопасности</title>
     
-    <!-- Подключение VK Bridge и Telegram Web App -->
-    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Подключение VK Bridge -->
+    <script src="https://cdn.jsdelivr.net/npm/@vkontakte/vk-bridge@2.14.2/dist/browser.min.js"></script>
     
     <script>
-        // Инициализация платформ НЕМЕДЛЕННО (без ожидания DOMContentLoaded).
-        // Если ждать загрузки DOM и Tailwind CDN, клиент VK может прервать запуск по таймауту.
+        // Инициализация VK Bridge НЕМЕДЛЕННО (критично для ВКонтакте).
         try {
             if (window.vkBridge) {
                 window.vkBridge.send('VKWebAppInit').catch(function(e) { console.warn("VK Bridge Init warning:", e); });
             }
         } catch(e) {
             console.warn("Не удалось инициализировать VK Bridge:", e);
-        }
-
-        // Инициализация Telegram Web App
-        try {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.ready();
-                window.Telegram.WebApp.expand();
-            }
-        } catch(e) {
-            console.warn("Не удалось инициализировать Telegram Web App:", e);
         }
     </script>
     
@@ -571,9 +559,6 @@
                     vkBridge.send('VKWebAppOpenLink', { link: url }).catch(function() {
                         window.open(url, '_blank', 'noopener,noreferrer');
                     });
-                } else if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
-                    // Нативный метод Telegram
-                    window.Telegram.WebApp.openLink(url);
                 } else {
                     // Стандартный веб или ПК
                     window.open(url, '_blank', 'noopener,noreferrer');
@@ -820,18 +805,14 @@
         }
 
         function openVideo(url) { 
-            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
-                window.Telegram.WebApp.openLink(url);
-            } else {
-                var iframe = document.getElementById('vk-iframe');
-                var loader = document.getElementById('video-loader');
-                iframe.classList.add('opacity-0'); 
-                if(loader) loader.classList.remove('hidden'); 
-                iframe.src = url; 
-                var m = document.getElementById('vk-player-modal'); 
-                m.classList.remove('hidden'); 
-                setTimeout(()=>m.classList.remove('opacity-0'), 10); 
-            }
+            var iframe = document.getElementById('vk-iframe');
+            var loader = document.getElementById('video-loader');
+            iframe.classList.add('opacity-0'); 
+            if(loader) loader.classList.remove('hidden'); 
+            iframe.src = url; 
+            var m = document.getElementById('vk-player-modal'); 
+            m.classList.remove('hidden'); 
+            setTimeout(()=>m.classList.remove('opacity-0'), 10); 
         }
 
         function closeVideo() { 
