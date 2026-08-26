@@ -6,30 +6,29 @@
     <title>Код Безопасности</title>
     
     <!-- Подключение VK Bridge и Telegram Web App -->
-    <script src="https://cdn.jsdelivr.net/npm/@vkontakte/vk-bridge@2.14.2/dist/browser.min.js"></script>
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <script>
-        // Максимально безопасная инициализация VK Bridge и Telegram
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                if (typeof vkBridge !== 'undefined' && vkBridge.supports && vkBridge.supports('VKWebAppInit')) {
-                    vkBridge.send('VKWebAppInit').catch(function(e) { console.warn("VK Bridge Init warning:", e); });
-                }
-            } catch(e) {
-                console.warn("Не удалось инициализировать VK Bridge:", e);
+        // Инициализация платформ НЕМЕДЛЕННО (без ожидания DOMContentLoaded).
+        // Если ждать загрузки DOM и Tailwind CDN, клиент VK может прервать запуск по таймауту.
+        try {
+            if (window.vkBridge) {
+                window.vkBridge.send('VKWebAppInit').catch(function(e) { console.warn("VK Bridge Init warning:", e); });
             }
+        } catch(e) {
+            console.warn("Не удалось инициализировать VK Bridge:", e);
+        }
 
-            // Инициализация Telegram Web App
-            try {
-                if (window.Telegram && window.Telegram.WebApp) {
-                    window.Telegram.WebApp.ready();
-                    window.Telegram.WebApp.expand();
-                }
-            } catch(e) {
-                console.warn("Не удалось инициализировать Telegram Web App:", e);
+        // Инициализация Telegram Web App
+        try {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
             }
-        });
+        } catch(e) {
+            console.warn("Не удалось инициализировать Telegram Web App:", e);
+        }
     </script>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -555,8 +554,8 @@
 
         function triggerTaptic() {
             try { 
-                if (typeof vkBridge !== 'undefined' && vkBridge.supports && vkBridge.supports('VKWebAppTapticSelectionChanged')) {
-                    vkBridge.send('VKWebAppTapticSelectionChanged'); 
+                if (window.vkBridge && window.vkBridge.supports && window.vkBridge.supports('VKWebAppTapticSelectionChanged')) {
+                    window.vkBridge.send('VKWebAppTapticSelectionChanged'); 
                 }
             } catch(e) {}
         }
@@ -587,11 +586,11 @@
         function shareApp() {
             triggerTaptic();
             try {
-                if (typeof vkBridge !== 'undefined') {
+                if (window.vkBridge) {
                     var urlParams = new URLSearchParams(window.location.search);
                     var appId = urlParams.get('vk_app_id');
                     var shareLink = appId ? 'https://vk.com/app' + appId : window.location.href;
-                    vkBridge.send('VKWebAppShare', { link: shareLink }).catch(function(err) {});
+                    window.vkBridge.send('VKWebAppShare', { link: shareLink }).catch(function(err) {});
                 }
             } catch(e) {}
         }
@@ -843,8 +842,8 @@
 
         function initApp() {
             try {
-                if (typeof vkBridge !== 'undefined') {
-                    vkBridge.send('VKWebAppGetUserInfo').then(function(data) {
+                if (window.vkBridge) {
+                    window.vkBridge.send('VKWebAppGetUserInfo').then(function(data) {
                         if (data && data.first_name) {
                             var nameDisplay = document.getElementById('user-name-display');
                             var avatarImg = document.getElementById('user-avatar-img');
