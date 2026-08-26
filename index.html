@@ -95,6 +95,16 @@
         </div>
     </header>
 
+    <div id="mobile-web-banner" class="hidden bg-blue-600 text-white px-4 py-3 flex items-center justify-between shadow-md z-[99] relative">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center shrink-0">
+                <i class="fa-brands fa-vk text-white"></i>
+            </div>
+            <div class="text-[11px] sm:text-xs font-medium leading-tight">Приложение работает стабильнее<br>в <span class="font-bold">официальном клиенте VK</span></div>
+        </div>
+        <button onclick="openNativeApp()" class="bg-white text-blue-600 px-4 py-2 rounded-xl text-xs font-bold shadow-sm active:scale-95 transition-transform flex shrink-0">Открыть</button>
+    </div>
+
     <main id="main-scroll-container" class="w-full max-w-4xl mx-auto p-4 relative z-10" style="padding-bottom: calc(6rem + env(safe-area-inset-bottom));">
         
         <section id="tab-home" class="tab-content hidden">
@@ -825,6 +835,28 @@
             setTimeout(()=>{ m.classList.add('hidden'); document.getElementById('vk-iframe').src=''; }, 300); 
         }
 
+        function openNativeApp() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var appId = urlParams.get('vk_app_id');
+            if (!appId) return;
+            
+            // Ссылка для вызова нативного приложения ВКонтакте
+            var deepLink = 'vk://app' + appId;
+            
+            // 1. Пытаемся обойти песочницу iframe через window.top
+            try { 
+                window.top.location.href = deepLink; 
+            } catch(e) {}
+            
+            // 2. Имитируем клик пользователя с выходом из iframe (target='_top')
+            var a = document.createElement('a');
+            a.href = deepLink;
+            a.target = '_top';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
         function initApp() {
             try {
                 if (window.vkBridge) {
@@ -887,6 +919,19 @@
 
         function startApp() {
             try {
+                var urlParams = new URLSearchParams(window.location.search);
+                var platform = urlParams.get('vk_platform');
+                var appId = urlParams.get('vk_app_id');
+
+                if (platform === 'mobile_web' && appId) {
+                    // 1. Показываем баннер-страховку на случай блокировки авто-перехода браузером
+                    var banner = document.getElementById('mobile-web-banner');
+                    if (banner) banner.classList.remove('hidden');
+                    
+                    // 2. Запускаем автоматический переход с небольшой задержкой
+                    setTimeout(openNativeApp, 300);
+                }
+
                 switchTab('home');
             } catch (e) {
                 console.error("Критическая ошибка: не удалось показать стартовый экран", e);
