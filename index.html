@@ -10,7 +10,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <script>
-        // Максимально безопасная инициализация VK Bridge
+        // Максимально безопасная инициализация VK Bridge и Telegram
         document.addEventListener('DOMContentLoaded', function() {
             try {
                 if (typeof vkBridge !== 'undefined' && vkBridge.supports && vkBridge.supports('VKWebAppInit')) {
@@ -19,6 +19,16 @@
             } catch(e) {
                 console.warn("Не удалось инициализировать VK Bridge:", e);
             }
+
+            // Инициализация Telegram Web App
+            try {
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.ready();
+                    window.Telegram.WebApp.expand();
+                }
+            } catch(e) {
+                console.warn("Не удалось инициализировать Telegram Web App:", e);
+            }
         });
     </script>
     
@@ -26,7 +36,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        html, body { margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        html, body { margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
         .card-perspective { perspective: 1000px; }
         .card-flipper { transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; position: relative; }
@@ -96,7 +106,7 @@
         </div>
     </header>
 
-    <main id="main-scroll-container" class="w-full max-w-4xl mx-auto p-4 relative z-10 pb-28">
+    <main id="main-scroll-container" class="w-full max-w-4xl mx-auto p-4 relative z-10" style="padding-bottom: calc(6rem + env(safe-area-inset-bottom));">
         
         <section id="tab-home" class="tab-content hidden">
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-blue-500"></i> Главная</h2>
@@ -443,15 +453,15 @@
         
     </main>
 
-    <nav class="bg-white border-t border-slate-200 fixed bottom-0 w-full z-[100] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-safe">
+    <nav class="bg-white border-t border-slate-200 fixed bottom-0 w-full z-[100] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-safe select-none">
         <div class="flex items-center h-16 max-w-4xl mx-auto w-full px-1">
-            <button onclick="switchTab('city', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-blue-600" data-target="city"><i class="fa-solid fa-city text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Город</span></button>
-            <button onclick="switchTab('forest', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-emerald-600" data-target="forest"><i class="fa-solid fa-tree text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Лес</span></button>
-            <button onclick="switchTab('video', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-red-600" data-target="video"><i class="fa-solid fa-circle-play text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Видео</span></button>
-            <button onclick="switchTab('ai', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-purple-600" data-target="ai"><i class="fa-solid fa-robot text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">ИИ</span></button>
-            <button onclick="switchTab('blog', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-purple-600" data-target="blog"><i class="fa-solid fa-newspaper text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Блог</span></button>
-            <button onclick="switchTab('sos', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-red-600" data-target="sos"><i class="fa-solid fa-triangle-exclamation text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">SOS</span></button>
-            <button onclick="switchTab('support', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-pink-600" data-target="support"><i class="fa-solid fa-heart text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Донат</span></button>
+            <button onclick="switchTab('city', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-blue-600 outline-none" data-target="city"><i class="fa-solid fa-city text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Город</span></button>
+            <button onclick="switchTab('forest', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-emerald-600 outline-none" data-target="forest"><i class="fa-solid fa-tree text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Лес</span></button>
+            <button onclick="switchTab('video', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-red-600 outline-none" data-target="video"><i class="fa-solid fa-circle-play text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Видео</span></button>
+            <button onclick="switchTab('ai', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-purple-600 outline-none" data-target="ai"><i class="fa-solid fa-robot text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">ИИ</span></button>
+            <button onclick="switchTab('blog', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-purple-600 outline-none" data-target="blog"><i class="fa-solid fa-newspaper text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Блог</span></button>
+            <button onclick="switchTab('sos', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-red-600 outline-none" data-target="sos"><i class="fa-solid fa-triangle-exclamation text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">SOS</span></button>
+            <button onclick="switchTab('support', this)" class="tab-btn flex-1 flex flex-col items-center justify-center h-full transition-colors text-slate-400 hover:text-pink-600 outline-none" data-target="support"><i class="fa-solid fa-heart text-xl mb-1"></i><span class="text-[9px] sm:text-[10px] font-semibold text-center leading-tight">Донат</span></button>
         </div>
     </nav>
 
@@ -544,16 +554,32 @@
         }
 
         function triggerTaptic() {
-            try { if (typeof vkBridge !== 'undefined') vkBridge.send('VKWebAppTapticSelectionChanged'); } catch(e) {}
+            try { 
+                if (typeof vkBridge !== 'undefined' && vkBridge.supports && vkBridge.supports('VKWebAppTapticSelectionChanged')) {
+                    vkBridge.send('VKWebAppTapticSelectionChanged'); 
+                }
+            } catch(e) {}
         }
 
         function openLink(url, event) {
             if(url === '#') { if (event) event.preventDefault(); return; }
             if (event) event.preventDefault();
             triggerTaptic();
-            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
-                window.Telegram.WebApp.openLink(url);
-            } else {
+            
+            try {
+                if (typeof vkBridge !== 'undefined' && vkBridge.supports && vkBridge.supports('VKWebAppOpenLink')) {
+                    // Нативный метод VK (обход блокировщиков в мобильном клиенте)
+                    vkBridge.send('VKWebAppOpenLink', { link: url }).catch(function() {
+                        window.open(url, '_blank', 'noopener,noreferrer');
+                    });
+                } else if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
+                    // Нативный метод Telegram
+                    window.Telegram.WebApp.openLink(url);
+                } else {
+                    // Стандартный веб или ПК
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                }
+            } catch (e) {
                 window.open(url, '_blank', 'noopener,noreferrer');
             }
         }
