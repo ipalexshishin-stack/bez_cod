@@ -354,7 +354,7 @@
                 <h3 class="font-bold text-lg mb-3">Поиск отрядов ПСО</h3>
                 <input type="text" id="pso-search" placeholder="Введите город (например, Вологда)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" onkeyup="filterPSO()">
                 <div id="pso-list" class="space-y-3 max-h-60 overflow-y-auto"></div>
-                <a href="https://vk.com/search?c[q]=Поисково-спасательный%20отряд&c[section]=communities" target="_blank" rel="noopener noreferrer" class="mt-4 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl text-sm transition-colors active:scale-95 flex items-center justify-center">
+                <a href="https://vk.com/search?c[q]=Поисково-спасательный%20отряд&c[section]=communities" onclick="openLink('https://vk.com/search?c[q]=Поисково-спасательный%20отряд&c[section]=communities', event)" target="_blank" rel="noopener noreferrer" class="mt-4 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl text-sm transition-colors active:scale-95 flex items-center justify-center">
                     <i class="fa-solid fa-magnifying-glass mr-2"></i> Искать другие города в ВК
                 </a>
             </div>
@@ -380,18 +380,18 @@
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
                 <h3 class="font-bold text-lg mb-4 text-slate-800 border-b border-slate-100 pb-2">Команда и партнеры</h3>
                 <div class="space-y-4">
-                    <a href="https://vk.com/id16426067" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95">
+                    <a href="https://vk.com/id16426067" onclick="openLink('https://vk.com/id16426067', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95">
                         <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-user-shield"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">Александр Шишин</div><div class="text-xs text-slate-500">Автор проекта, специалист по безопасности</div></div>
                         <i class="fa-brands fa-vk text-blue-500 text-lg"></i>
                     </a>
-                    <a href="https://vk.ru/im/channels/-239286076" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95">
+                    <a href="https://vk.ru/im/channels/-239286076" onclick="openLink('https://vk.ru/im/channels/-239286076', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95">
                         <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-users"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">Канал проекта</div><div class="text-xs text-slate-500">Подписывайтесь на обновления</div></div>
                         <i class="fa-brands fa-vk text-blue-500 text-lg"></i>
                     </a>
                     
-                    <a href="https://vk.ru/hrpuls" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-800 hover:bg-slate-900 rounded-xl transition-colors shadow-sm active:scale-95 mt-4 group">
+                    <a href="https://vk.ru/hrpuls" onclick="openLink('https://vk.ru/hrpuls', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-800 hover:bg-slate-900 rounded-xl transition-colors shadow-sm active:scale-95 mt-4 group">
                         <div class="w-10 h-10 bg-white/10 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/20 transition-colors"><i class="fa-solid fa-briefcase"></i></div>
                         <div class="flex-1">
                             <div class="font-bold text-sm text-white flex items-center gap-2">
@@ -402,7 +402,7 @@
                         <i class="fa-solid fa-arrow-right text-slate-400 group-hover:text-white transition-colors"></i>
                     </a>
                     
-                    <a href="https://vk.ru/svarche" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-orange-600 hover:bg-orange-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
+                    <a href="https://vk.ru/svarche" onclick="openLink('https://vk.ru/svarche', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-orange-600 hover:bg-orange-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
                         <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-fire-flame-curved"></i></div>
                         <div class="flex-1">
                             <div class="font-bold text-sm text-white flex items-center gap-2">
@@ -413,7 +413,7 @@
                         <i class="fa-solid fa-arrow-right text-orange-300 group-hover:text-white transition-colors"></i>
                     </a>
 
-                    <a href="https://vk.com/pso.azimut" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
+                    <a href="https://vk.com/pso.azimut" onclick="openLink('https://vk.com/pso.azimut', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
                         <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-map-location-dot"></i></div>
                         <div class="flex-1">
                             <div class="font-bold text-sm text-white flex items-center gap-2">
@@ -424,7 +424,7 @@
                         <i class="fa-solid fa-arrow-right text-indigo-200 group-hover:text-white transition-colors"></i>
                     </a>
 
-                    <a href="https://vk.ru/pso_tyneodin" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-teal-600 hover:bg-teal-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
+                    <a href="https://vk.ru/pso_tyneodin" onclick="openLink('https://vk.ru/pso_tyneodin', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-teal-600 hover:bg-teal-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
                         <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-users-viewfinder"></i></div>
                         <div class="flex-1">
                             <div class="font-bold text-sm text-white flex items-center gap-2">
