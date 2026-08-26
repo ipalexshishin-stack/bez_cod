@@ -121,7 +121,6 @@
                 </div>
             </div>
 
-            <!-- Блок помощи проекту -->
             <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-5 rounded-3xl shadow-sm border border-orange-200 mb-6 relative overflow-hidden">
                 <div class="absolute -right-4 -top-4 text-orange-500/10 text-6xl"><i class="fa-solid fa-bullhorn"></i></div>
                 <h3 class="font-extrabold text-lg mb-3 text-orange-900 flex items-center gap-2 relative z-10"><i class="fa-solid fa-fire-flame-curved text-orange-500"></i> Как помочь проекту?</h3>
@@ -840,21 +839,11 @@
             var appId = urlParams.get('vk_app_id');
             if (!appId) return;
             
-            // Ссылка для вызова нативного приложения ВКонтакте
-            var deepLink = 'vk://app' + appId;
+            // Используем стандартную ссылку vk.com/app, которая перехватывается OS (App Links / Universal Links)
+            var universalLink = 'https://vk.com/app' + appId;
             
-            // 1. Пытаемся обойти песочницу iframe через window.top
-            try { 
-                window.top.location.href = deepLink; 
-            } catch(e) {}
-            
-            // 2. Имитируем клик пользователя с выходом из iframe (target='_top')
-            var a = document.createElement('a');
-            a.href = deepLink;
-            a.target = '_top';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            // Надежный метод открытия: заставляем весь браузер перейти по ссылке
+            window.open(universalLink, '_top');
         }
 
         function initApp() {
@@ -928,7 +917,7 @@
                     var banner = document.getElementById('mobile-web-banner');
                     if (banner) banner.classList.remove('hidden');
                     
-                    // 2. Запускаем автоматический переход с небольшой задержкой
+                    // 2. Запускаем автоматический переход с небольшой задержкой (Universal Link)
                     setTimeout(openNativeApp, 300);
                 }
 
