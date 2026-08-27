@@ -467,7 +467,7 @@
         <i class="fa-solid fa-phone-volume text-xl animate-pulse"></i>
     </a>
 
-    <div id="vk-player-modal" class="fixed inset-0 z-[110] bg-black/95 hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+    <div id="vk-player-modal" class="fixed inset-0 z-[110] bg-black/95 hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300" style="display: none;">
         <button onclick="closeVideo()" class="absolute top-6 right-4 sm:top-8 sm:right-8 text-white/70 hover:text-white w-12 h-12 flex items-center justify-center bg-white/10 rounded-full backdrop-blur-sm transition-all active:scale-95 z-[120]">
             <i class="fa-solid fa-xmark text-2xl"></i>
         </button>
@@ -482,7 +482,7 @@
         </div>
     </div>
 
-    <div id="pdf-modal" class="fixed inset-0 z-[120] bg-black/60 hidden flex-col justify-end transition-opacity opacity-0 duration-300">
+    <div id="pdf-modal" class="fixed inset-0 z-[120] bg-black/60 hidden flex-col justify-end transition-opacity opacity-0 duration-300" style="display: none;">
         <div class="flex-1 w-full" onclick="closePdf()"></div>
         <div id="pdf-modal-content" class="bg-white w-full max-w-4xl mx-auto rounded-t-3xl p-6 transform translate-y-full transition-transform duration-300 max-h-[85vh] flex flex-col relative">
             <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4 absolute top-3 left-1/2 -translate-x-1/2"></div>
@@ -566,15 +566,43 @@
                 }
             } catch(e) {}
             
-            // Для обычного браузера и мобильного web
-            // Если событие было вызвано тегом <a> с target="_blank",
-            // мы просто позволяем браузеру отработать этот клик.
+            // Если клик по тегу A, позволяем браузеру самому обработать target="_blank"
             if (event && event.currentTarget && event.currentTarget.tagName === 'A') {
-                return;
+                return; 
             } else {
+                // Запасной план
                 if (event) event.preventDefault();
                 window.open(url, '_blank', 'noopener,noreferrer');
             }
+        }
+
+        function openVideo(url) {
+            triggerTaptic();
+            var iframe = document.getElementById('vk-iframe');
+            var loader = document.getElementById('video-loader');
+            if (iframe) {
+                iframe.classList.add('opacity-0'); 
+                iframe.src = url; 
+            }
+            if (loader) {
+                loader.style.display = 'flex';
+                loader.classList.remove('hidden'); 
+            }
+            var m = document.getElementById('vk-player-modal'); 
+            m.style.display = 'flex';
+            m.classList.remove('hidden'); 
+            setTimeout(function() { m.classList.remove('opacity-0'); }, 10); 
+        }
+
+        function closeVideo() { 
+            var m = document.getElementById('vk-player-modal'); 
+            m.classList.add('opacity-0'); 
+            setTimeout(function() { 
+                m.style.display = 'none';
+                m.classList.add('hidden'); 
+                var iframe = document.getElementById('vk-iframe');
+                if (iframe) iframe.src = ''; 
+            }, 300); 
         }
 
         function shareApp() {
@@ -590,11 +618,11 @@
         }
 
         function forceVkAppRedirect() {
-            var urlParams = window.location.search;
-            var appIdMatch = urlParams.match(/vk_app_id=(\d+)/);
+            var appIdMatch = window.location.search.match(/vk_app_id=(\d+)/);
             var appId = appIdMatch ? appIdMatch[1] : null;
             if (appId) {
-                window.open('https://vk.com/app' + appId, '_top');
+                var appLink = 'https://vk.com/app' + appId;
+                window.open(appLink, '_top');
             } else {
                 window.open('https://vk.com/app51608976', '_top');
             }
@@ -666,7 +694,7 @@
             var currentCard = cards[state.currentIndex];
             var t = THEMES[category] || THEMES.city;
 
-            container.innerHTML = 
+            var html = 
                 '<div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100">' +
                     '<div class="flex items-center justify-between mb-3">' +
                         '<span class="text-xs font-bold uppercase tracking-wider ' + t.text + ' ' + t.bgLight + ' px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-solid ' + t.icon + '"></i> Карточки</span>' +
@@ -681,14 +709,21 @@
                                 '<div class="text-center my-auto px-2"><p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">' + currentCard.back + '</p></div>' +
                             '</div>' +
                         '</div>' +
-                    '</div>' +
-                    (state.showHint ? '<div class="mt-3 bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-xl text-xs flex items-start gap-2 animate-fadeIn"><i class="fa-solid fa-lightbulb text-amber-500 mt-0.5 text-sm shrink-0"></i><div><span class="font-bold">Подсказка:</span> ' + currentCard.hint + '</div></div>' : '') +
+                    '</div>';
+
+            if (state.showHint) {
+                html += '<div class="mt-3 bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-xl text-xs flex items-start gap-2 animate-fadeIn"><i class="fa-solid fa-lightbulb text-amber-500 mt-0.5 text-sm shrink-0"></i><div><span class="font-bold">Подсказка:</span> ' + currentCard.hint + '</div></div>';
+            }
+
+            html += 
                     '<div class="flex items-center justify-between gap-2 mt-4">' +
                         '<button onclick="prevCard(\'' + category + '\')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2 px-3 rounded-xl text-xs transition-colors active:scale-95"><i class="fa-solid fa-chevron-left"></i> Назад</button>' +
                         '<button onclick="toggleHint(\'' + category + '\')" class="bg-amber-100 hover:bg-amber-200 text-amber-700 font-bold p-2.5 rounded-xl text-xs transition-colors active:scale-95"><i class="fa-solid fa-lightbulb"></i></button>' +
                         '<button onclick="nextCard(\'' + category + '\')" class="flex-1 ' + t.bgMain + ' ' + t.hover + ' text-white font-semibold py-2 px-3 rounded-xl text-xs transition-colors active:scale-95">Далее <i class="fa-solid fa-chevron-right"></i></button>' +
                     '</div>' +
                 '</div>';
+
+            container.innerHTML = html;
         }
 
         function toggleCardFlip(category) { widgetStates[category].isFlipped = !widgetStates[category].isFlipped; renderFlashcardWidget(category); triggerTaptic(); }
@@ -1066,34 +1101,6 @@
             }, 300);
         }
 
-        function openVideo(url) {
-            var iframe = document.getElementById('vk-iframe');
-            var loader = document.getElementById('video-loader');
-            if (iframe) {
-                iframe.classList.add('opacity-0'); 
-                iframe.src = url; 
-            }
-            if (loader) {
-                loader.style.display = 'flex';
-                loader.classList.remove('hidden'); 
-            }
-            var m = document.getElementById('vk-player-modal'); 
-            m.style.display = 'flex';
-            m.classList.remove('hidden'); 
-            setTimeout(function() { m.classList.remove('opacity-0'); }, 10); 
-        }
-
-        function closeVideo() { 
-            var m = document.getElementById('vk-player-modal'); 
-            m.classList.add('opacity-0'); 
-            setTimeout(function() { 
-                m.style.display = 'none';
-                m.classList.add('hidden'); 
-                var iframe = document.getElementById('vk-iframe');
-                if (iframe) iframe.src = ''; 
-            }, 300); 
-        }
-
         function initApp() {
             try {
                 if (window.vkBridge) {
@@ -1171,19 +1178,6 @@
                     banner.style.display = 'block';
                     banner.classList.remove('hidden');
                 }
-                
-                var appIdMatch = window.location.search.match(/vk_app_id=(\d+)/);
-                var appId = appIdMatch ? appIdMatch[1] : null;
-                var appLink = appId ? 'https://vk.com/app' + appId : 'https://vk.com/app51608976';
-                
-                var a = document.createElement('a');
-                a.href = appLink;
-                a.target = '_top';
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                setTimeout(function() {
-                    try { a.click(); } catch(e) {}
-                }, 300);
             }
 
             try { switchTab('home'); } catch (e) {}
