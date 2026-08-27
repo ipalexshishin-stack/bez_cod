@@ -11,7 +11,7 @@
     <script>
         try {
             if (window.vkBridge) {
-                window.vkBridge.send('VKWebAppInit').catch(function(e) { console.warn("VK Bridge warning:", e); });
+                window.vkBridge.send('VKWebAppInit').catch(function(e) {});
             }
         } catch(e) {}
     </script>
@@ -85,7 +85,7 @@
                 <button onclick="shareApp()" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-full transition-colors active:scale-95 shadow-sm shrink-0" title="Поделиться">
                     <i class="fa-solid fa-share-nodes text-xs sm:text-sm"></i>
                 </button>
-                <a href="https://vk.ru/im/channels/-239286076" onclick="openLink('https://vk.ru/im/channels/-239286076', event)" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 px-3 h-8 sm:h-9 bg-slate-800 hover:bg-slate-900 text-white rounded-full transition-colors active:scale-95 shadow-sm shrink-0" title="Подписаться на канал">
+                <a href="https://vk.ru/im/channels/-239286076" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 px-3 h-8 sm:h-9 bg-slate-800 hover:bg-slate-900 text-white rounded-full transition-colors active:scale-95 shadow-sm shrink-0" title="Подписаться на канал">
                     <i class="fa-solid fa-bell text-xs sm:text-sm"></i>
                     <span class="text-[10px] sm:text-xs font-bold hidden sm:inline-block">Подписка</span>
                 </a>
@@ -124,9 +124,9 @@
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
                 <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2"><i class="fa-solid fa-handshake text-blue-500"></i> Партнеры проекта</h3>
                 <div class="space-y-3">
-                    <a href="https://vk.com/market-32585861" onclick="openLink('https://vk.com/market-32585861', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-solid fa-shop text-lg"></i> Маркет</a>
-                    <a href="https://vk.com/svarche" onclick="openLink('https://vk.com/svarche', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-solid fa-fire-flame-curved text-lg"></i> СварЧе (Партнер)</a>
-                    <a href="https://vk.ru/hrpuls" onclick="openLink('https://vk.ru/hrpuls', event)" target="_blank" rel="noopener noreferrer" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-solid fa-briefcase text-lg"></i> HR Пульс (Партнер)</a>
+                    <a href="https://vk.com/market-32585861" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-solid fa-shop text-lg"></i> Маркет</a>
+                    <a href="https://vk.com/svarche" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-solid fa-fire-flame-curved text-lg"></i> СварЧе (Партнер)</a>
+                    <a href="https://vk.ru/hrpuls" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i class="fa-solid fa-briefcase text-lg"></i> HR Пульс (Партнер)</a>
                 </div>
             </div>
 
@@ -134,7 +134,7 @@
                 <div class="absolute -right-4 -top-4 text-blue-500/10 text-6xl"><i class="fa-solid fa-shield-halved"></i></div>
                 <h3 class="font-bold text-lg mb-2 text-blue-900 flex items-center gap-2 relative z-10"><i class="fa-solid fa-star-of-life text-blue-500"></i> МЧС России</h3>
                 <p class="text-sm text-blue-800 mb-4 relative z-10 leading-relaxed font-medium">Официальное приложение. Ваш личный помощник в экстренных ситуациях: быстрый вызов спасателей, инструкции по первой помощи и оповещения о ЧС.</p>
-                <a href="https://www.rustore.ru/catalog/app/io.citizens.security" onclick="openLink('https://www.rustore.ru/catalog/app/io.citizens.security', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 bg-white hover:bg-blue-50 rounded-2xl transition-colors border border-blue-100 active:scale-95 shadow-sm relative z-10 group">
+                <a href="https://www.rustore.ru/catalog/app/io.citizens.security" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 bg-white hover:bg-blue-50 rounded-2xl transition-colors border border-blue-100 active:scale-95 shadow-sm relative z-10 group">
                     <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-star-of-life text-xl"></i></div>
                     <div class="flex-1"><div class="font-extrabold text-base text-slate-800">МЧС России</div><div class="text-xs text-slate-500 mt-0.5">Скачать официальное приложение</div></div>
                     <div class="flex items-center justify-center w-8"><i class="fa-solid fa-download text-blue-400 group-hover:text-blue-600 transition-colors text-lg"></i></div>
@@ -145,7 +145,7 @@
                 <div class="absolute -right-4 -top-4 text-orange-500/10 text-6xl"><i class="fa-solid fa-hands-holding-child"></i></div>
                 <h3 class="font-bold text-lg mb-2 text-orange-900 flex items-center gap-2 relative z-10"><i class="fa-solid fa-satellite-dish text-orange-500"></i> Поиск пропавших людей</h3>
                 <p class="text-sm text-orange-800 mb-4 relative z-10 leading-relaxed font-medium">Оберег Поиск — это специализированное приложение для координации поисков и обеспечения безопасности детей и взрослых.</p>
-                <a href="https://obereg-poisk.ru/download/" onclick="openLink('https://obereg-poisk.ru/download/', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 bg-white hover:bg-orange-50 rounded-2xl transition-colors border border-orange-100 active:scale-95 shadow-sm relative z-10 group">
+                <a href="https://obereg-poisk.ru/download/" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 bg-white hover:bg-orange-50 rounded-2xl transition-colors border border-orange-100 active:scale-95 shadow-sm relative z-10 group">
                     <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-hands-holding-child text-xl"></i></div>
                     <div class="flex-1"><div class="font-extrabold text-base text-slate-800">Оберег Поиск</div><div class="text-xs text-slate-500 mt-0.5">Скачать официальное приложение</div></div>
                     <div class="flex items-center justify-center w-8"><i class="fa-solid fa-download text-orange-400 group-hover:text-orange-600 transition-colors text-lg"></i></div>
@@ -156,31 +156,31 @@
                 <h3 class="font-bold text-lg mb-3 text-slate-800 flex items-center gap-2"><i class="fa-solid fa-mobile-screen text-blue-500"></i> Родительский контроль</h3>
                 <p class="text-sm text-slate-600 mb-4 leading-relaxed">Рекомендуем установить на телефоны дополнительные сервисы родительского контроля:</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <a href="https://www.rustore.ru/catalog/app/app.kids360.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="openLink('https://www.rustore.ru/catalog/app/app.kids360.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                    <a href="https://www.rustore.ru/catalog/app/app.kids360.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-hourglass-half text-lg"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">Kids360</div><div class="text-[10px] text-slate-500 mt-0.5">Контроль времени и приложений</div></div>
                     </a>
-                    <a href="https://www.rustore.ru/catalog/app/app.movetoplay.mtp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="openLink('https://www.rustore.ru/catalog/app/app.movetoplay.mtp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                    <a href="https://www.rustore.ru/catalog/app/app.movetoplay.mtp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-person-running text-lg"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">MoveToPlay</div><div class="text-[10px] text-slate-500 mt-0.5">Экранное время через активность</div></div>
                     </a>
-                    <a href="https://www.rustore.ru/catalog/app/app.geoloc?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="openLink('https://www.rustore.ru/catalog/app/app.geoloc?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                    <a href="https://www.rustore.ru/catalog/app/app.geoloc?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-location-crosshairs text-lg"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">GeoLoc</div><div class="text-[10px] text-slate-500 mt-0.5">Семейный GPS-локатор</div></div>
                     </a>
-                    <a href="https://www.rustore.ru/catalog/app/ru.ritg.parentalcontrol?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="openLink('https://www.rustore.ru/catalog/app/ru.ritg.parentalcontrol?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                    <a href="https://www.rustore.ru/catalog/app/ru.ritg.parentalcontrol?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=text" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-mobile-screen-button text-lg"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">Кроха (Kroha)</div><div class="text-[10px] text-slate-500 mt-0.5">Родительский контроль и зрение</div></div>
                     </a>
-                    <a href="https://www.rustore.ru/catalog/app/ru.gdemoideti.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button" onclick="openLink('https://www.rustore.ru/catalog/app/ru.gdemoideti.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                    <a href="https://www.rustore.ru/catalog/app/ru.gdemoideti.parent?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-map-pin text-lg"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">Где мои дети</div><div class="text-[10px] text-slate-500 mt-0.5">GPS-трекер и звук вокруг</div></div>
                     </a>
-                    <a href="https://www.rustore.ru/catalog/app/com.thecybernanny.adroapp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button" onclick="openLink('https://www.rustore.ru/catalog/app/com.thecybernanny.adroapp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                    <a href="https://www.rustore.ru/catalog/app/com.thecybernanny.adroapp?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-user-shield text-lg"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">КиберНяня</div><div class="text-[10px] text-slate-500 mt-0.5">Комплексный контроль и защита</div></div>
                     </a>
-                    <a href="https://www.rustore.ru/catalog/app/ru.profsoft.alerton?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button" onclick="openLink('https://www.rustore.ru/catalog/app/ru.profsoft.alerton?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                    <a href="https://www.rustore.ru/catalog/app/ru.profsoft.alerton?mt_link_id=rpn0r1&rsm=1&mt_sub1=prostore&mt_sub2=apps-with-parental-control&mt_sub3=button" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-bell text-lg"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">Alerton</div><div class="text-[10px] text-slate-500 mt-0.5">Тревожная кнопка и оповещения</div></div>
                     </a>
@@ -191,17 +191,17 @@
                 <h3 class="font-bold text-lg mb-3 text-slate-800 flex items-center gap-2"><i class="fa-solid fa-route text-emerald-500"></i> Геолокация и запись треков</h3>
                 <p class="text-sm text-slate-600 mb-4 leading-relaxed">Эти приложения работают без интернета по спутникам (GPS). Обязательно установите перед походом в лес, чтобы записать маршрут и выйти обратно к машине:</p>
                 <div class="space-y-3">
-                    <a href="https://www.rustore.ru/catalog/app/com.gpr.geotracker?ysclid=mt79ji69fk825147137" onclick="openLink('https://www.rustore.ru/catalog/app/com.gpr.geotracker?ysclid=mt79ji69fk825147137', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                    <a href="https://www.rustore.ru/catalog/app/com.gpr.geotracker?ysclid=mt79ji69fk825147137" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-map-pin text-lg"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">Геотрекер (GeoTracker)</div><div class="text-[10px] text-slate-500 mt-0.5">Лучшее приложение для запись трека в лесу</div></div>
                         <div class="flex items-center justify-center w-6"><i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-emerald-600 transition-colors"></i></div>
                     </a>
-                    <a href="https://www.rustore.ru/catalog/app/net.osmand?ysclid=mt79imz6v3753835951" onclick="openLink('https://www.rustore.ru/catalog/app/net.osmand?ysclid=mt79imz6v3753835951', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                    <a href="https://www.rustore.ru/catalog/app/net.osmand?ysclid=mt79imz6v3753835951" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-map text-lg"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">OsmAnd</div><div class="text-[10px] text-slate-500 mt-0.5">Подробные офлайн-карты для ориентирования</div></div>
                         <div class="flex items-center justify-center w-6"><i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-orange-600 transition-colors"></i></div>
                     </a>
-                    <a href="https://www.rustore.ru/catalog/app/com.bodunov.galileo?ysclid=mt79ln30tv601032622" onclick="openLink('https://www.rustore.ru/catalog/app/com.bodunov.galileo?ysclid=mt79ln30tv601032622', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
+                    <a href="https://www.rustore.ru/catalog/app/com.bodunov.galileo?ysclid=mt79ln30tv601032622" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95 group">
                         <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-location-arrow text-lg"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">Guru Maps (Galileo)</div><div class="text-[10px] text-slate-500 mt-0.5">Векторные карты и надежные GPS-треки</div></div>
                         <div class="flex items-center justify-center w-6"><i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-blue-600 transition-colors"></i></div>
@@ -237,7 +237,7 @@
                 <div class="absolute -right-4 -bottom-4 text-slate-700 text-6xl"><i class="fa-solid fa-envelope"></i></div>
                 <h3 class="font-bold text-lg mb-2 flex items-center gap-2 relative z-10"><i class="fa-solid fa-at text-blue-400"></i> Связь с разработчиком</h3>
                 <p class="text-sm text-slate-300 mb-4 relative z-10">Нашли техническую ошибку, есть идея или хотите предложить сотрудничество?</p>
-                <a href="https://vk.com/id16426067" onclick="openLink('https://vk.com/id16426067', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors active:scale-95 border border-white/10 relative z-10 group">
+                <a href="https://vk.com/id16426067" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors active:scale-95 border border-white/10 relative z-10 group">
                     <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center shrink-0 border-2 border-white/20 group-hover:scale-105 transition-transform"><i class="fa-solid fa-user-shield"></i></div>
                     <div class="flex-1"><div class="font-bold text-sm">Александр Шишин</div><div class="text-[10px] text-slate-300">Автор проекта (Написать в ЛС)</div></div>
                     <i class="fa-brands fa-vk text-xl text-blue-400 group-hover:text-white transition-colors"></i>
@@ -333,7 +333,7 @@
             </div>
             <h2 class="text-2xl font-extrabold mb-4 flex items-center gap-2"><i class="fa-solid fa-circle-play text-red-500"></i> Видеоуроки</h2>
             
-            <a href="https://vk.ru/clips/shishin_85" onclick="openLink('https://vk.ru/clips/shishin_85', event)" target="_blank" rel="noopener noreferrer" class="mb-5 w-full bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-bold py-3.5 rounded-2xl shadow-sm transition-colors active:scale-95 flex items-center justify-center gap-2">
+            <a href="https://vk.ru/clips/shishin_85" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="mb-5 w-full bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-bold py-3.5 rounded-2xl shadow-sm transition-colors active:scale-95 flex items-center justify-center gap-2">
                 <i class="fa-solid fa-mobile-screen text-lg"></i> Смотреть короткие VK Клипы
             </a>
 
@@ -375,7 +375,7 @@
                 <h3 class="font-bold text-lg mb-3">Поиск отрядов ПСО</h3>
                 <input type="text" id="pso-search" placeholder="Введите город (например, Вологда)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" onkeyup="filterPSO()">
                 <div id="pso-list" class="space-y-3 max-h-60 overflow-y-auto"></div>
-                <a href="https://vk.com/search?c[q]=Поисково-спасательный%20отряд&c[section]=communities" onclick="openLink('https://vk.com/search?c[q]=Поисково-спасательный%20отряд&c[section]=communities', event)" target="_blank" rel="noopener noreferrer" class="mt-4 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl text-sm transition-colors active:scale-95 flex items-center justify-center">
+                <a href="https://vk.com/search?c[q]=Поисково-спасательный%20отряд&c[section]=communities" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="mt-4 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl text-sm transition-colors active:scale-95 flex items-center justify-center">
                     <i class="fa-solid fa-magnifying-glass mr-2"></i> Искать другие города в ВК
                 </a>
             </div>
@@ -391,18 +391,18 @@
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4">
                 <h3 class="font-bold text-lg mb-4 text-slate-800 border-b border-slate-100 pb-2">Команда и партнеры</h3>
                 <div class="space-y-4">
-                    <a href="https://vk.com/id16426067" onclick="openLink('https://vk.com/id16426067', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95">
+                    <a href="https://vk.com/id16426067" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95">
                         <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-user-shield"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">Александр Шишин</div><div class="text-xs text-slate-500">Автор проекта, специалист по безопасности</div></div>
                         <i class="fa-brands fa-vk text-blue-500 text-lg"></i>
                     </a>
-                    <a href="https://vk.ru/im/channels/-239286076" onclick="openLink('https://vk.ru/im/channels/-239286076', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95">
+                    <a href="https://vk.ru/im/channels/-239286076" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-slate-100 active:scale-95">
                         <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-users"></i></div>
                         <div class="flex-1"><div class="font-bold text-sm text-slate-800">Канал проекта</div><div class="text-xs text-slate-500">Подписывайтесь на обновления</div></div>
                         <i class="fa-brands fa-vk text-blue-500 text-lg"></i>
                     </a>
                     
-                    <a href="https://vk.ru/hrpuls" onclick="openLink('https://vk.ru/hrpuls', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-800 hover:bg-slate-900 rounded-xl transition-colors shadow-sm active:scale-95 mt-4 group">
+                    <a href="https://vk.ru/hrpuls" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-slate-800 hover:bg-slate-900 rounded-xl transition-colors shadow-sm active:scale-95 mt-4 group">
                         <div class="w-10 h-10 bg-white/10 text-white rounded-full flex items-center justify-center shrink-0 transition-colors"><i class="fa-solid fa-briefcase"></i></div>
                         <div class="flex-1">
                             <div class="font-bold text-sm text-white flex items-center gap-2">
@@ -413,7 +413,7 @@
                         <i class="fa-solid fa-arrow-right text-slate-400 transition-colors"></i>
                     </a>
                     
-                    <a href="https://vk.ru/svarche" onclick="openLink('https://vk.ru/svarche', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-orange-600 hover:bg-orange-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
+                    <a href="https://vk.ru/svarche" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-orange-600 hover:bg-orange-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
                         <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 transition-colors"><i class="fa-solid fa-fire-flame-curved"></i></div>
                         <div class="flex-1">
                             <div class="font-bold text-sm text-white flex items-center gap-2">
@@ -424,7 +424,7 @@
                         <i class="fa-solid fa-arrow-right text-orange-300 transition-colors"></i>
                     </a>
 
-                    <a href="https://vk.com/pso.azimut" onclick="openLink('https://vk.com/pso.azimut', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
+                    <a href="https://vk.com/pso.azimut" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
                         <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 transition-colors"><i class="fa-solid fa-map-location-dot"></i></div>
                         <div class="flex-1">
                             <div class="font-bold text-sm text-white flex items-center gap-2">
@@ -435,7 +435,7 @@
                         <i class="fa-solid fa-arrow-right text-indigo-200 transition-colors"></i>
                     </a>
 
-                    <a href="https://vk.ru/pso_tyneodin" onclick="openLink('https://vk.ru/pso_tyneodin', event)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-teal-600 hover:bg-teal-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
+                    <a href="https://vk.ru/pso_tyneodin" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 bg-teal-600 hover:bg-teal-700 rounded-xl transition-colors shadow-sm active:scale-95 mt-2 group">
                         <div class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center shrink-0 transition-colors"><i class="fa-solid fa-users-viewfinder"></i></div>
                         <div class="flex-1">
                             <div class="font-bold text-sm text-white flex items-center gap-2">
@@ -552,51 +552,48 @@
         }
 
         function triggerTaptic() {
-            try { if (window.vkBridge) window.vkBridge.send('VKWebAppTapticSelectionChanged'); } catch(e) {}
+            try { 
+                if (window.vkBridge) {
+                    window.vkBridge.send('VKWebAppTapticSelectionChanged').catch(function(){});
+                }
+            } catch(e) {}
         }
 
-        // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: Функция проверяет, находимся ли мы в VK,
-        // Если нет - ВООБЩЕ не блокирует браузер. Ссылка откроется сама.
-        function openLink(url, event) {
-            if(url === '#') { if (event) event.preventDefault(); return; }
+        function vkLink(url) {
             triggerTaptic();
-            
-            var isVKApp = false;
             try {
-                isVKApp = window.location.search.indexOf('vk_platform') !== -1 && window.location.search.indexOf('mobile_web') === -1;
+                var isVKApp = window.location.search.indexOf('vk_platform') !== -1 && window.location.search.indexOf('mobile_web') === -1;
+                if (isVKApp && window.vkBridge) {
+                    window.vkBridge.send('VKWebAppOpenLink', { link: url }).catch(function(){});
+                    return false; 
+                }
             } catch(e) {}
-
-            if (isVKApp && window.vkBridge) {
-                if (event) event.preventDefault(); 
-                window.vkBridge.send('VKWebAppOpenLink', { link: url }).catch(function(){});
-            }
+            return true; 
         }
 
-        // Функция видео оставлена для открытия во всплывающем окне, если внутри VK
-        function openVideo(url, event) {
+        function playVkVideo(url) {
             triggerTaptic();
-            var isVKApp = false;
             try {
-                isVKApp = window.location.search.indexOf('vk_platform') !== -1 && window.location.search.indexOf('mobile_web') === -1;
+                var isVKApp = window.location.search.indexOf('vk_platform') !== -1 && window.location.search.indexOf('mobile_web') === -1;
+                if (isVKApp) {
+                    var iframe = document.getElementById('vk-iframe');
+                    var loader = document.getElementById('video-loader');
+                    if (iframe) {
+                        iframe.classList.add('opacity-0'); 
+                        iframe.src = url; 
+                    }
+                    if (loader) {
+                        loader.style.display = 'flex';
+                        loader.classList.remove('hidden'); 
+                    }
+                    var m = document.getElementById('vk-player-modal'); 
+                    m.style.display = 'flex';
+                    m.classList.remove('hidden'); 
+                    setTimeout(function() { m.classList.remove('opacity-0'); }, 10);
+                    return false; 
+                }
             } catch(e) {}
-
-            if (isVKApp) {
-                if (event) event.preventDefault();
-                var iframe = document.getElementById('vk-iframe');
-                var loader = document.getElementById('video-loader');
-                if (iframe) {
-                    iframe.classList.add('opacity-0'); 
-                    iframe.src = url; 
-                }
-                if (loader) {
-                    loader.style.display = 'flex';
-                    loader.classList.remove('hidden'); 
-                }
-                var m = document.getElementById('vk-player-modal'); 
-                m.style.display = 'flex';
-                m.classList.remove('hidden'); 
-                setTimeout(function() { m.classList.remove('opacity-0'); }, 10);
-            } 
+            return true; 
         }
 
         function closeVideo() { 
@@ -975,7 +972,7 @@
             for(var j=0; j<filtered.length; j++) {
                 var art = filtered[j];
                 var escapedLink = art.link.replace(/'/g, "\\'");
-                html += '<a href="' + art.link + '" onclick="openLink(\'' + escapedLink + '\', event)" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden hover:shadow-md relative">' +
+                html += '<a href="' + art.link + '" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 active:scale-95 transition-transform overflow-hidden hover:shadow-md relative">' +
                             '<div class="p-4 pt-5">' +
                                 '<div class="flex items-center gap-2 mb-2">' +
                                     '<span class="text-[10px] font-extrabold bg-purple-100 text-purple-700 px-2.5 py-1 rounded-md uppercase tracking-wide">' + art.category + '</span>' +
@@ -1019,7 +1016,7 @@
                             '</div>' +
                             '<div class="flex gap-2">' +
                                 '<a href="tel:' + pso.phone + '" class="flex-1 sm:flex-none bg-green-100 text-green-700 px-3 py-2 rounded-lg text-xs font-bold text-center"><i class="fa-solid fa-phone"></i> Вызов</a>' +
-                                '<a href="' + pso.vk + '" onclick="openLink(\'' + pso.vk + '\', event)" target="_blank" rel="noopener noreferrer" class="flex-1 sm:flex-none bg-blue-100 text-blue-700 px-3 py-2 rounded-lg text-xs font-bold text-center"><i class="fa-brands fa-vk text-sm"></i> Группа</a>' +
+                                '<a href="' + pso.vk + '" onclick="return vkLink(this.href)" target="_blank" rel="noopener noreferrer" class="flex-1 sm:flex-none bg-blue-100 text-blue-700 px-3 py-2 rounded-lg text-xs font-bold text-center"><i class="fa-brands fa-vk text-sm"></i> Группа</a>' +
                             '</div>' +
                         '</div>';
             }
@@ -1137,7 +1134,7 @@
                             var v = vkVideos[title];
                             // ВИДЕО ОТКРЫВАЮТСЯ ПО КЛИКУ ВО ВНУТРЕННЕМ ОКНЕ (В СООТВЕТСТВИИ С ТРЕБОВАНИЕМ)
                             videoContainer.innerHTML += 
-                                '<a href="' + v.url + '" onclick="openVideo(\'' + v.url + '\', event)" class="block bg-white rounded-2xl shadow-sm border border-slate-100 cursor-pointer overflow-hidden group active:scale-95 transition-transform relative" target="_blank">' +
+                                '<a href="' + v.url + '" onclick="return playVkVideo(\'' + v.url + '\')" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-2xl shadow-sm border border-slate-100 cursor-pointer overflow-hidden group active:scale-95 transition-transform relative">' +
                                     '<div class="relative w-full pb-[56.25%] bg-slate-200">' +
                                         '<img src="' + v.cover + '" onerror="this.onerror=null; this.src=\'' + v.fallback + '\';" alt="' + title + '" class="absolute top-0 left-0 w-full h-full object-cover">' +
                                         '<div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">' +
