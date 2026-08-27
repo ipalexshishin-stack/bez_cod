@@ -467,7 +467,7 @@
         <i class="fa-solid fa-phone-volume text-xl animate-pulse"></i>
     </a>
 
-    <div id="vk-player-modal" class="fixed inset-0 z-[110] bg-black/95 hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300" style="display: none;">
+    <div id="vk-player-modal" class="fixed inset-0 z-[110] bg-black/95 flex-col items-center justify-center opacity-0 transition-opacity duration-300" style="display: none;">
         <button onclick="closeVideo()" class="absolute top-6 right-4 sm:top-8 sm:right-8 text-white/70 hover:text-white w-12 h-12 flex items-center justify-center bg-white/10 rounded-full backdrop-blur-sm transition-all active:scale-95 z-[120]">
             <i class="fa-solid fa-xmark text-2xl"></i>
         </button>
@@ -477,12 +477,12 @@
                     <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-3"></i>
                     <span class="text-sm font-medium animate-pulse">Загрузка плеера...</span>
                 </div>
-                <iframe id="vk-iframe" src="" class="absolute top-0 left-0 w-full h-full z-[117] opacity-0 transition-opacity duration-500" allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" frameborder="0" allowfullscreen onload="this.classList.remove('opacity-0'); var loader = document.getElementById('video-loader'); if (loader) loader.classList.add('hidden');"></iframe>
+                <iframe id="vk-iframe" src="" class="absolute top-0 left-0 w-full h-full z-[117] opacity-0 transition-opacity duration-500" allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" frameborder="0" allowfullscreen onload="this.classList.remove('opacity-0'); var vl = document.getElementById('video-loader'); if(vl) vl.style.display = 'none';"></iframe>
             </div>
         </div>
     </div>
 
-    <div id="pdf-modal" class="fixed inset-0 z-[120] bg-black/60 hidden flex-col justify-end transition-opacity opacity-0 duration-300" style="display: none;">
+    <div id="pdf-modal" class="fixed inset-0 z-[120] bg-black/60 flex-col justify-end transition-opacity opacity-0 duration-300" style="display: none;">
         <div class="flex-1 w-full" onclick="closePdf()"></div>
         <div id="pdf-modal-content" class="bg-white w-full max-w-4xl mx-auto rounded-t-3xl p-6 transform translate-y-full transition-transform duration-300 max-h-[85vh] flex flex-col relative">
             <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4 absolute top-3 left-1/2 -translate-x-1/2"></div>
@@ -503,14 +503,14 @@
         };
 
         var ALL_FLASHCARDS = [
-            { category: 'city', front: 'Правило «Стой, где стоишь»', back: 'Основное правило: оставаться на месте и ждать, пока тебя найдут.', hint: 'Главное действие при потере родителей.' },
-            { category: 'city', front: '«Круг доверия» вместо пароля', back: 'Семейный пароль в панике легко забыть. Лучшая замена — правило «Круг доверия» (строгий список из 2-3 людей, с кем можно уходить) и обязательный звонок родителям перед любым уходом.', hint: 'Почему кодовое слово больше не надежно.' },
-            { category: 'city', front: 'Правило «Три О»', back: 'Остановись, Оглядись, Окликни — алгоритм действий, если потерял родителей.', hint: 'Первые шаги при потере.' },
-            { category: 'city', front: 'Островки безопасности', back: 'Зона в супермаркетах и банках, где помогут потерявшемуся.<br><span class="mt-3 bg-white/10 p-2.5 rounded-xl flex items-center gap-3 border border-white/20 text-left w-full"><span class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center shrink-0 shadow-sm"><i class="fa-solid fa-location-dot text-white text-xl"></i></span><span class="flex flex-col"><span class="text-[12px] font-extrabold text-orange-400 uppercase leading-tight tracking-wide">Островок<br>безопасности</span><span class="text-[10px] text-slate-300 mt-0.5">Здесь помогут!</span></span></span>', hint: 'Оранжевый знак геометки.' },
-            { category: 'forest', front: 'Обними дерево', back: 'Если потерялся в лесу — обними ближайшее дерево, стой на месте и шуми. Не пытайся искать выход сам!', hint: 'Что делать в лесу в первую очередь.' },
-            { category: 'forest', front: 'Цвет одежды в лес', back: 'Яркая (красная, желтая, оранжевая). Камуфляж строго запрещен!', hint: 'Как облегчить работу спасателям.' },
-            { category: 'forest', front: 'Встреча с диким зверем', back: 'Замри. Не убегай! Медленно подними руки или куртку вверх (чтобы казаться больше) и плавно отступай назад, не поворачиваясь спиной.', hint: 'Как вести себя с диким зверем.' },
-            { category: 'sos', front: 'Номер спасения', back: '112 — бесплатный номер. Работает без SIM-карты.', hint: 'Единый телефон экстренных служб.' }
+            { category: 'city', front: "Правило «Стой, где стоишь»", back: "Основное правило: оставаться на месте и ждать, пока тебя найдут.", hint: "Главное действие при потере родителей." },
+            { category: 'city', front: "«Круг доверия» вместо пароля", back: "Семейный пароль в панике легко забыть. Лучшая замена — правило «Круг доверия» (строгий список из 2-3 людей, с кем можно уходить) и обязательный звонок родителям перед любым уходом.", hint: "Почему кодовое слово больше не надежно." },
+            { category: 'city', front: "Правило «Три О»", back: "Остановись, Оглядись, Окликни — алгоритм действий, если потерял родителей.", hint: "Первые шаги при потере." },
+            { category: 'city', front: "Островки безопасности", back: "Зона в супермаркетах и банках, где помогут потерявшемуся.<br><span class='mt-3 bg-white/10 p-2.5 rounded-xl flex items-center gap-3 border border-white/20 text-left w-full'><span class='w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center shrink-0 shadow-sm'><i class='fa-solid fa-location-dot text-white text-xl'></i></span><span class='flex flex-col'><span class='text-[12px] font-extrabold text-orange-400 uppercase leading-tight tracking-wide'>Островок<br>безопасности</span><span class='text-[10px] text-slate-300 mt-0.5'>Здесь помогут!</span></span></span>", hint: "Оранжевый знак геометки." },
+            { category: 'forest', front: "Обними дерево", back: "Если потерялся в лесу — обними ближайшее дерево, стой на месте и шуми. Не пытайся искать выход сам!", hint: "Что делать в лесу в первую очередь." },
+            { category: 'forest', front: "Цвет одежды в лес", back: "Яркая (красная, желтая, оранжевая). Камуфляж строго запрещен!", hint: "Как облегчить работу спасателям." },
+            { category: 'forest', front: "Встреча с диким зверем", back: "Замри. Не убегай! Медленно подними руки или куртку вверх (чтобы казаться больше) и плавно отступай назад, не поворачиваясь спиной.", hint: "Как вести себя с диким зверем." },
+            { category: 'sos', front: "Номер спасения", back: "112 — бесплатный номер. Работает без SIM-карты.", hint: "Единый телефон экстренных служб." }
         ];
 
         var vkVideos = {
@@ -520,18 +520,18 @@
         };
 
         var psoDatabase = [
-            { name: 'ПСО Ты не один', city: 'Вологодская область', phone: '89115056898', vk: 'https://vk.ru/pso_tyneodin' },
-            { name: 'ПСО ЮК-Спас', city: 'Вологодская область', phone: '89211238880', vk: 'https://vk.com/deti35' },
-            { name: 'ПСО Азимут', city: 'Вологодская область', phone: '89115183366', vk: 'https://vk.com/pso.azimut' },
-            { name: 'ПСО ЛизаАлерт', city: 'Федеральный отряд', phone: '88007005452', vk: 'https://vk.com/lizaalert_real' }
+            { name: "ПСО Ты не один", city: "Вологодская область", phone: "89115056898", vk: "https://vk.ru/pso_tyneodin" },
+            { name: "ПСО ЮК-Спас", city: "Вологодская область", phone: "89211238880", vk: "https://vk.com/deti35" },
+            { name: "ПСО Азимут", city: "Вологодская область", phone: "89115183366", vk: "https://vk.com/pso.azimut" },
+            { name: "ПСО ЛизаАлерт", city: "Федеральный отряд", phone: "88007005452", vk: "https://vk.com/lizaalert_real" }
         ];
 
         var blogArticles = [
-            { title: 'Гайд по разработке: Как мы создали «Код Безопасности» 2.0', desc: 'Подробная статья о том, как создать свое VK Mini App на чистом JS и Tailwind, обойти ограничения браузеров и выложить приложение на GitHub Pages.', category: 'Гайд', author: 'Александр Шишин', link: 'https://vk.ru/im/channels/-239286076?cmid=12' },
-            { title: 'Дорога в школу: инструкция по безопасности', desc: 'На знакомом маршруте дети теряют бдительность. Пройдите с ребенком путь до школы ногами...', category: 'Школа', author: 'Александр Шишин', link: 'https://vk.com/wall16426067_31772' },
-            { title: 'Пропал ребенок: первые действия', desc: 'Что нужно сделать в первые минуты и часы, если вы не можете найти своего ребенка.', category: 'SOS', author: 'ПСО «Ты не один»', link: 'https://vk.com/@pso_tyneodin-propal-rebenok' },
-            { title: 'Город и дети: правила выживания', desc: 'Как научить ребенка безопасно перемещаться по городу и не стать жертвой преступников.', category: 'Город', author: 'ПСО «Ты не один»', link: 'https://vk.com/@pso_tyneodin-gorod-deti' },
-            { title: 'Тревожная кнопка 2.0: как соцсети помогают искать людей', desc: 'Технологии на службе поисковиков: как социальные сети, блоги и мессенджеры помогают в поиске пропавших.', category: 'Технологии', author: 'Александр Шишин', link: 'https://vk.com/@shishin_85-trevozhnaya-knopka-20-kak-socseti-blogi-i-messendzhery-pomo' }
+            { title: "Гайд по разработке: Как мы создали «Код Безопасности» 2.0", desc: "Подробная статья о том, как создать свое VK Mini App на чистом JS и Tailwind, обойти ограничения браузеров и выложить приложение на GitHub Pages.", category: "Гайд", author: "Александр Шишин", link: "https://vk.ru/im/channels/-239286076?cmid=12" },
+            { title: "Дорога в школу: инструкция по безопасности", desc: "На знакомом маршруте дети теряют бдительность. Пройдите с ребенком путь до школы ногами...", category: "Школа", author: "Александр Шишин", link: "https://vk.com/wall16426067_31772" },
+            { title: "Пропал ребенок: первые действия", desc: "Что нужно сделать в первые минуты и часы, если вы не можете найти своего ребенка.", category: "SOS", author: "ПСО «Ты не один»", link: "https://vk.com/@pso_tyneodin-propal-rebenok" },
+            { title: "Город и дети: правила выживания", desc: "Как научить ребенка безопасно перемещаться по городу и не стать жертвой преступников.", category: "Город", author: "ПСО «Ты не один»", link: "https://vk.com/@pso_tyneodin-gorod-deti" },
+            { title: "Тревожная кнопка 2.0: как соцсети помогают искать людей", desc: "Технологии на службе поисковиков: как социальные сети, блоги и мессенджеры помогают в поиске пропавших.", category: "Технологии", author: "Александр Шишин", link: "https://vk.com/@shishin_85-trevozhnaya-knopka-20-kak-socseti-blogi-i-messendzhery-pomo" }
         ];
         var currentBlogCategory = 'Все';
 
@@ -555,43 +555,48 @@
             try { if (window.vkBridge) window.vkBridge.send('VKWebAppTapticSelectionChanged'); } catch(e) {}
         }
 
+        // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: Функция проверяет, находимся ли мы в VK,
+        // Если нет - ВООБЩЕ не блокирует браузер. Ссылка откроется сама.
         function openLink(url, event) {
+            if(url === '#') { if (event) event.preventDefault(); return; }
             triggerTaptic();
-            try {
-                var isVKApp = window.location.search.indexOf('vk_platform') !== -1 && window.location.search.indexOf('mobile_web') === -1;
-                if (isVKApp && window.vkBridge) {
-                    if (event) event.preventDefault();
-                    window.vkBridge.send('VKWebAppOpenLink', { link: url }).catch(function(){});
-                    return;
-                }
-            } catch(e) {}
             
-            // Если клик по тегу A, позволяем браузеру самому обработать target="_blank"
-            if (event && event.currentTarget && event.currentTarget.tagName === 'A') {
-                return; 
-            } else {
-                // Запасной план
-                if (event) event.preventDefault();
-                window.open(url, '_blank', 'noopener,noreferrer');
+            var isVKApp = false;
+            try {
+                isVKApp = window.location.search.indexOf('vk_platform') !== -1 && window.location.search.indexOf('mobile_web') === -1;
+            } catch(e) {}
+
+            if (isVKApp && window.vkBridge) {
+                if (event) event.preventDefault(); 
+                window.vkBridge.send('VKWebAppOpenLink', { link: url }).catch(function(){});
             }
         }
 
-        function openVideo(url) {
+        // Функция видео оставлена для открытия во всплывающем окне, если внутри VK
+        function openVideo(url, event) {
             triggerTaptic();
-            var iframe = document.getElementById('vk-iframe');
-            var loader = document.getElementById('video-loader');
-            if (iframe) {
-                iframe.classList.add('opacity-0'); 
-                iframe.src = url; 
-            }
-            if (loader) {
-                loader.style.display = 'flex';
-                loader.classList.remove('hidden'); 
-            }
-            var m = document.getElementById('vk-player-modal'); 
-            m.style.display = 'flex';
-            m.classList.remove('hidden'); 
-            setTimeout(function() { m.classList.remove('opacity-0'); }, 10); 
+            var isVKApp = false;
+            try {
+                isVKApp = window.location.search.indexOf('vk_platform') !== -1 && window.location.search.indexOf('mobile_web') === -1;
+            } catch(e) {}
+
+            if (isVKApp) {
+                if (event) event.preventDefault();
+                var iframe = document.getElementById('vk-iframe');
+                var loader = document.getElementById('video-loader');
+                if (iframe) {
+                    iframe.classList.add('opacity-0'); 
+                    iframe.src = url; 
+                }
+                if (loader) {
+                    loader.style.display = 'flex';
+                    loader.classList.remove('hidden'); 
+                }
+                var m = document.getElementById('vk-player-modal'); 
+                m.style.display = 'flex';
+                m.classList.remove('hidden'); 
+                setTimeout(function() { m.classList.remove('opacity-0'); }, 10);
+            } 
         }
 
         function closeVideo() { 
@@ -710,7 +715,7 @@
                             '</div>' +
                         '</div>' +
                     '</div>';
-
+            
             if (state.showHint) {
                 html += '<div class="mt-3 bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-xl text-xs flex items-start gap-2 animate-fadeIn"><i class="fa-solid fa-lightbulb text-amber-500 mt-0.5 text-sm shrink-0"></i><div><span class="font-bold">Подсказка:</span> ' + currentCard.hint + '</div></div>';
             }
@@ -1130,8 +1135,9 @@
                     for (var title in vkVideos) {
                         if (vkVideos.hasOwnProperty(title)) {
                             var v = vkVideos[title];
+                            // ВИДЕО ОТКРЫВАЮТСЯ ПО КЛИКУ ВО ВНУТРЕННЕМ ОКНЕ (В СООТВЕТСТВИИ С ТРЕБОВАНИЕМ)
                             videoContainer.innerHTML += 
-                                '<div onclick="openVideo(\'' + v.url + '\')" class="bg-white rounded-2xl shadow-sm border border-slate-100 cursor-pointer overflow-hidden group active:scale-95 transition-transform relative">' +
+                                '<a href="' + v.url + '" onclick="openVideo(\'' + v.url + '\', event)" class="block bg-white rounded-2xl shadow-sm border border-slate-100 cursor-pointer overflow-hidden group active:scale-95 transition-transform relative" target="_blank">' +
                                     '<div class="relative w-full pb-[56.25%] bg-slate-200">' +
                                         '<img src="' + v.cover + '" onerror="this.onerror=null; this.src=\'' + v.fallback + '\';" alt="' + title + '" class="absolute top-0 left-0 w-full h-full object-cover">' +
                                         '<div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">' +
@@ -1141,7 +1147,7 @@
                                         '</div>' +
                                     '</div>' +
                                     '<div class="p-4"><h3 class="font-bold text-slate-800 text-sm mb-1">' + title + '</h3></div>' +
-                                '</div>';
+                                '</a>';
                         }
                     }
                 }
